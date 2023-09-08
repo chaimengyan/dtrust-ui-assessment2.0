@@ -1,0 +1,237 @@
+.el-menu--popup {
+  margin-left: -10px;
+  background-color: #fff;
+
+  .el-menu-item {
+    background-color: #001525;
+
+    span,
+    i {
+      color: rgb(184, 182, 187);
+    }
+
+    &.is-active {
+      background-color: #409eff;
+
+      span,
+      i {
+        color: #fff;
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 1);
+      }
+    }
+
+    &:hover {
+      background-color: #001525;
+
+      i,
+      span {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.el-dropdown-menu__item {
+  font-size: 12px !important;
+  line-height: 28px !important;
+}
+
+.el-card.is-always-shadow {
+  box-shadow: none;
+  border: none !important;
+}
+
+.el-scrollbar__view {
+  height: 100%;
+}
+
+.el-scrollbar__thumb {
+  display: none !important;
+}
+
+.el-menu--horizontal {
+  border-bottom: none !important;
+}
+
+.el-menu {
+  border-right: none !important;
+}
+
+.el-menu--display,
+.el-menu--display + .el-submenu__icon-arrow {
+  display: none;
+}
+
+.el-dropdown-menu__item--divided:before,
+.el-menu,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
+.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+  background-color: transparent;
+}
+
+.el-message__icon,
+.el-message__content {
+  display: inline-block;
+}
+
+.el-date-editor .el-range-input,
+.el-date-editor .el-range-separator {
+  height: auto;
+  overflow: hidden;
+}
+
+.el-dialog__wrapper {
+  z-index: 2048;
+}
+
+.el-col {
+  margin-bottom: 8px;
+}
+
+.el-main {
+  padding: 0 !important;
+}
+
+.el-dropdown-menu__item--divided:before,
+.el-menu,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
+.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+  background-color: transparent !important;
+}
+.el-dialog {
+  border-radius: 6px !important;
+  .el-dialog__header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #dfd8d8;
+    background-color:aliceblue;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .dialog-header-title {
+        font-size: 18px;
+      }
+      .dialog-header-screen {
+        color: #909399;
+        margin-right: 26px;
+        font-size: 15px;
+        &:hover {
+          color: #409EFF;
+        }
+      }
+    }
+    .el-dialog__headerbtn {
+      top: 15px;
+      font-size: 20px;
+    }
+  }
+  .el-dialog__footer {
+    width: 100%;
+    padding: 10px 36px;
+    border-top: 1px solid #dfd8d8;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &.is-fullscreen {
+    .el-dialog__footer {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
+}
+
+.el-drawer {
+  padding-bottom: 60px;
+  .el-drawer__header {
+    padding: 12px 24px;
+    border-bottom: 1px solid #dfd8d8;
+    background-color:aliceblue;
+  }
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .drawer-header-title {
+    font-size: 18px;
+    color: #001525;
+  }
+  .drawer-header-screen {
+    color: #909399;
+    margin-right: 10px;
+    font-size: 15px;
+    &:hover {
+      color: #409EFF;
+    }
+  }
+}
+.demo-drawer__footer {
+  border-top: 1px solid #dfd8d8;
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: end;
+  padding: 10px 36px;
+  z-index: 999;
+}
+}
+.avue-dialog .el-dialog {
+  border-radius: 6px;
+  padding-bottom: 0px;
+
+  .avue-crud__dialog__menu {
+    padding-right: 26px;
+  }
+  .avue-dialog__footer  {
+    padding: 10px 36px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+}
+
+// 提示框最大宽度调窄
+// .el-tooltip__popper {
+//   max-width: 10%;
+// }
+
+// 步骤条完成状态颜色和logo保持一致
+.el-step__head.is-success, .el-step__title.is-success {
+  color: #01aea9;
+  border-color: #01aea9;
+}
+
+// 处理表格底部多出横线
+.el-table__fixed-right, .el-table__fixed{
+  height: 100% !important;
+}
+
+// 与输入框对齐
+.el-select {
+  display: flex;
+}
+
+// 与输入框对齐
+.el-cascader {
+  display: flex;
+}
+
+
+
+// 图标/颜色 灰色部分宽度调整一致
+.el-input-group__append, .el-input-group__prepend {
+  width: 30px;
+}
+
+// 解决颜色选择器多出1px的问题
+.el-color-picker--mini .el-color-picker__trigger {
+  height: 27px;
+}

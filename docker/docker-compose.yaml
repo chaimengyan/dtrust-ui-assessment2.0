@@ -1,0 +1,19 @@
+version: '3'
+services:
+  dtrust-ui-assets:
+    build:
+      context: .
+    restart: always
+    container_name: dtrust-ui-assets
+    image: dtrust-ui-assets
+    networks:
+      - dtrustsaas_default #miwugzs #dtrustsaas_default
+    external_links:
+      - dtrust-gateway
+    ports:
+      - 38082:38082
+
+# 加入到后端网络， 默认为 dtrust_default  | docker network ls   查看
+networks:
+  dtrustsaas_default:
+    external: true
