@@ -5,63 +5,70 @@ import {
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
-  console.log(option,"llllll");
+ 
+  option.column.forEach((item, index) => {
+    item.isOverHidden = isOverHidden
+    if(item.type === 'icon') {
+      item.iconList = iconList
+    }
+  });
+  _this.option = option
   // let option
   // getTableByName('asset').then(res => {
   //   option = res.data.data
   //   getAssetsFieldByTableName('asset').then(res => {
-  //     option={
-  //         labelWidth: 150,
-  //         selection: true,
-  //         reserveSelection:true,
-  //         border: false,
-  //         index: true,
-  //         indexLabel: _this.$t('crudCommon.序号'),
-  //         stripe: true,
-  //         menuAlign: 'center',
-  //         searchMenuSpan: 6,
-  //         editBtn: false,
-  //         delBtn: false,
-  //         align: 'center',
-  //         addBtn: false,
-  //         viewBtn:false,
-  //         menuWidth:150,
-  //         height: 500, 
-  //         rowKey: 'projectId',
-  //         column: [{
-  //           fixed: true,
-  //           label: '租户id',
-  //           prop: 'tenantId',
-  //           span: 24,
-  //           hide: true,
-  //           noView: true,
-  //           editDisplay: false,
-  //           addDisplay: false,
-  //           display: false,
-  //         }, {
-  //           fixed: true,
-  //           label: '资产id',
-  //           prop: 'projectId',
-  //           span: 24,
-  //           hide: true,
-  //           noView: true,
-  //           editDisplay: false,
-  //           addDisplay: false,
-  //           display: false,
-  //         },  {
-  //           label: _this.$t('assetsManagement.资产名称'),
-  //           prop: 'projectName',
-  //           search: true,
-  //           span: 12,
-  //           rules: [{
-  //             required: true,
-  //             message: `${_this.$t('crudCommon.请输入')}${_this.$t('assetsManagement.资产名称')}`,
-  //             trigger: 'blur'
-  //           }],
-  //           overHidden: isOverHidden,
-  //         },
-  //        ]
-  //       }
+    // _this.option={
+    //       labelWidth: 150,
+    //       selection: true,
+    //       reserveSelection:true,
+    //       border: false,
+    //       index: true, 
+    //       indexLabel: _this.$t('crudCommon.序号'),
+    //       stripe: true,
+    //       menuAlign: 'center',
+    //       searchMenuSpan: 6,
+    //       editBtn: false,
+    //       delBtn: false,
+    //       align: 'center',
+    //       addBtn: false,
+    //       viewBtn:false,
+    //       menuWidth:150,
+    //       height: 500, 
+    //       rowKey: 'projectId',
+    //       column: [{
+    //         fixed: true,
+    //         label: '租户id',
+    //         prop: 'tenantId',
+    //         span: 24,
+    //         hide: true,
+    //         noView: true,
+    //         editDisplay: false,
+    //         addDisplay: false,
+    //         display: false,
+    //       }, {
+    //         fixed: true,
+    //         label: '资产id',
+    //         prop: 'projectId',
+    //         span: 24,
+    //         hide: true,
+    //         noView: true,
+    //         editDisplay: false,
+    //         addDisplay: false,
+    //         display: false,
+    //       },  {
+    //         label: _this.$t('assetsManagement.资产名称'),
+    //         prop: 'projectName',
+    //         search: true,
+    //         span: 12,
+    //         rules: [{
+    //           required: true,
+    //           message: `${_this.$t('crudCommon.请输入')}${_this.$t('assetsManagement.资产名称')}`,
+    //           trigger: 'blur'
+    //         }],
+    //         overHidden: isOverHidden,
+    //       },
+    //      ]
+    //     }
   //   })
   // })
   

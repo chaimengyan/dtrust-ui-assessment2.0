@@ -151,20 +151,66 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
-    label: 'iconList',
-    prop: 'iconList',
-    span: 24,
-    rules: [{
-      required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
+  },
+  // {
+  //   label: 'iconList',
+  //   prop: 'iconList',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
+  {
     label: 'type',
     prop: 'type',
+    type: 'select',
+    value: 'input',
     span: 24,
+    dicData: [
+      {
+        label: 'input',
+        value: 'input'
+      },{
+        label: 'number',
+        value: 'number'
+      },{
+        label: 'select',
+        value: 'select'
+      },{
+        label: 'icon',
+        value: 'icon'
+      },{
+        label: 'color',
+        value: 'color'
+      },{
+        label: 'cascader',
+        value: 'cascader'
+      },{
+        label: 'checkbox',
+        value: 'checkbox'
+      },{
+        label: 'radio',
+        value: 'radio'
+      },{
+        label: 'date',
+        value: 'date'
+      },{
+        label: 'time',
+        value: 'time'
+      },{
+        label: 'switch',
+        value: 'switch'
+      },{
+        label: 'upload',
+        value: 'upload'
+      },{
+        label: 'tree',
+        value: 'tree'
+      }
+    ],
     rules: [{
       required: false,
       message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
@@ -191,17 +237,8 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
-    label: 'dicData',
-    prop: 'dicData',
-    span: 24,
-    rules: [{
-      required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
+  },
+  {
     label: 'formslot',
     prop: 'formslot',
     value: true,

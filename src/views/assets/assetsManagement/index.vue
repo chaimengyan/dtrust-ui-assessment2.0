@@ -427,13 +427,14 @@ export default {
       locationOptions: [],
       isOverHidden: true,
       isFullscreen: false,
+      option: {}
     };
   },
   computed: {
     ...mapGetters(["permissions", "userInfo"]),
-    option() {
-      return tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, {})
-    },
+    // option() {
+    //   return tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, {})
+    // },
   },
   created() {
     this.getList(this.page)
@@ -442,43 +443,19 @@ export default {
   methods: {
     //查询table/资产表格/表单配置
     getTable() {
-      getTableByName('asset').then(res => {
-        let option
-        option = res.data.data
+      getTableByName('asset').then(tableRes => {
         getAssetsFieldByTableName('asset').then(res => {
-          option.column = res.data.data
-          console.log(option, this.$refs.crud, 'this.$refs.crud');
-          
-          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, {
-            labelWidth: 150,
-            selection: true,
-            reserveSelection:true,
-            border: false,
-            index: true,
-            indexLabel:'crudCommon.序号',
-            stripe: true,
-            menuAlign: 'center',
-            searchMenuSpan: 6,
-            editBtn: false,
-            delBtn: false,
-            align: 'center',
-            addBtn: false,
-            viewBtn:false,
-            menuWidth:150,
-            height: 500, 
-            rowKey: 'projectId',
-            column: [ {
-              label: 'assetsManagement.资产名称',
-              prop: 'projectName',
-              search: true,
-              span: 12,
-              rules: [{
-                required: true,
-                message: ``,
-                trigger: 'blur'
-              }],
-            },]})
-          this.$refs.crud.onRefreshChange()
+          // this.option = {
+          //   ...tableRes.data.data,
+          //   column: res.data.data
+          // };
+          const option = {
+            ...tableRes.data.data,
+            column: res.data.data
+          };
+
+          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
+          this.$refs.crud.refreshTable()
         })
       })
     },

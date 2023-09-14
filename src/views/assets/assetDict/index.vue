@@ -22,7 +22,7 @@
         <template
           slot-scope="scope"
           slot="menu">
-          <!-- <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button
               v-if="permissions.assets_assetDict_edit"
               type="text"
@@ -30,7 +30,7 @@
               icon="el-icon-edit"
               @click="editBtn(scope.row,scope.index)"
               />
-          </el-tooltip> -->
+          </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('assetDict.字典项')" placement="top">
             <el-button
               v-if="permissions.assets_assetDict_dictItem"
@@ -118,7 +118,7 @@
         query: {},
         form: {
           type: undefined,
-          fieldId: undefined
+          fieldId: undefined,
         },
         dictType: undefined,
         fieldId: undefined,
