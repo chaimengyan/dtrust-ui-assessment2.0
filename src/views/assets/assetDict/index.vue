@@ -33,7 +33,7 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('assetDict.字典项')" placement="top">
             <el-button
-              v-if="permissions.assets_assetDict_dictItem"
+              v-if="permissions.assets_assetDict_dictItem && scope.row.type === 'select'"
               type="text"
               size="small"
               icon="el-icon-menu"
@@ -193,6 +193,7 @@
       },
       // 修改字典
       handleUpdate(row, index, done) {
+        row.rules = null
         putAssetsField(row).then(res => {
             if(res.data.status == 200) {
                 this.getList(this.page);

@@ -130,9 +130,43 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: 'rules',
-    prop: 'rules',
+    label: 'required',
+    prop: 'required',
+    value: true,
+    type: 'switch',
     span: 24,
+    rules: [{
+      required: false,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  }, {
+    label: 'message',
+    prop: "message",
+    value: '此项必填',
+    span: 24,
+    rules: [{
+      required: false,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  }, {
+    label: 'trigger',
+    prop: "triggerValue",
+    value: 'blur',
+    span: 24,
+    type: 'select',
+    dicData: [
+      {
+        label: 'blur',
+        value: 'blur'
+      }, {
+        label: 'change',
+        value: 'change'
+      }
+    ],
     rules: [{
       required: false,
       message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
@@ -209,6 +243,9 @@ export const tableOption = (_this, isOverHidden) => {
       },{
         label: 'tree',
         value: 'tree'
+      },{
+        label: 'datetime',
+        value: 'datetime'
       }
     ],
     rules: [{
@@ -347,7 +384,7 @@ export const tableOption = (_this, isOverHidden) => {
   },{
     label: 'search',
     prop: 'search',
-    value: true,
+    value: false,
     type: 'switch',
     span: 24,
     rules: [{

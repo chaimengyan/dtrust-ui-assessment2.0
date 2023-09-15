@@ -445,15 +445,10 @@ export default {
     getTable() {
       getTableByName('asset').then(tableRes => {
         getAssetsFieldByTableName('asset').then(res => {
-          // this.option = {
-          //   ...tableRes.data.data,
-          //   column: res.data.data
-          // };
           const option = {
             ...tableRes.data.data,
             column: res.data.data
           };
-
           tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
           this.$refs.crud.refreshTable()
         })

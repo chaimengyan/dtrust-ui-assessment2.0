@@ -295,6 +295,10 @@ import {
   putObj,
   getProjectAttributesBySceneId
 } from "@/api/assets/businessScenarioManagement";
+import {
+  getTableByName,
+  getAssetsFieldByTableName
+} from "@/api/customConfiguration/tableConfiguration";
 import { tableOption } from "@/const/crud/assets/businessScenarioManagement";
 import { mapGetters } from "vuex";
 import  RelatedAssets from "@/views/assets/businessScenarioManagement/relatedAssets";
@@ -372,18 +376,33 @@ export default {
       rowData: {},
       isOverHidden: true,
       isFullscreen: false,
+      option: {}
     };
   },
   computed: {
     ...mapGetters(["permissions", "userInfo"]),
-    option() {
-      return tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
-    },
+    // option() {
+    //   return tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
+    // },
   },
   created() {
     this.getList(this.page)
+    this.getTable()
   },
   methods: {
+    //查询table/业务场景表格/表单配置
+    getTable() {
+      getTableByName('scene').then(tableRes => {
+        getAssetsFieldByTableName('scene').then(res => {
+          const option = {
+            ...tableRes.data.data,
+            column: res.data.data
+          };
+          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
+          this.$refs.crud.refreshTable()
+        })
+      })
+    },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
       tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
