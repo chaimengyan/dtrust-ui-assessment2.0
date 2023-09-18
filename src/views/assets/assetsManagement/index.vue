@@ -478,8 +478,8 @@ export default {
         this.map.addOverlay(marker); // 将标注添加到地图中
         const geoc = new BMapGL.Geocoder();
         this.map.addEventListener('click', (e) => {
-          this.form.lng = e.latlng.lng
-          this.form.lat = e.latlng.lat
+          this.form.lng = e.latlng.lng.toString()
+          this.form.lat = e.latlng.lat.toString()
           //创建标注位置
           const pt = new BMapGL.Point(e.latlng.lng, e.latlng.lat);
           const marker = new BMapGL.Marker(pt);  // 创建标注

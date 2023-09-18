@@ -3,29 +3,41 @@ import iconList from "@/const/iconList";
 import {
   getDeptTreeByTenantId
 } from "@/api/assets/assetsManagement";
+
+// item.dicUrl 调接口
+function getSelectOption(item, tenantId) {
+  getDeptTreeByTenantId(tenantId).then(res => {
+    item.dicData = res.data.data || []
+  })
+}
+
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
-  // getDeptTreeByTenantId(tenantId).then(res => {
-    
-  // })
+  
 
   option.column.forEach((item, index) => {
     item.isOverHidden = isOverHidden
+    Reflect.deleteProperty(item, 'props')
+   
+    if (item.dicUrl) {
+      getSelectOption(item, tenantId);
+    }
+
     if(item.type === 'icon') {
       item.iconList = iconList
     }
-    // else if(item.prop === 'managingOrganization') {
-    //   // item.dicUrl = `/admin/dept/getDeptTreeByTenantId?tenantId=${tenantId}`
-    //   item.props = {
-    //           label:'name',
-    //           value:'id'
-    //         }
-    //   item.dicData = [{label:'aaa',value: 'wwwww'}]
-    // }
+    else if(item.prop === 'managingOrganization') {
+      item.props = {
+        label:'name',
+        value:'id'
+      }
+      getSelectOption(item, tenantId);
+    }
   });
+  //fieldType iconList searchLabelWidth width
   _this.option = option
   
-const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
-return option
+// const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
+// return option
 // return {
   //   labelWidth: 150,
   //   selection: true,

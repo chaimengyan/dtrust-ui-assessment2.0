@@ -1,14 +1,44 @@
 import iconList from "@/const/iconList";
 import city from "@/const/json/city"
+import {
+  getDeptTreeByTenantId
+} from "@/api/assets/assetsManagement";
 
+// item.dicUrl 调接口
+function getSelectOption(item, tenantId) {
+  getDeptTreeByTenantId(tenantId).then(res => {
+    item.dicData = res.data.data || []
+  })
+}
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
- 
   option.column.forEach((item, index) => {
     item.isOverHidden = isOverHidden
+    Reflect.deleteProperty(item, 'props')
+
+    if(item.prop === 'managingOrganization') {
+      item.props = {
+        label:'name',
+        value:'id'
+      }
+      getSelectOption(item, tenantId);
+    }
+
     if(item.type === 'icon') {
       item.iconList = iconList
     }
+
+    if(['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
+      item.props = {
+        label: 'name_cn',
+        value: 'code',
+        children: 'cities',
+      }
+      item.dicData = city
+    }
+
   });
+
+   
   _this.option = option
 const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
 return option
