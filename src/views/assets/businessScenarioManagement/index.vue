@@ -392,6 +392,7 @@ export default {
   methods: {
     //查询table/业务场景表格/表单配置
     getTable() {
+      this.fullscreenLoading = true
       getTableByName('scene').then(tableRes => {
         getAssetsFieldByTableName('scene').then(res => {
           const option = {
@@ -400,6 +401,8 @@ export default {
           };
           tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
           this.$refs.crud.refreshTable()
+          this.fullscreenLoading = false
+
         })
       })
     },

@@ -443,6 +443,7 @@ export default {
   methods: {
     //查询table/资产表格/表单配置
     getTable() {
+      this.fullscreenLoading = true
       getTableByName('asset').then(tableRes => {
         getAssetsFieldByTableName('asset').then(res => {
           const option = {
@@ -451,6 +452,7 @@ export default {
           };
           tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
           this.$refs.crud.refreshTable()
+          this.fullscreenLoading = false;
         })
       })
     },
