@@ -94,6 +94,8 @@ export default {
     数据主体映射图: 'Data Subject Mapping Map',
     数据字段映射图: 'Data Field Mapping Map',
     数据处理活动流图: 'Data processing activity flow diagram',
+    自定义配置: 'Custom configuration',
+    表格配置: 'Table Configuration',
 
     告知同意及主体权利: 'Inform consent and subject power',
     主体权利仪表盘: 'Main right dashboard',
