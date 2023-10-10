@@ -496,14 +496,16 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         search: true,
         overHidden: isOverHidden,
 
-      }, {
-        width: 120,
-        label:_this.$t('businessScenarioManagement.来源资产'),
-        prop:'parentProjectName',
-        sortable:true,
-        overHidden: isOverHidden,
+      },
+      //  {
+      //   width: 120,
+      //   label:_this.$t('businessScenarioManagement.来源资产'),
+      //   prop:'parentProjectName',
+      //   sortable:true,
+      //   overHidden: isOverHidden,
 
-      }, {
+      // }, 
+      {
         width: 120,
         searchSpan: 6,
         label:_this.$t('businessScenarioManagement.数据主体类型'),

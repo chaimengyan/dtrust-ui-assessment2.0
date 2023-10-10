@@ -13,7 +13,7 @@
             @selection-change="selectionChange"
             >
             <template slot="menuRight" slot-scope="{size}">
-              <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
+              <el-button icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
             </template>
             <template v-if="!isView" slot-scope="{row,index}" slot="menuLeft">
               <el-button
@@ -32,6 +32,23 @@
                 >{{$t('assetsManagement.配置')}}</el-button>
             </template>
           </avue-crud>
+          <!-- <avue-crud 
+             v-model="treeForm"
+             :option="option"
+             :data="temporaryTreeFieldList"
+             ref="treeCrud"
+             >
+            <!-- <template #icon="scope">
+              <i :class="scope.row.icon"
+                style="font-size:24px"></i>
+            </template>
+            <template #menu="{row,size}">
+              <el-button :size="size"
+                        text
+                        type="primary"
+                        @click="handleAdd(row)">新增子级</el-button>
+            </template> -->
+          </avue-crud> -->
         </div>
       
         <el-dialog 
@@ -122,6 +139,7 @@ export default {
     },
     data() {
       return {
+        treeForm: {},
          page: {
           pageSize: 10,
           total: 0, // 总页数
@@ -129,6 +147,7 @@ export default {
         },
         pageList: [],
         temporaryFieldList: [],
+        temporaryTreeFieldList: [],
         sourceDialog: false,
         rowIndex: '',
         sourceForm: {},
@@ -142,6 +161,7 @@ export default {
         isBatch: false,
         isFullscreen: false,
         isOverHidden: true,
+        treeOption: [],
       };
     },
     watch: {
@@ -171,10 +191,28 @@ export default {
         actRelationOption(this, this.isView, this.isOverHidden)
       },
       onLoad(page, pageList) {
+        // pageList.
+        console.log(page, pageList,'pppppppp');
         this.page.total = pageList.length
+        this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList), '')
+        console.log(this.temporaryTreeFieldList,this.tranListToTreeData(deepClone(pageList), ''),'this.temporaryTreeFieldList');
         this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
       },
-
+      tranListToTreeData(list, rootValue) {
+        const arr = [];
+        list.forEach((item) => {
+          console.log(item,item.identification,rootValue,'///////');
+          if (item.attributesId === rootValue) {
+            // 递归调用
+            const children = this.tranListToTreeData(list, item.attributesId);
+            if (children.length) {
+              item.children = children;
+            }
+            arr.push(item);
+          }
+        });
+        return arr;
+      },
       // 初始化sourceForm
       initSourceForm() {
         this.sourceForm = {
