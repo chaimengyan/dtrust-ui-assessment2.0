@@ -451,7 +451,8 @@ return option
 export const actRelationOption = (_this, isView, isOverHidden) => {
   return {
     selection: !isView,
-    rowKey: 'identification',
+    rowKey: 'id',
+    rowParentKey:'attributesId',
     reserveSelection:true,
     menu: !isView,
     align:'center',
@@ -520,6 +521,31 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         label:_this.$t('assetsManagement.数据主体数量'),
         prop:'volumeOfDataSubjects',
         sortable:true,
+      },
+      { 
+        label: '收集',
+        prop:'activitiesName',
+        overHidden: isOverHidden,
+      },
+      { 
+        label: '存储',
+        prop:'activitiesName',
+        overHidden: isOverHidden,
+      },
+      { 
+        label: '使用',
+        prop:'activitiesName',
+        overHidden: isOverHidden,
+      },
+      { 
+        label: '传输',
+        prop:'activitiesName',
+        overHidden: isOverHidden,
+      },
+      { 
+        label: '存档/删除',
+        prop:'activitiesName',
+        overHidden: isOverHidden,
       },
       { 
         label:_this.$t('businessScenarioManagement.数据处理活动'),

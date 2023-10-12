@@ -1,7 +1,7 @@
 <template>
     <basic-container>
       <div class="relation-container">
-          <avue-crud
+          <!-- <avue-crud
             ref="crud"
             :page.sync="page"
             :data="temporaryFieldList"
@@ -31,24 +31,33 @@
                 @click="checkSource(row,index)"
                 >{{$t('assetsManagement.配置')}}</el-button>
             </template>
-          </avue-crud>
-          <!-- <avue-crud 
+          </avue-crud> -->
+          <avue-crud 
              v-model="treeForm"
              :option="option"
              :data="temporaryTreeFieldList"
              ref="treeCrud"
              >
-            <!-- <template #icon="scope">
-              <i :class="scope.row.icon"
-                style="font-size:24px"></i>
+             <template slot="menuRight" slot-scope="{size}">
+              <el-button icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
             </template>
-            <template #menu="{row,size}">
-              <el-button :size="size"
-                        text
-                        type="primary"
-                        @click="handleAdd(row)">新增子级</el-button>
-            </template> -->
-          </avue-crud> -->
+            <template v-if="!isView" slot-scope="{row,index}" slot="menuLeft">
+              <el-button
+                size="small"
+                icon="el-icon-setting"
+                @click="batchCheckSource(row,index)"
+                >{{$t('assetsManagement.批量配置')}}</el-button
+              >
+            </template>
+            <template slot-scope="{row,index}" slot="menu">
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-setting"
+                @click="checkSource(row,index)"
+                >{{$t('assetsManagement.配置')}}</el-button>
+            </template>
+          </avue-crud>
         </div>
       
         <el-dialog 
@@ -191,27 +200,35 @@ export default {
         actRelationOption(this, this.isView, this.isOverHidden)
       },
       onLoad(page, pageList) {
-        // pageList.
         console.log(page, pageList,'pppppppp');
         this.page.total = pageList.length
-        this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList), '')
-        console.log(this.temporaryTreeFieldList,this.tranListToTreeData(deepClone(pageList), ''),'this.temporaryTreeFieldList');
+        this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList))
+        console.log(this.temporaryTreeFieldList,'this.temporaryTreeFieldList');
         this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
       },
-      tranListToTreeData(list, rootValue) {
-        const arr = [];
-        list.forEach((item) => {
-          console.log(item,item.identification,rootValue,'///////');
-          if (item.attributesId === rootValue) {
-            // 递归调用
-            const children = this.tranListToTreeData(list, item.attributesId);
-            if (children.length) {
-              item.children = children;
-            }
-            arr.push(item);
+      tranListToTreeData(list) {
+        const data = list.reduce((pre, cur) => {
+          const len = list.filter(item => item.attributesId === cur.attributesId)
+          
+          if (len.length === 1) {
+            pre[cur.attributesId] = cur;
+            return pre;
           }
-        });
-        return arr;
+          if (!pre[cur.attributesId]) {
+            pre[cur.attributesId] = {
+              id: cur.attributesId,
+              attributesName: cur.attributesName,
+              children: [cur],
+            }
+            Reflect.deleteProperty(cur, 'attributesName')
+            return pre;
+          }
+
+          Reflect.deleteProperty(cur, 'attributesName')
+          pre[cur.attributesId].children.push(cur)
+          return pre;
+        }, {})
+        return Object.values(data);
       },
       // 初始化sourceForm
       initSourceForm() {
