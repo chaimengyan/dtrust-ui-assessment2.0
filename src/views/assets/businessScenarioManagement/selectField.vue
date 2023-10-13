@@ -14,7 +14,16 @@
                     >
                     <template v-for="item in checkedAssetObjList">
                         <el-submenu :index="item.projectId.toString()" :key="item.projectId">
-                            <template slot="title">{{item.projectName}}</template>
+                            <template slot="title">
+                                <div style="display: flex;justify-content: space-around;">
+                                    <div>
+                                        {{item.projectName}}
+                                    </div>
+                                    <div @click="addFields(item)">
+                                        <i class="el-icon-circle-plus-outline" ></i>
+                                    </div>
+                                </div>
+                            </template>
                             <template v-for="i in item.dataSubjectList">
                                 <el-menu-item :index="`${i.mainBodyId.toString()}+${item.projectId.toString()}`" :key="i.mainBodyId" >
                                     {{i.mainBodyName}}
@@ -81,15 +90,21 @@
                 </el-main>
             </el-container>
         </el-container>
+        <AssetsRelationField 
+            ref="assetsRelationFieldRef"
+            :isAssets="false"
+        />
     </basic-container>
 </template>
 <script>
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import CheckTag from "@/components/CheckTag"
+import  AssetsRelationField from "@/views/assets/assetsManagement/assetsRelationField";
 
 export default {
     name: "SelectField",
     components: {
+        AssetsRelationField,
         CheckBox,
         CheckTag
     },
@@ -175,6 +190,9 @@ export default {
 
     },
     methods: {
+        addFields(item) {
+            this.$refs.assetsRelationFieldRef.relationBtn(item, '50%')
+        },
         filterNode(value, data) {
             console.log(data, '过滤qq')
             if (!value) return this.filterList = data;

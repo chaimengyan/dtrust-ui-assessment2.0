@@ -452,7 +452,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
   return {
     selection: !isView,
     rowKey: 'id',
-    rowParentKey:'attributesId',
+    rowParentKey: 'attributesId',
     reserveSelection:true,
     menu: !isView,
     align:'center',
@@ -523,35 +523,46 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         sortable:true,
       },
       { 
-        label: '收集',
-        prop:'activitiesName',
+        label:'收集',
+        prop:'0',
         overHidden: isOverHidden,
-      },
-      { 
-        label: '存储',
-        prop:'activitiesName',
+        formatter(_, cur) {
+          return cur?.label
+        }
+      },{ 
+        label:'存储',
+        prop:'1',
         overHidden: isOverHidden,
-      },
-      { 
-        label: '使用',
-        prop:'activitiesName',
+        formatter(_, cur) {
+          return cur?.label
+        }
+      },{ 
+        label:'使用',
+        prop:'2',
         overHidden: isOverHidden,
-      },
-      { 
-        label: '传输',
-        prop:'activitiesName',
+        formatter(_, cur) {
+          return cur?.label
+        }
+      },{ 
+        label:'传输',
+        prop:'3',
         overHidden: isOverHidden,
-      },
-      { 
-        label: '存档/删除',
-        prop:'activitiesName',
+        formatter(_, cur) {
+          return cur?.label
+        }
+      },{ 
+        label:'存档/删除',
+        prop:'4',
         overHidden: isOverHidden,
+        formatter(_, cur) {
+          return cur?.label
+        }
       },
-      { 
-        label:_this.$t('businessScenarioManagement.数据处理活动'),
-        prop:'activitiesName',
-        overHidden: isOverHidden,
-      },
+      // { 
+      //   label:_this.$t('businessScenarioManagement.数据处理活动'),
+      //   prop:'activitiesName',
+      //   overHidden: isOverHidden,
+      // },
       {
         searchLabelWidth:70,
         searchSpan: 4,

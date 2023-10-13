@@ -149,7 +149,7 @@ export default {
     data() {
       return {
         treeForm: {},
-         page: {
+        page: {
           pageSize: 10,
           total: 0, // 总页数
           currentPage: 1, // 当前页数
@@ -171,6 +171,8 @@ export default {
         isFullscreen: false,
         isOverHidden: true,
         treeOption: [],
+        currentRow: null,
+        keys: [0, 1, 2, 3, 4]
       };
     },
     watch: {
@@ -200,10 +202,9 @@ export default {
         actRelationOption(this, this.isView, this.isOverHidden)
       },
       onLoad(page, pageList) {
-        console.log(page, pageList,'pppppppp');
+        // pageList.
         this.page.total = pageList.length
-        this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList))
-        console.log(this.temporaryTreeFieldList,'this.temporaryTreeFieldList');
+        this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList), '')
         this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
       },
       tranListToTreeData(list) {
@@ -287,10 +288,24 @@ export default {
 
       },
 
+      findChildrenOptionByValue(value, options) {
+        for (let index = 0; index < options.length; index++) {
+          const item = options[index].children.find(item => item.value === value);
+          if (item) {
+            return item;
+          }
+        }
+      },
+
       // 选择数据处理活动
       changeEvent(val) {
-        console.log(val,"valllll");
-        this.sourceForm.assetsSceneProjectAttributesActivitiesList = this.actList.filter(a => this.sourceForm.activitiesIdList.includes(a.activitiesId))
+        this.keys.forEach(k => {
+          this.$set(this.currentRow, k, undefined)
+        })
+
+        this.sourceForm.assetsSceneProjectAttributesActivitiesList = this.currentRow.assetsSceneProjectAttributesActivitiesList = this.actList.filter(a => {
+          return this.sourceForm.activitiesIdList.includes(a.activitiesId)
+        })
           this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item,index) => {
             if(!('echoActivitiesValue' in item)){
               if(item.activitiesType === 0) {
@@ -304,8 +319,8 @@ export default {
             if(!('answers' in item)){
               item.answers = JSON.parse(item.activitiesJson).answers
             }
-          })
-        },
+        })
+      },
         
       // 保存表格数据
       saveCurd() {
@@ -340,13 +355,12 @@ export default {
             }
             for(let c of this.activitiesOptions) {
               if(a.activitiesCategory == c.value) {
-                c.children.push({value: a.activitiesId, label: a.activitiesName})
+                c.children.push({value: a.activitiesId, label: a.activitiesName, parent: c.value})
                 break
               }
             }
           })
-          console.log(this.activitiesOptions, 'activitiesCategoryOptionsactivitiesCategoryOptions');
-          this.changeEvent()
+          // this.changeEvent()
         })
       },
 
@@ -354,40 +368,46 @@ export default {
       checkSource(row, index) {
         this.isBatch = false
         this.initSourceForm()
-        console.log(row, 'rowwwwww')
         this.sourceForm.volumeOfDataSubjects = row.volumeOfDataSubjects
         this.sourceForm.assetsSceneProjectAttributesActivitiesList = row.assetsSceneProjectAttributesActivitiesList || []
-        
         this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
-          this.$set(item, 'echoActivitiesValue', JSON.parse(item.activitiesValue))
+          const isString =  typeof item.echoActivitiesValue === "string";
+
+          this.$set(item, 'echoActivitiesValue', isString ? JSON.parse(item.echoActivitiesValue) : item.echoActivitiesValue)
           this.sourceForm.activitiesIdList[index] = item.activitiesId
         })
         this.rowIndex = row.identification
         this.sourceDialog = true
         this.getAllAssetsActivities()
+        this.currentRow = this.fieldList.find(item => item.id === row.id);
       },
       
       // 保存关联信息
       saveSource() {
-        const activitiesName = []
         const noAnswer = this.sourceForm.assetsSceneProjectAttributesActivitiesList
           .map(x => x.echoActivitiesValue)
           .filter(y => ['0', "''", '[]'].includes(JSON.stringify(y)))
         if(noAnswer.length) return this.$message.error(this.$t('businessScenarioManagement.还有问题没有回答'))
-        this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
-          item.tenantId = undefined
-          item.activitiesValue = JSON.stringify(item.echoActivitiesValue)
-          if(item.activitiesType === 0) {
-            const name = item.answers.find(x => x.value === item.echoActivitiesValue).label
-            activitiesName[index] = `${item.activitiesName}：${name}`
-          } else if(item.activitiesType === 1) {
-            const name = item.answers.filter(x => item.echoActivitiesValue.includes(x.value)).map(i => i.label).join('||')
-            activitiesName[index] = `${item.activitiesName}：${name}`
-          } else {
-            activitiesName[index] = `${item.activitiesName}：${item.echoActivitiesValue}`
-          }
+
+        this.sourceForm.activitiesIdList?.forEach(item => {
+          const data = this.findChildrenOptionByValue(item, this.activitiesOptions)
+          this.$set(this.currentRow, data.parent, data)
         })
-        this.sourceForm.activitiesName = activitiesName.join('；')
+
+        // this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
+        //   item.tenantId = undefined
+        //   item.activitiesValue = JSON.stringify(item.echoActivitiesValue)
+        //   if(item.activitiesType === 0) {
+        //     const name = item.answers.find(x => x.value === item.echoActivitiesValue).label
+        //     activitiesName[index] = `${item.activitiesName}：${name}`
+        //   } else if(item.activitiesType === 1) {
+        //     const name = item.answers.filter(x => item.echoActivitiesValue.includes(x.value)).map(i => i.label).join('||')
+        //     activitiesName[index] = `${item.activitiesName}：${name}`
+        //   } else {
+        //     activitiesName[index] = `${item.activitiesName}：${item.echoActivitiesValue}`
+        //   }
+        // })
+        // this.sourceForm.activitiesName = activitiesName.join('；')
 
         if(this.isBatch) {
           this.fieldList.forEach((item,index) => {

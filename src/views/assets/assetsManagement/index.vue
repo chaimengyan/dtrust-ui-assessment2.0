@@ -138,7 +138,7 @@
         </template>
       </avue-crud>
     </basic-container>
-    <el-drawer size="100%" v-if="relationDialog" :visible.sync="relationDialog">
+    <!-- <el-drawer size="100%" v-if="relationDialog" :visible.sync="relationDialog">
       <div class="drawer-header" slot="title">
         <span class="drawer-header-title" v-html="relationTitle"></span>
         <div class="drawer-header-screen" @click="() => isFullscreen = !isFullscreen">
@@ -194,7 +194,11 @@
             icon="el-icon-circle-close"
             @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
       </div>
-    </el-drawer>
+    </el-drawer> -->
+    <AssetsRelationField 
+      ref="assetsRelationFieldRef"
+      :isAssets="true"
+    />
     <el-dialog 
       :title="$t('assetsManagement.查看资产详情')" 
       width="70%" 
@@ -348,6 +352,7 @@ import {
   getTableByName,
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
+import  AssetsRelationField from "@/views/assets/assetsManagement/assetsRelationField";
 import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
 import  SelectField from "@/views/assets/assetsManagement/selectField";
 import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
@@ -360,7 +365,7 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "assetsManagement",
-  components: {DataSubject, SelectField, FieldRelation, Details, ReleaseForm, FindStart, History},
+  components: {AssetsRelationField, DataSubject, SelectField, FieldRelation, Details, ReleaseForm, FindStart, History},
   data() {
     return {
       active: 0,
@@ -759,6 +764,8 @@ export default {
 
     // 打开关联字段弹窗
     relationBtn(row) {
+      this.$refs.assetsRelationFieldRef.relationBtn(row, '100%')
+      return
       this.fullscreenLoading = true
       this.active = 0
       this.projectId = row.projectId
