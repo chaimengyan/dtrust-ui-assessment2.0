@@ -172,7 +172,7 @@ export default {
         isOverHidden: true,
         treeOption: [],
         currentRow: null,
-        keys: [0, 1, 2, 3, 4]
+        keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList']
       };
     },
     watch: {
@@ -393,7 +393,8 @@ export default {
           const data = this.findChildrenOptionByValue(item, this.activitiesOptions)
           this.$set(this.currentRow, data.parent, data)
         })
-
+        console.log(this.sourceForm, 'this.sourceForm');
+        return
         // this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         //   item.tenantId = undefined
         //   item.activitiesValue = JSON.stringify(item.echoActivitiesValue)

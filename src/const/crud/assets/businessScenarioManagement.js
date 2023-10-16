@@ -524,35 +524,35 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
       },
       { 
         label:'收集',
-        prop:'0',
+        prop:'gatherActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
           return cur?.label
         }
       },{ 
         label:'存储',
-        prop:'1',
+        prop:'storageActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
           return cur?.label
         }
       },{ 
         label:'使用',
-        prop:'2',
+        prop:'useActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
           return cur?.label
         }
       },{ 
         label:'传输',
-        prop:'3',
+        prop:'transmitActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
           return cur?.label
         }
       },{ 
         label:'存档/删除',
-        prop:'4',
+        prop:'delActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
           return cur?.label
