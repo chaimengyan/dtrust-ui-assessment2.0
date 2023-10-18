@@ -1,5 +1,5 @@
 <template>
-    <el-drawer :size="relationDialogSize" v-if="relationDialog" append-to-body :visible.sync="relationDialog">
+    <el-drawer v-loading.fullscreen.lock="fullscreenLoading" :size="relationDialogSize" v-if="relationDialog" append-to-body :visible.sync="relationDialog">
         <div class="drawer-header" slot="title">
             <span class="drawer-header-title" v-html="relationTitle"></span>
             <div class="drawer-header-screen" @click="() => isFullscreen = !isFullscreen">
@@ -34,7 +34,7 @@
             :isView="false"
             :fieldList="fieldList"
             :saveBtnText="saveBtnText"
-            @saveSuccess="FieldRelationSaveSuccess"
+            @saveSuccess="saveSuccess"
             />
         <div class="demo-drawer__footer">
             <el-button 
@@ -211,13 +211,14 @@
         this.$refs.fieldRelation.saveCurd()
       },
       // 子组件数据保存成功
-      FieldRelationSaveSuccess(isUpdate) {
+      saveSuccess(isUpdate) {
+        this.$emit('saveSuccess', isUpdate)
         // if(isUpdate === true) {
-          this.reassess(this.projectId)
+          // this.reassess(this.projectId)
         // }
         this.relationDialog = false
         this.fullscreenLoading = false
-        this.getList(this.page)
+        // this.getList(this.page)
       },
      
     },

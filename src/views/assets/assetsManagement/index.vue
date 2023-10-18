@@ -198,6 +198,7 @@
     <AssetsRelationField 
       ref="assetsRelationFieldRef"
       :isAssets="true"
+      @saveSuccess="FieldRelationSaveSuccess"
     />
     <el-dialog 
       :title="$t('assetsManagement.查看资产详情')" 
@@ -797,8 +798,8 @@ export default {
       // if(isUpdate === true) {
         this.reassess(this.projectId)
       // }
-      this.relationDialog = false
-      this.fullscreenLoading = false
+      // this.relationDialog = false
+      // this.fullscreenLoading = false
       this.getList(this.page)
     },
     deleteBtn(row) {
