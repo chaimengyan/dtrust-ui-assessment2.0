@@ -10,7 +10,7 @@
             >
             <div class="form-content">
                 <!-- 多选或单选 -->
-                <div v-if="actType === 0 || actType === 1">
+                <div v-if="actType === 'radio' || actType === 'checkbox'">
                     <el-form-item
                         :label="`${$t('dataProcessingActivities.选项')}${index < 9 ? '0'+(index+1) : index+1}:`"
                         v-for="(item,index) in optionsForm.answers"
@@ -28,7 +28,7 @@
                 </div>
 
                 <!-- 文本框 -->
-                <div v-if="actType === 2">
+                <div v-if="actType === 'textarea'">
                     <el-input
                         type="textarea"
                         :rows="3"
@@ -37,7 +37,7 @@
                 </div>
 
                 <!-- 日期 -->
-                <div v-if="actType === 3">
+                <div v-if="actType === 'date'">
                     <el-date-picker
                         v-model="datePicker"
                         type="date">
@@ -65,8 +65,8 @@ export default {
             default: () => {}
         },
         actType: {
-            type: Number,
-            default: 0
+            type: String,
+            default: 'radio'
         },
     },
     data() {
@@ -109,7 +109,7 @@ export default {
             let optionsForm
              this.$refs['optionsForm'].validate((valid) => {
                 if (valid) {
-                    optionsForm = this.actType === 2 ? this.initOptionsForm() : this.optionsForm
+                    optionsForm = this.actType === 'textarea' ? this.initOptionsForm() : this.optionsForm
                 }else {
                     optionsForm = false
                     return false;

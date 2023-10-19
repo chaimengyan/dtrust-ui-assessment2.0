@@ -3,7 +3,7 @@
         <el-form ref="answersForm" :model="answersForm">
             <div v-for="item in activitiesList" :key="item.activitiesId">
                 <el-form-item 
-                    v-if="item.activitiesType === 0" 
+                    v-if="item.activitiesType === 'radio'" 
                     :label="`${item.activitiesName}：`" >
                     <el-radio 
                         v-for="(a, i) in item.answers"
@@ -15,7 +15,7 @@
                     </el-radio>
                 </el-form-item>
                 <el-form-item 
-                    v-if="item.activitiesType === 1" 
+                    v-if="item.activitiesType === 'checkbox'" 
                     :label="`${item.activitiesName}：`" >
                     <el-checkbox-group v-model="item.echoActivitiesValue">
                         <el-checkbox 
@@ -27,7 +27,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item 
-                    v-if="item.activitiesType === 2" 
+                    v-if="item.activitiesType === 'textarea'" 
                     :label="`${item.activitiesName}：`" >
                     <el-input
                         type="textarea"
@@ -36,7 +36,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item 
-                    v-if="item.activitiesType === 3" 
+                    v-if="item.activitiesType === 'date'" 
                     :label="`${item.activitiesName}：`" >
                     <el-date-picker
                         v-model="item.echoActivitiesValue"

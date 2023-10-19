@@ -155,19 +155,19 @@ export default {
       activitiesTypeOptions: [
         {
           label: this.$t('dataProcessingActivities.单选'),
-          value: 0
+          value: 'radio'
         },
         {
           label: this.$t('dataProcessingActivities.多选'),
-          value: 1
+          value: 'checkbox'
         },
         {
           label: this.$t('dataProcessingActivities.文本框'),
-          value: 2
+          value: 'textarea'
         },
         {
           label: this.$t('crudCommon.日期'),
-          value: 3
+          value: 'date'
         },
       ],
       isFullscreen: false,

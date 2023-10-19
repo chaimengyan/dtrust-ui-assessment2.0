@@ -9,6 +9,7 @@
                 v-for="item in dataList"
                 :label="item[itemId]"
                 :key="item[itemId]"
+                :disabled="'disabled' in item ? item.disabled : false"
                 >
                 {{item[itemName]}}
             </el-checkbox>

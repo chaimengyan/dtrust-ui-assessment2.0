@@ -109,3 +109,11 @@ export function getAssetsProjectHistoryByPage(query) {
       params: query
     })
   }
+
+  // 根据资产id查询字段(业务场景用)
+export function getProjectAttributesListByProjectId(id) {
+    return request({
+        url: `/assets/assetsProjectAttributes/getProjectAttributesListByProjectId/${id}`,
+        method: 'get',
+    })
+}

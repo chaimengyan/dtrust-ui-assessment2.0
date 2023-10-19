@@ -81,7 +81,7 @@ export default {
             activitiesCategory: '',
             activitiesName: '',
             definition: '',
-            activitiesType: 0,
+            activitiesType: 'radio',
             activitiesJson: '',
         },
         // 回显内容

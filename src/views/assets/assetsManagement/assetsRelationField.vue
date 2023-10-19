@@ -67,6 +67,7 @@
   <script>
   import {
     getAssetsProjectAttributesListByProjectId,
+    getProjectAttributesListByProjectId
   } from "@/api/assets/assetsManagement";
   import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
   import  SelectField from "@/views/assets/assetsManagement/selectField";
@@ -152,6 +153,15 @@
       // 根据资产id查询关联字段信息
       getAssetsProjectAttributesListByProjectId(id) {
           return getAssetsProjectAttributesListByProjectId(id).then(res => {
+            console.log(res.data.data,'res.data.data11');
+              this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
+              this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
+          })
+      },
+      // 根据资产id查询字段(业务场景用)
+      getProjectAttributesListByProjectId(id) {
+        return getProjectAttributesListByProjectId(id).then(res => {
+          console.log(res.data.data,'res.data.data');
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
           })
@@ -198,7 +208,8 @@
         this.projectId = row.projectId
         this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
         this.relationDialog = true
-        this.getAssetsProjectAttributesListByProjectId(this.projectId).then(()  => {
+        const Api = relationDialogSize === '100%' ? this.getAssetsProjectAttributesListByProjectId(this.projectId) : this.getProjectAttributesListByProjectId(this.projectId)
+        Api.then(()  => {
           this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
           this.$refs.dataSubject.echoChecked()
           this.fullscreenLoading = false
@@ -226,7 +237,7 @@
   </script>
 
   <style lang="scss" scoped>
-  ::v-deep  .avue-icon i {
+  ::v-deep  .avue-icon i { 
     font-size: 16px !important;
   }
   </style>

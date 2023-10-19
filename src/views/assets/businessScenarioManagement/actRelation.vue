@@ -308,9 +308,9 @@ export default {
         })
           this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item,index) => {
             if(!('echoActivitiesValue' in item)){
-              if(item.activitiesType === 0) {
+              if(item.activitiesType === 'radio') {
                 this.$set(item, 'echoActivitiesValue', 0)
-              } else if(item.activitiesType === 1) {
+              } else if(item.activitiesType === 'checkbox') {
                 this.$set(item, 'echoActivitiesValue', [])
               } else {
                 this.$set(item, 'echoActivitiesValue', '')
@@ -321,10 +321,25 @@ export default {
             }
         })
       },
+
+      transferData(data) {
+        const result = [];
+
+        data.forEach(item => {
+          result.push(item);
+          if (item.children && item.children.length) {
+            result.push(...this.transferData(item.children))
+          }
+        })
+
+        return result
+      },
         
       // 保存表格数据
       saveCurd() {
-        console.log(this.fieldList, 'baocun ')
+        // 树结构扁平化
+        const data = this.transferData(this.temporaryTreeFieldList)
+        console.log(data, 'data')
         this.fieldList.forEach((item, index) => {
           this.fieldList[index].projectAttributesId = item.id || item.projectAttributesId
           item.assetsSceneId = this.sceneId
@@ -354,8 +369,9 @@ export default {
               this.$set(a, 'echoActivitiesValue', activitiesItem.echoActivitiesValue)
             }
             for(let c of this.activitiesOptions) {
+              console.log(c, 'ccccc');
               if(a.activitiesCategory == c.value) {
-                c.children.push({value: a.activitiesId, label: a.activitiesName, parent: c.value})
+                c.children.push({value: a.activitiesId, label: a.activitiesName, parent: this.keys[c.value]})
                 break
               }
             }

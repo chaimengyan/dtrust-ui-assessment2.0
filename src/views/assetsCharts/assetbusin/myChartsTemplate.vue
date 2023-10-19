@@ -97,10 +97,10 @@ import {
                 const arr = val.map(x => { 
                     const activitiesName = x.activitiesName
                     const activitiesValue = JSON.parse(x.activitiesJson).answers
-                    if(x.activitiesType === 0) {// 单选
+                    if(x.activitiesType === 'radio') {// 单选
                         const answer = activitiesValue.find(b => b.value === x.activitiesValue*1).label
                         return `${activitiesName}：${answer}`
-                    } else if(x.activitiesType === 1) {//多选
+                    } else if(x.activitiesType === 'checkbox') {//多选
                         const answer = activitiesValue.filter(b => x.activitiesValue.includes(b.value+'')).map(c => c.label).join('|')
                         return `${activitiesName}：${answer}`
                     } else {
