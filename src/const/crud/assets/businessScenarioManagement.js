@@ -527,6 +527,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         prop:'gatherActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
+          console.log(_, cur, '_, cur');
           return cur?.label
         }
       },{ 

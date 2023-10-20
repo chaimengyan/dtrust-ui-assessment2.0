@@ -93,6 +93,7 @@
         <AssetsRelationField 
             ref="assetsRelationFieldRef"
             :isAssets="false"
+            @saveSuccess="saveSuccess"
         />
     </basic-container>
 </template>
@@ -190,6 +191,9 @@ export default {
 
     },
     methods: {
+        saveSuccess(data) {
+            console.log(data, 'aaaaaa');
+        },
         addFields(item) {
             this.$refs.assetsRelationFieldRef.relationBtn(item, '50%')
         },

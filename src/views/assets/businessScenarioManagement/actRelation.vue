@@ -202,7 +202,6 @@ export default {
         actRelationOption(this, this.isView, this.isOverHidden)
       },
       onLoad(page, pageList) {
-        // pageList.
         this.page.total = pageList.length
         this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList), '')
         this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
@@ -216,7 +215,9 @@ export default {
             return pre;
           }
           if (!pre[cur.attributesId]) {
+            console.log(cur, 'cur');
             pre[cur.attributesId] = {
+              ...cur,
               id: cur.attributesId,
               attributesName: cur.attributesName,
               children: [cur],
@@ -326,6 +327,16 @@ export default {
         const result = [];
 
         data.forEach(item => {
+          this.keys.forEach(key => {
+            if (item[key]) {
+              item[key] = {
+                ...item[key],
+                activitiesValue: item[key].value,
+                activitiesLabel: item[key].label,
+                "activitiesCategory": "0" 
+              }
+            }
+          })
           result.push(item);
           if (item.children && item.children.length) {
             result.push(...this.transferData(item.children))
@@ -369,9 +380,8 @@ export default {
               this.$set(a, 'echoActivitiesValue', activitiesItem.echoActivitiesValue)
             }
             for(let c of this.activitiesOptions) {
-              console.log(c, 'ccccc');
               if(a.activitiesCategory == c.value) {
-                c.children.push({value: a.activitiesId, label: a.activitiesName, parent: this.keys[c.value]})
+                c.children.push({value: a.activitiesId, label: a.activitiesName, activitiesId: a.activitiesId, parent: this.keys[c.value]})
                 break
               }
             }
@@ -409,8 +419,7 @@ export default {
           const data = this.findChildrenOptionByValue(item, this.activitiesOptions)
           this.$set(this.currentRow, data.parent, data)
         })
-        console.log(this.sourceForm, 'this.sourceForm');
-        return
+        console.log(this.currentRow, 'this.sourceForm');
         // this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         //   item.tenantId = undefined
         //   item.activitiesValue = JSON.stringify(item.echoActivitiesValue)

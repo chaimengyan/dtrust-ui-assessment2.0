@@ -14,6 +14,7 @@
         <DataSubject
             v-show="active === 0"
             ref="dataSubject"
+            :disabledKeys="disabledKeys"
             :echoCheckedDataSubjectList="echoCheckedDataSubjectList"
             @getCheckedDataSubject="getCheckedDataSubject"
         />
@@ -23,6 +24,7 @@
             :defaultActive="defaultActive"
             :projectId="projectId"
             :checkedDataSubjectObjList="checkedDataSubjectObjList"
+            :disabledKeys="disabledKeys"
             :isView="false"
             />
 
@@ -67,6 +69,7 @@
   <script>
   import {
     getAssetsProjectAttributesListByProjectId,
+    assetsAddAttributes,
     getProjectAttributesListByProjectId
   } from "@/api/assets/assetsManagement";
   import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
@@ -102,6 +105,7 @@
         // 完整勾选字段
         fieldList: [],
         isFullscreen: false,
+        disabledKeys: null,
         relationDialogSize: '100%'
       };
     },
@@ -149,11 +153,27 @@
       previousStep() {
         this.active--
       },
-      saveField() {},
+      saveField() {
+        this.fullscreenLoading = true
+        const dataList = this.$refs.selectField.getCheckedDataSubjectObjList()
+        this.fieldList = this.handleFieldList(dataList)
+        this.fieldList.forEach((item, index) => {
+          if(!('status' in item)){
+            this.fieldList[index].status = 1
+          }
+        })
+        assetsAddAttributes(this.fieldList).then(res => {
+            if(res.data.status === 200) {
+              this.relationDialog = false
+              this.fullscreenLoading = false
+              this.$emit('saveSuccess', this.fieldList)
+              this.$message.success(res.data.message)
+            }
+          })
+      },
       // 根据资产id查询关联字段信息
       getAssetsProjectAttributesListByProjectId(id) {
           return getAssetsProjectAttributesListByProjectId(id).then(res => {
-            console.log(res.data.data,'res.data.data11');
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
           })
@@ -161,8 +181,8 @@
       // 根据资产id查询字段(业务场景用)
       getProjectAttributesListByProjectId(id) {
         return getProjectAttributesListByProjectId(id).then(res => {
-          console.log(res.data.data,'res.data.data');
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
+              this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
               this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
           })
       },

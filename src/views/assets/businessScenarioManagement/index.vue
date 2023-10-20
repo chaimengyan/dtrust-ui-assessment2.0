@@ -450,7 +450,7 @@ export default {
     },
     // 保存关联字段
     relationFormSubmit() {
-      this.fullscreenLoading = true
+      // this.fullscreenLoading = true
       this.$refs.actRelation.saveCurd()
     },
     // 子组件数据保存成功

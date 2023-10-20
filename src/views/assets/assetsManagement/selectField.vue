@@ -40,6 +40,7 @@
                     <el-aside class="category" width="200px">
                         <CheckBox
                             ref="checkCBox"
+                            :disabledKeys="disabled ? checkedCategoryList : null"
                             :echoCheckedList="checkedCategoryList"
                             :dataList="categoryList"
                             :parentName="$t('assetsManagement.全选')"
@@ -53,6 +54,7 @@
                                 <template v-for="item in checkedCategoryListAll">
                                     <CheckBox
                                         ref="checkBox"
+                                        :disabledKeys="disabled ? checkedFieldList[item.categoryId] : null"
                                         :echoCheckedList="checkedFieldList[item.categoryId]"
                                         :echoCheckedListAll="checkedFieldListAll[item.categoryId]"
                                         :dataList="fieldList[item.categoryId]"
@@ -98,6 +100,10 @@ export default {
             type: Array,
             default: () => []
         },
+        disabledKeys: {
+            type: Array,
+            default: null
+        },
         projectId: {
             type: Number,
             default: 0
@@ -140,7 +146,8 @@ export default {
         mainBodyId: 0,
         // 数据主体类型name
         mainBodyName: '',
-
+        disabled: false,
+        disabledCheckboxKeys: false,
       };
     },
     watch: {
@@ -166,11 +173,12 @@ export default {
                     this.checkedCategoryList = item.checkedCategoryList || []
                     this.checkedCategoryListAll = item.checkedCategoryListAll || []
 
+                    this.disabled = this.disabledKeys ? this.disabledKeys.includes(item.mainBodyId) : false;
+
                     this.checkedDataClass = item.checkedDataClass || []
 
                     this.checkedFieldList = item.checkedFieldList || {}
                     this.checkedFieldListAll = item.checkedFieldListAll || {}
-                    
                 }
             })
             console.log(this.checkedDataSubjectObjList ,this.checkedDataClass,'切换主体类型数据')

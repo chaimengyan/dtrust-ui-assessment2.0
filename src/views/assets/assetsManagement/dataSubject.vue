@@ -4,7 +4,7 @@
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.mainBodyId">
                     <div class="grid-content bg-purple">
-                        <el-checkbox :label="item.mainBodyId">
+                        <el-checkbox :label="item.mainBodyId" :disabled="disabledKeys ? disabledKeys.includes(item.mainBodyId) : false">
                             {{item.mainBodyName}}
                         </el-checkbox>
                     </div>
@@ -31,6 +31,10 @@ export default {
             type: Array,
             default: () => []
         },
+        disabledKeys: {
+            type: Array,
+            default: null
+        },
     },
     data() {
       return {
@@ -47,7 +51,7 @@ export default {
     },
     created() {
         this.getMainBodList()
-       
+      
     },
     methods: {
         // 回显选中

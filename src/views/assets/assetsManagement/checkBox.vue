@@ -1,6 +1,6 @@
 <template>
     <basic-container>
-        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">{{parentName}}</el-checkbox>
+        <el-checkbox :disabled="disabledKeys" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">{{parentName}}</el-checkbox>
         <div style="margin: 15px 0;"></div>
         <el-checkbox-group v-model="checkedList" @change="handleCheckedChange">
             <el-checkbox
@@ -9,7 +9,7 @@
                 v-for="item in dataList"
                 :label="item[itemId]"
                 :key="item[itemId]"
-                :disabled="'disabled' in item ? item.disabled : false"
+                :disabled="'disabled' in item ? item.disabled : (disabledKeys ? disabledKeys.includes(item[itemId]) : false)"
                 >
                 {{item[itemName]}}
             </el-checkbox>
@@ -50,6 +50,10 @@ export default {
             type: String,
             default: ''
         },
+        disabledKeys: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
       return {
@@ -85,6 +89,7 @@ export default {
 
         // 点击多选框事件
         handleCheckedChange(value) {
+            console.log(value, 'vvvvvv');
             let checkedCount = value.length;
             this.checkAll = checkedCount === this.dataList.length;
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataList.length;
