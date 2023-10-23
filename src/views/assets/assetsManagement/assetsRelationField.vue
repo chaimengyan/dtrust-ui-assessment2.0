@@ -160,6 +160,7 @@
         this.fieldList.forEach((item, index) => {
           if(!('status' in item)){
             this.fieldList[index].status = 1
+            this.fieldList[index].projectId = this.projectId
           }
         })
         assetsAddAttributes(this.fieldList).then(res => {
