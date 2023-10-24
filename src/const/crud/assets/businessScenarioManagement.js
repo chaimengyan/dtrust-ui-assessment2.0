@@ -528,7 +528,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
         formatter(_, cur) {
           if (cur && cur.length) {
-            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+            return cur.map(item => `${item.label}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
       },{ 
@@ -537,7 +537,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
         formatter(_, cur) {
           if (cur && cur.length) {
-            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+            return cur.map(item => `${item.label}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
       },{ 
@@ -546,7 +546,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
         formatter(_, cur) {
           if (cur && cur.length) {
-            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+            return cur.map(item => `${item.label}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
       },{ 
@@ -555,7 +555,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
         formatter(_, cur) {
           if (cur && cur.length) {
-            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+            return cur.map(item => `${item.label}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
       },{ 
@@ -564,7 +564,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
         formatter(_, cur) {
           if (cur && cur.length) {
-            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+            return cur.map(item => `${item.label}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
       },
