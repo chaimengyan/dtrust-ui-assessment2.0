@@ -527,36 +527,45 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         prop:'gatherActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
-          console.log(_, cur, '_, cur');
-          return cur?.label
+          if (cur && cur.length) {
+            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+          }
         }
       },{ 
         label:'存储',
         prop:'storageActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
-          return cur?.label
+          if (cur && cur.length) {
+            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+          }
         }
       },{ 
         label:'使用',
         prop:'useActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
-          return cur?.label
+          if (cur && cur.length) {
+            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+          }
         }
       },{ 
         label:'传输',
         prop:'transmitActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
-          return cur?.label
+          if (cur && cur.length) {
+            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+          }
         }
       },{ 
         label:'存档/删除',
         prop:'delActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
-          return cur?.label
+          if (cur && cur.length) {
+            return cur.map(item => `${item.label}:${item.showValue}`).join(';')
+          }
         }
       },
       // { 

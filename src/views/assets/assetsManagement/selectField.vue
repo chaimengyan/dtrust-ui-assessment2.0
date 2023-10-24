@@ -40,7 +40,7 @@
                     <el-aside class="category" width="200px">
                         <CheckBox
                             ref="checkCBox"
-                            :disabledKeys="disabled ? checkedCategoryList : null"
+                            :disabledKeys="disabled ? disabledSelectAllKeys : null"
                             :echoCheckedList="checkedCategoryList"
                             :dataList="categoryList"
                             :parentName="$t('assetsManagement.全选')"
@@ -54,7 +54,7 @@
                                 <template v-for="item in checkedCategoryListAll">
                                     <CheckBox
                                         ref="checkBox"
-                                        :disabledKeys="disabled ? checkedFieldList[item.categoryId] : null"
+                                        :disabledKeys="disabled ? disabledSelectKeys[item.categoryId] : null"
                                         :echoCheckedList="checkedFieldList[item.categoryId]"
                                         :echoCheckedListAll="checkedFieldListAll[item.categoryId]"
                                         :dataList="fieldList[item.categoryId]"
@@ -85,6 +85,7 @@ import {
 } from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import CheckTag from "@/components/CheckTag"
+import { deepClone } from "@/util/util";
 export default {
     name: "SelectField",
     components: {
@@ -148,6 +149,10 @@ export default {
         mainBodyName: '',
         disabled: false,
         disabledCheckboxKeys: false,
+
+        disabledSelectKeys: {},
+        disabledSelectAllKeys: {},
+
       };
     },
     watch: {
@@ -179,6 +184,10 @@ export default {
 
                     this.checkedFieldList = item.checkedFieldList || {}
                     this.checkedFieldListAll = item.checkedFieldListAll || {}
+
+                    this.disabledSelectKeys = deepClone(this.checkedFieldList);
+                    this.disabledSelectAllKeys = deepClone(this.checkedCategoryList);
+
                 }
             })
             console.log(this.checkedDataSubjectObjList ,this.checkedDataClass,'切换主体类型数据')

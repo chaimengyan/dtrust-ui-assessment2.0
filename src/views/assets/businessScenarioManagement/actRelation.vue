@@ -122,6 +122,7 @@ import { activitiesCategoryOptions } from "@/util/enum"
 import ActAnswers from "@/views/assets/businessScenarioManagement/actAnswers";
 import {deepClone} from '@/util/util'
 import {actRelationOption} from "@/const/crud/assets/businessScenarioManagement"
+import { isArray } from 'lodash'
 
 export default {
     name: "actRelation",
@@ -217,7 +218,6 @@ export default {
           if (!pre[cur.attributesId]) {
             console.log(cur, 'cur');
             pre[cur.attributesId] = {
-              ...cur,
               id: cur.attributesId,
               attributesName: cur.attributesName,
               children: [cur],
@@ -337,12 +337,13 @@ export default {
               }
             }
           })
-          result.push(item);
           if (item.children && item.children.length) {
             result.push(...this.transferData(item.children))
+          } else {
+            result.push(item)
           }
         })
-
+console.log(result, 'result');
         return result
       },
         
@@ -381,13 +382,32 @@ export default {
             }
             for(let c of this.activitiesOptions) {
               if(a.activitiesCategory == c.value) {
-                c.children.push({value: a.activitiesId, label: a.activitiesName, activitiesId: a.activitiesId, parent: this.keys[c.value]})
+                c.children.push({value: a.activitiesId, showValue: this.getShowValue(activitiesItem),  label: a.activitiesName, activitiesId: a.activitiesId, parent: this.keys[c.value]})
                 break
               }
             }
           })
           // this.changeEvent()
         })
+      },
+
+      getShowValue(activitiesItem) {
+        const { echoActivitiesValue } = activitiesItem || {}
+        if (!echoActivitiesValue) {
+          return echoActivitiesValue;
+        }
+        console.log(echoActivitiesValue, 'echoActivitiesValue')
+        const value = isArray(echoActivitiesValue) ? echoActivitiesValue : [echoActivitiesValue]
+        
+        const showValues = value.map(pValue => {
+          const item = activitiesItem.answers?.find(item => item.value === pValue)
+          if (item) {
+            return item.label;
+          }
+          return pValue;
+        }).filter(v => v)
+
+        return showValues.join(', ')
       },
 
       // 添加单个关联弹窗
@@ -415,24 +435,15 @@ export default {
           .filter(y => ['0', "''", '[]'].includes(JSON.stringify(y)))
         if(noAnswer.length) return this.$message.error(this.$t('businessScenarioManagement.还有问题没有回答'))
 
-        this.sourceForm.activitiesIdList?.forEach(item => {
-          const data = this.findChildrenOptionByValue(item, this.activitiesOptions)
-          this.$set(this.currentRow, data.parent, data)
+        this.keys.forEach(key => {
+          this.$set(this.currentRow, key, [])
         })
-        console.log(this.currentRow, 'this.sourceForm');
-        // this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
-        //   item.tenantId = undefined
-        //   item.activitiesValue = JSON.stringify(item.echoActivitiesValue)
-        //   if(item.activitiesType === 0) {
-        //     const name = item.answers.find(x => x.value === item.echoActivitiesValue).label
-        //     activitiesName[index] = `${item.activitiesName}：${name}`
-        //   } else if(item.activitiesType === 1) {
-        //     const name = item.answers.filter(x => item.echoActivitiesValue.includes(x.value)).map(i => i.label).join('||')
-        //     activitiesName[index] = `${item.activitiesName}：${name}`
-        //   } else {
-        //     activitiesName[index] = `${item.activitiesName}：${item.echoActivitiesValue}`
-        //   }
-        // })
+
+        this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
+          const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
+          data.showValue = this.getShowValue(item);
+          this.$set(this.currentRow, data.parent, [...(this.currentRow[data.parent] || []), data])
+        })
         // this.sourceForm.activitiesName = activitiesName.join('；')
 
         if(this.isBatch) {
