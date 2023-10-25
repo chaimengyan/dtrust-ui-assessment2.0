@@ -12,14 +12,14 @@
                     background-color="#dadde2"
                     text-color="#303133"
                     >
-                    <template v-for="item in checkedAssetObjList">
+                    <template v-for="(item, index) in checkedAssetObjList">
                         <el-submenu :index="item.projectId.toString()" :key="item.projectId">
                             <template slot="title">
                                 <div style="display: flex;justify-content: space-around;">
                                     <div>
                                         {{item.projectName}}
                                     </div>
-                                    <div @click="addFields(item)">
+                                    <div @click="addFields(item, index)">
                                         <i class="el-icon-circle-plus-outline" ></i>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@ export default {
         projectName: '',
         // 资产列表
         assetObjList: [],
-
+        currentIndex: undefined,
       };
     },
     watch: {
@@ -191,10 +191,35 @@ export default {
 
     },
     methods: {
-        saveSuccess(data) {
-            console.log(data, 'aaaaaa');
+        saveSuccess(fields, bodys) {
+            const asset = this.checkedAssetObjList[this.currentIndex];
+            const data = bodys.map(item => {
+                const categoryList = item.checkedCategoryListAll || item.categoryList;
+                const mainBodyIdCp = `${item.mainBodyId}+${asset.projectId}`;
+                const filterFields = fields.filter(item => `${item.mainBodyId}+${asset.projectId}` === mainBodyIdCp);
+                const fieldList = categoryList.reduce((pre, cur) => {
+                    if (!pre[cur.categoryId]) {
+                        pre[cur.categoryId] = [];
+                    }
+                    pre[cur.categoryId].push(...filterFields.filter(item => item.categoryId === cur.categoryId));
+                    return pre;
+                }, {})
+                return {
+                    attributes: filterFields,
+                    categoryList,
+                    dataClassList: categoryList,
+                    fieldList,
+                    mainBodyId: item.mainBodyId,
+                    mainBodyName: item.mainBodyName,
+                    typeList: item.typeList,
+                    mainBodyIdCp,
+                }
+            });
+            this.$set(asset, 'dataSubjectList', data)
+            this.checkDataSubject(this.currentIndex);
         },
-        addFields(item) {
+        addFields(item, index) {
+            this.currentIndex = index;
             this.$refs.assetsRelationFieldRef.relationBtn(item, '50%')
         },
         filterNode(value, data) {
@@ -224,6 +249,7 @@ export default {
             this.mainBodyId = index.split('+')[0]*1
             this.mainBodyIdCp = index
             this.mainBodyName = asset.dataSubjectList.find(item => item.mainBodyId === this.mainBodyId).mainBodyName
+            console.log(this.checkedAssetObjList, 'this.checkedAssetObjList')
             this.checkedAssetObjList.forEach((asset, index) => {
                 asset.dataSubjectList.length !== 0 && asset.dataSubjectList.forEach((item,index) => {
                     if(item.mainBodyIdCp === this.mainBodyIdCp) {
@@ -239,8 +265,6 @@ export default {
                         this.checkedFieldListAll = item.checkedFieldListAll || {}
 
                         this.fieldList = item.fieldList
-
-                        
                     }
                 })
             })

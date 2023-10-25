@@ -163,11 +163,14 @@
             this.fieldList[index].projectId = this.projectId
           }
         })
+        console.log(this.checkedDataSubjectObjList, 'checkedDataSubjectObjListcheckedDataSubjectObjList')
+        this.relationDialog = false
+
         assetsAddAttributes(this.fieldList).then(res => {
             if(res.data.status === 200) {
               this.relationDialog = false
               this.fullscreenLoading = false
-              this.$emit('saveSuccess', this.fieldList)
+              this.$emit('saveSuccess', this.fieldList, this.checkedDataSubjectObjList)
               this.$message.success(res.data.message)
             }
           })

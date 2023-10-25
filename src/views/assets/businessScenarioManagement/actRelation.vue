@@ -385,7 +385,7 @@ console.log(result, 'result');
                 c.children.push({
                   value: a.activitiesId, 
                   activitiesAnswerLabel: this.getShowValue(activitiesItem), 
-                  activitiesAnswerValue: this.getShowValue(activitiesItem), 
+                  activitiesAnswerValue: activitiesItem?.echoActivitiesValue, 
                   activitiesQnLabel: a.activitiesName,
                   label: a.activitiesName, 
                   activitiesCategory: a.activitiesCategory,
@@ -450,6 +450,9 @@ console.log(result, 'result');
         this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
           const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
           data.activitiesAnswerLabel = this.getShowValue(item);
+          data.activitiesAnswerValue = JSON.stringify(item.echoActivitiesValue);
+          data.activitiesType = item.activitiesType;
+
           this.$set(this.currentRow, data.parent, [...(this.currentRow[data.parent] || []), data])
         })
         // this.sourceForm.activitiesName = activitiesName.join('；')
