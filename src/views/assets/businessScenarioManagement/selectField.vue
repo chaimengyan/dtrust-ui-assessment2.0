@@ -193,21 +193,32 @@ export default {
     methods: {
         saveSuccess(fields, bodys) {
             const asset = this.checkedAssetObjList[this.currentIndex];
+            console.log(bodys, 'pppp')
             const data = bodys.map(item => {
                 const categoryList = item.checkedCategoryListAll || item.categoryList;
                 const mainBodyIdCp = `${item.mainBodyId}+${asset.projectId}`;
                 const filterFields = fields.filter(item => `${item.mainBodyId}+${asset.projectId}` === mainBodyIdCp);
+                const checkedFieldList = {};
                 const fieldList = categoryList.reduce((pre, cur) => {
                     if (!pre[cur.categoryId]) {
                         pre[cur.categoryId] = [];
                     }
-                    pre[cur.categoryId].push(...filterFields.filter(item => item.categoryId === cur.categoryId));
+                    if (!checkedFieldList[cur.categoryId]) {
+                        checkedFieldList[cur.categoryId] = [];
+                    }
+                    const items = filterFields.filter(item => item.categoryId === cur.categoryId);
+                    checkedFieldList[cur.categoryId].push(...items.map(item => item.attributesId));
+                    pre[cur.categoryId].push(...items);
                     return pre;
                 }, {})
                 return {
                     attributes: filterFields,
                     categoryList,
-                    dataClassList: categoryList,
+                    checkedCategoryList: categoryList.map(item => item.categoryId),
+                    checkedCategoryListAll: [...categoryList],
+                    dataClassList: item.typeList,
+                    checkedFieldList,
+                    checkedFieldListAll: {...fieldList},
                     fieldList,
                     mainBodyId: item.mainBodyId,
                     mainBodyName: item.mainBodyName,
@@ -216,7 +227,9 @@ export default {
                 }
             });
             this.$set(asset, 'dataSubjectList', data)
-            this.checkDataSubject(this.currentIndex);
+            if (this.mainBodyIdCp) {
+                this.checkDataSubject(this.mainBodyIdCp);
+            }
         },
         addFields(item, index) {
             this.currentIndex = index;
