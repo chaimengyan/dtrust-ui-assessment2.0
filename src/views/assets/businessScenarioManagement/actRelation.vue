@@ -420,6 +420,7 @@ console.log(result, 'result');
 
     // 添加单个关联弹窗
     checkSource(row, index) {
+      console.log(row, '22222222');
       this.isBatch = false
       this.initSourceForm()
       this.sourceForm.volumeOfDataSubjects = row.volumeOfDataSubjects

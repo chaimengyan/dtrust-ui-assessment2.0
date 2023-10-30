@@ -18,7 +18,7 @@ import {
   getAllAssetsProject
 } from "@/api/assets/assetsManagement";
 import {
-  getAssetsProjectAttributesListByProjectId
+  getProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
 export default {
     name: "RelatedAssets",
@@ -52,7 +52,7 @@ export default {
         // 回显选中
         echoChecked() {
             this.checkedAssetIds = this.echoCheckedAssetObjList.map(item => {
-              this.getAssetsProjectAttributesListByProjectId(item.projectId)
+              this.getProjectAttributesListByProjectId(item.projectId)
               return item.projectId
             })
         },
@@ -65,7 +65,7 @@ export default {
         // 选择资产事件
         handleChange(val) {
           const lastId = val.length === 0 ? '' : val[val.length-1]
-          this.getAssetsProjectAttributesListByProjectId(lastId)
+          this.getProjectAttributesListByProjectId(lastId)
 
         },
         // 处理数据后向父组件传值
@@ -77,11 +77,11 @@ export default {
         },
 
          // 根据资产id查询字段 
-        getAssetsProjectAttributesListByProjectId(id) {
+         getProjectAttributesListByProjectId(id) {
             if(id === '' || 'dataSubjectList' in this.assetsList.find(p => p.projectId === id)) {
               this.handleCheckedAssetObjList()
             } else {
-              getAssetsProjectAttributesListByProjectId(id).then(res => {
+              getProjectAttributesListByProjectId(id).then(res => {
                 const a = this.handleEchoData(res.data.data, id)
                 this.assetsList.forEach((item, index) => {
                     if(item.projectId === id) {
