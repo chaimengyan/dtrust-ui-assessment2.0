@@ -192,41 +192,48 @@ export default {
     },
     methods: {
         saveSuccess(fields, bodys) {
+            console.log(fields, bodys, 'ok')
             const asset = this.checkedAssetObjList[this.currentIndex];
-            console.log(bodys, 'pppp')
-            const data = bodys.map(item => {
-                const categoryList = item.checkedCategoryListAll || item.categoryList;
-                const mainBodyIdCp = `${item.mainBodyId}+${asset.projectId}`;
-                const filterFields = fields.filter(item => `${item.mainBodyId}+${asset.projectId}` === mainBodyIdCp);
-                const checkedFieldList = {};
-                const fieldList = categoryList.reduce((pre, cur) => {
-                    if (!pre[cur.categoryId]) {
-                        pre[cur.categoryId] = [];
+            
+            bodys.forEach(newItem => {
+                const findMain = asset.dataSubjectList.find(item => item.mainBodyId === newItem.mainBodyId);
+                if (findMain) {
+                    const needAddMains = newItem.checkedCategoryListAll?.filter(item => !findMain.categoryList.find(newItem => newItem.categoryId === item.categoryId))
+                    if (needAddMains?.length) {
+                        findMain.categoryList.push(...needAddMains);
+                        findMain.checkedCategoryList.push(...needAddMains.map(item => item.categoryId));
+                        findMain.checkedCategoryListAll.push(...needAddMains);
                     }
-                    if (!checkedFieldList[cur.categoryId]) {
-                        checkedFieldList[cur.categoryId] = [];
-                    }
-                    const items = filterFields.filter(item => item.categoryId === cur.categoryId);
-                    checkedFieldList[cur.categoryId].push(...items.map(item => item.attributesId));
-                    pre[cur.categoryId].push(...items);
-                    return pre;
-                }, {})
-                return {
-                    attributes: filterFields,
-                    categoryList,
-                    checkedCategoryList: categoryList.map(item => item.categoryId),
-                    checkedCategoryListAll: [...categoryList],
-                    dataClassList: item.typeList,
-                    checkedFieldList,
-                    checkedFieldListAll: {...fieldList},
-                    fieldList,
-                    mainBodyId: item.mainBodyId,
-                    mainBodyName: item.mainBodyName,
-                    typeList: item.typeList,
-                    mainBodyIdCp,
+                    
+                    Object.keys(newItem.checkedFieldListAll).forEach(k => {
+                        const findFields = findMain.fieldList[k] || []
+                        const newCheckFields = newItem.checkedFieldListAll[k];
+                        const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.attributesId === newFields.attributesId))
+                        
+                        findMain.fieldList = findMain.fieldList ? findMain.fieldList : {};
+                        findMain.checkedFieldList = findMain.checkedFieldList ? findMain.checkedFieldList : {};
+                        findMain.checkedFieldListAll = findMain.checkedFieldListAll ? findMain.checkedFieldListAll : {};
+
+                        if (!findMain.fieldList[k]) {
+                            this.$set(findMain.fieldList, k, [])
+                        }
+
+                        if (!findMain.checkedFieldList[k]) {
+                            this.$set(findMain.checkedFieldList, k, [])
+
+                        }
+                        if (!findMain.checkedFieldListAll[k]) {
+                            this.$set(findMain.checkedFieldListAll, k, [])
+                        }
+                        
+                        findMain.fieldList[k].push(...needAddFields);
+                        findMain.checkedFieldListAll[k].push(...newCheckFields);
+                        findMain.checkedFieldList[k].push(...needAddFields.map(item => item.attributesId));
+
+                    })
+
                 }
-            });
-            this.$set(asset, 'dataSubjectList', data)
+            })
             if (this.mainBodyIdCp) {
                 this.checkDataSubject(this.mainBodyIdCp);
             }

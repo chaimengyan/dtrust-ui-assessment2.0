@@ -196,6 +196,7 @@ export default {
     },
   },
   created() {
+    this.getAllAssetsActivities()
   },
   methods: {
     changeArray() {
@@ -285,7 +286,6 @@ export default {
       this.isBatch = true
       this.initSourceForm()
       this.sourceDialog = true
-      this.getAllAssetsActivities()
 
     },
 
@@ -420,11 +420,18 @@ console.log(result, 'result');
 
     // 添加单个关联弹窗
     checkSource(row, index) {
-      console.log(row, '22222222');
       this.isBatch = false
       this.initSourceForm()
       this.sourceForm.volumeOfDataSubjects = row.volumeOfDataSubjects
-      this.sourceForm.assetsSceneProjectAttributesActivitiesList = row.assetsSceneProjectAttributesActivitiesList || []
+
+      const maps = this.keys.map(key => {
+        const item = row[key] || [];
+        return item.map(item => {
+        const filterOption = this.actList.find(ac => ac.activitiesId === item.activitiesId);
+          return { ...filterOption, echoActivitiesValue: item.activitiesAnswerValue, answers: JSON.parse(filterOption.activitiesJson)?.answers }
+        })
+      })
+      this.sourceForm.assetsSceneProjectAttributesActivitiesList = maps.flat() || []
       this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         const isString =  typeof item.echoActivitiesValue === "string";
 
