@@ -191,8 +191,7 @@ export default {
 
     },
     methods: {
-        saveSuccess(fields, bodys) {
-            console.log(fields, bodys, 'ok')
+        saveSuccess(fields, bodys, allData) {
             const asset = this.checkedAssetObjList[this.currentIndex];
             
             bodys.forEach(newItem => {
@@ -207,7 +206,12 @@ export default {
                     
                     Object.keys(newItem.checkedFieldListAll).forEach(k => {
                         const findFields = findMain.fieldList[k] || []
-                        const newCheckFields = newItem.checkedFieldListAll[k];
+                        const newCheckFields = newItem.checkedFieldListAll[k]
+                        // let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
+                        //     if (item.id) return item;
+                        //     return this.findAttr(item.attributesId, allData)
+                        // });
+                        
                         const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.attributesId === newFields.attributesId))
                         
                         findMain.fieldList = findMain.fieldList ? findMain.fieldList : {};
@@ -226,9 +230,10 @@ export default {
                             this.$set(findMain.checkedFieldListAll, k, [])
                         }
                         
-                        findMain.fieldList[k].push(...needAddFields);
-                        findMain.checkedFieldListAll[k].push(...newCheckFields);
-                        findMain.checkedFieldList[k].push(...needAddFields.map(item => item.attributesId));
+                        const filterFields = needAddFields.filter(item => !findMain.checkedFieldList[k].includes(item.attributesId))
+                        findMain.fieldList[k].push(...filterFields);
+                        findMain.checkedFieldListAll[k].push(...filterFields);
+                        findMain.checkedFieldList[k].push(...filterFields.map(item => item.attributesId));
 
                     })
 
@@ -236,6 +241,15 @@ export default {
             })
             if (this.mainBodyIdCp) {
                 this.checkDataSubject(this.mainBodyIdCp);
+            }
+        },
+        findAttr(attributesId, data) {
+            for(let i = 0; i < data.length; i++) {
+                const item = data[i];
+                const attr = item.attributes.find(item => item.attributesId === attributesId);
+                if (attr) {
+                    return attr;
+                }
             }
         },
         addFields(item, index) {

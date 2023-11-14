@@ -167,10 +167,12 @@ export default {
 
       assetsAddAttributes(this.fieldList).then(res => {
           if(res.data.status === 200) {
-            this.relationDialog = false
-            this.fullscreenLoading = false
-            this.$emit('saveSuccess', this.fieldList, this.checkedDataSubjectObjList)
-            this.$message.success(res.data.message)
+            getProjectAttributesListByProjectId(this.projectId).then(res => {
+              this.relationDialog = false
+              this.fullscreenLoading = false
+              this.$emit('saveSuccess', this.fieldList, this.checkedDataSubjectObjList, res.data.data)
+              this.$message.success('操作成功')
+            })
           }
         })
     },

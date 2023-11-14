@@ -209,9 +209,11 @@ export default {
       this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
     },
     tranListToTreeData(list) {
+      console.log(list, 'list=======')
       const data = list.reduce((pre, cur) => {
         const len = list.filter(item => item.attributesId === cur.attributesId)
         
+        // debugger
         if (len.length === 1) {
           pre[cur.attributesId] = cur;
           return pre;
@@ -454,7 +456,7 @@ console.log(result, 'result');
       this.keys.forEach(key => {
         this.$set(this.currentRow, key, [])
       })
-
+console.log(this.keys, 'this.keys');
       this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
         data.activitiesAnswerLabel = this.getShowValue(item);
@@ -464,6 +466,7 @@ console.log(result, 'result');
         this.$set(this.currentRow, data.parent, [...(this.currentRow[data.parent] || []), data])
       })
       // this.sourceForm.activitiesName = activitiesName.join('；')
+      console.log(this.sourceForm.assetsSceneProjectAttributesActivitiesList, 'this.sourceForm.assetsSceneProjectAttributesActivitiesList');
 
       if(this.isBatch) {
         this.fieldList.forEach((item,index) => {
