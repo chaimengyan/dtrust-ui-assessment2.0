@@ -3,7 +3,7 @@ import request from '@/router/axios'
 // 资产分布(部门)
 export function getProjectOrderByDepartment(query) {
     return request({
-      url: '/assessment/info/getAssetsByLevelAndDept',
+      url: '/assessment/evaluation/getAssetsByLevelAndDept',
       method: 'get',
       params: query
     })
@@ -12,7 +12,7 @@ export function getProjectOrderByDepartment(query) {
 // 获取最近几个月的资产风险
 export function getAssetsLevelByMonth(query) {
     return request({
-      url: `/assessment/info/getAssetsLevelByMonth`,
+      url: `/assessment/evaluation/getAssetsLevelByMonth`,
       method: 'get',
       params: query
     })
@@ -30,7 +30,7 @@ export function getProjectOrderByType(query) {
 // 业务场景分布(部门)
 export function getSceneOrderByDepartment(query) {
     return request({
-      url: '/assessment/info/getSceneByLevelAndDept',
+      url: '/assessment/evaluation/getSceneByLevelAndDept',
       method: 'get',
       params: query
     })
@@ -39,7 +39,7 @@ export function getSceneOrderByDepartment(query) {
 // 获取最近几个月的业务场景风险
 export function getBusinessScenarioLevelByMonth(query) {
     return request({
-      url: `/assessment/info/getBusinessScenarioLevelByMonth`,
+      url: `/assessment/evaluation/getBusinessScenarioLevelByMonth`,
       method: 'get',
       params: query
     })

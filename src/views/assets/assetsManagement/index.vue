@@ -623,9 +623,9 @@ export default {
     },
 
     create(row, done, loading) {
-      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      }
+      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      // }
       const {sceneNames, ...rest} = this.form
       
       addObj(rest)
@@ -643,9 +643,9 @@ export default {
       });
     },
     update(row, index, done, loading) {
-      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      }
+      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      // }
       putObj(this.form)
         .then(res => {
           if(res.data.status == 200) {
