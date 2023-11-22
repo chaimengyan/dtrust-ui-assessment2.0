@@ -11,9 +11,7 @@
         <SelectField
             ref="selectField" 
             :defaultActive="defaultActive"
-            :projectId="projectId"
-            :checkedDataSubjectObjList="checkedDataSubjectObjList"
-            :disabledKeys="disabledKeys"
+            :checkedAssetObjList="checkedDataSubjectObjList"
             :isView="false"
             />
   
@@ -32,9 +30,9 @@
   <script>
   import {
     assetsAddAttributes,
-    getProjectAttributesListByProjectId
+    getAttributesListByProjectId
   } from "@/api/assets/assetsManagement";
-  import  SelectField from "@/views/assets/assetsManagement/selectField";
+  import  SelectField from "@/views/assets/reviewAssetFields/selectField";
   import { mapGetters } from "vuex";
   
   export default {
@@ -99,8 +97,8 @@
       // },
      
       // 根据资产id查询字段(业务场景用)
-      getProjectAttributesListByProjectId(id) {
-        return getProjectAttributesListByProjectId(id).then(res => {
+      getAttributesListByProjectId(id) {
+        return getAttributesListByProjectId(id).then(res => {
               this.checkedDataSubjectObjList = this.handleEchoData(res.data.data)
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
@@ -149,7 +147,7 @@
         this.projectId = row.projectId
         this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
         this.relationDialog = true
-        this.getProjectAttributesListByProjectId(this.projectId).then(()  => {
+        this.getAttributesListByProjectId(this.projectId).then(()  => {
           this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
           // this.$refs.dataSubject.echoChecked()
           this.fullscreenLoading = false

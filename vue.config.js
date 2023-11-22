@@ -3,10 +3,10 @@
  * https://cli.vuejs.org/zh/config/#%E7%9B%AE%E6%A0%87%E6%B5%8F%E8%A7%88%E5%99%A8
  *
  */
-// const url = 'http://192.168.6.247:39999'//胡宇江
+const url = 'http://192.168.6.247:39999'//胡宇江
 // const url = 'http://192.168.6.74:39999' //王傲
 // const url = 'http://api.idatatrust.com' //线上
-const url = 'http://116.205.172.167:39999' //2.0线上
+// const url = 'http://116.205.172.167:39999' //2.0线上
 // 基础路径，发布前修改这里,当前配置打包出来的资源都是相对路径
 let publicPath = './'
 

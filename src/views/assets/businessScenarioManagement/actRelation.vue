@@ -443,6 +443,7 @@ console.log(result, 'result');
       this.rowIndex = row.identification
       this.sourceDialog = true
       this.getAllAssetsActivities()
+      console.log(this.currentRow,this.fieldList, row ,'eeeeeeee');
       this.currentRow = this.fieldList.find(item => item.id === row.id);
     },
     

@@ -117,3 +117,11 @@ export function getProjectAttributesListByProjectId(id) {
         method: 'get',
     })
 }
+
+ // 根据资产id查询待审核字段
+ export function getAttributesListByProjectId(id) {
+    return request({
+        url: `/assets/assetsProjectAttributes/getAttributesListByProjectId/${id}`,
+        method: 'get',
+    })
+}

@@ -414,6 +414,7 @@ export default {
     nextStep() {
       if(this.active === 0) {
         this.checkedAssetObjList = this.$refs.relatedAssets.handleCheckedAssetObjList()
+        console.log(this.checkedAssetObjList, 'this.checkedAssetObjList....');
         if(this.checkedAssetObjList.length === 0) {
           this.$message.error(this.$t('businessScenarioManagement.请至少选择一个资产'))
         } else {
