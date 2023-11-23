@@ -16,10 +16,18 @@
             />
   
         <div class="demo-drawer__footer">
-            <el-button 
+            <!-- <el-button 
                 type="primary"
                 :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit">{{saveBtnText}}</el-button>
+                @click="relationFormSubmit">{{saveBtnText}}</el-button> -->
+              <el-button 
+                type="primary"
+                :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
+                @click="relationFormSubmit">{{'通过'}}</el-button>
+              <el-button 
+                type="danger"
+                :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
+                @click="relationFormSubmit">{{'拒绝'}}</el-button>
             <el-button 
                 icon="el-icon-circle-close"
                 @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
@@ -30,7 +38,8 @@
   <script>
   import {
     assetsAddAttributes,
-    getAttributesListByProjectId
+    getAttributesListByProjectId,
+    auditAssetsField
   } from "@/api/assets/assetsManagement";
   import  SelectField from "@/views/assets/reviewAssetFields/selectField";
   import { mapGetters } from "vuex";
@@ -103,6 +112,7 @@
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
               this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
+              console.log(this.fieldList,this.echoCheckedDataSubjectList ,'this.echoCheckedDataSubjectList' );
           })
       },
       // 获取勾选的数据主体类型
@@ -157,7 +167,7 @@
       // 提交关联字段
       relationFormSubmit() {
         this.fullscreenLoading = true
-        this.$refs.fieldRelation.saveCurd()
+        // this.$refs.fieldRelation.saveCurd()
       },
       // 子组件数据保存成功
       saveSuccess(isUpdate) {

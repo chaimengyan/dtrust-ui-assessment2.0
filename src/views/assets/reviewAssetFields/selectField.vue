@@ -193,6 +193,7 @@ export default {
             // this.mainBodyIdCp = index
             this.mainBodyName = this.checkedAssetObjList.find(item => item.mainBodyId === this.mainBodyId).mainBodyName
             this.checkedAssetObjList.length !== 0 && this.checkedAssetObjList.forEach((item, index) => {
+                console.log(item, 'lllllll');
                     if(item.mainBodyId === this.mainBodyId) {
 
                         this.categoryList = item.categoryList
@@ -202,10 +203,12 @@ export default {
                         this.dataClassList = item.dataClassList
                         this.checkedDataClass = item.checkedDataClass || []
 
-                        this.checkedFieldList = item.checkedFieldList || {}
-                        this.checkedFieldListAll = item.checkedFieldListAll || {}
+                        // this.checkedFieldList = item.checkedFieldList || {}
+                        // this.checkedFieldListAll = item.checkedFieldListAll || {}
 
-                        this.fieldList = item.fieldList
+                        this.fieldList = item.checkedFieldListAll || {}
+
+
                     }
                 })
             

@@ -125,3 +125,12 @@ export function getProjectAttributesListByProjectId(id) {
         method: 'get',
     })
 }
+
+ // 资产审核
+ export function auditAssetsField(obj) {
+    return request({
+        url: `/assets/assetsProjectAttributes/audit`,
+        method: 'put',
+        data: obj
+    })
+}

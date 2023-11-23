@@ -443,8 +443,7 @@ console.log(result, 'result');
       this.rowIndex = row.identification
       this.sourceDialog = true
       this.getAllAssetsActivities()
-      console.log(this.currentRow,this.fieldList, row ,'eeeeeeee');
-      this.currentRow = this.fieldList.find(item => item.id === row.id);
+      this.currentRow = this.fieldList.find(item => (item.id || item.attributesId) === (row.id || row.attributesId));
     },
     
     // 保存关联信息
@@ -457,7 +456,7 @@ console.log(result, 'result');
       this.keys.forEach(key => {
         this.$set(this.currentRow, key, [])
       })
-console.log(this.keys, 'this.keys');
+console.log(this.currentRow, 'this.keys');
       this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
         data.activitiesAnswerLabel = this.getShowValue(item);

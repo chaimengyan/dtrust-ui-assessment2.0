@@ -76,6 +76,7 @@ export default {
     methods: {
         // 回显选中
         echoChecked() {
+            console.log(this.checkedList, 'this.checkedListthis.checkedListthis.checkedList');
             this.checkedList = deepClone(this.echoCheckedList)
             this.handleCheckedChange(this.checkedList)
         },
@@ -93,7 +94,6 @@ export default {
             let checkedCount = value.length;
             this.checkAll = checkedCount === this.dataList.length;
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataList.length;
-
             if(this.echoCheckedListAll.length !== 0) {
                 this.checkedListAll = value.map((item,index) => {
                     return this.echoCheckedListAll.find(e => (e[this.itemId] ===item)) || this.dataList.find(d => (d[this.itemId] ===item))

@@ -419,6 +419,8 @@ export default {
           this.$message.error(this.$t('businessScenarioManagement.请至少选择一个资产'))
         } else {
           this.active++
+          console.log(this.checkedAssetObjList, 'this.checkedAssetObjList')
+
           const p = this.checkedAssetObjList[0].projectId + ''
           this.defaultActive = this.checkedAssetObjList[0].dataSubjectList[0].mainBodyIdCp
           this.$nextTick(() => {
