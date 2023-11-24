@@ -203,16 +203,16 @@ export default {
                         this.dataClassList = item.dataClassList
                         this.checkedDataClass = item.checkedDataClass || []
 
-                        // this.checkedFieldList = item.checkedFieldList || {}
-                        // this.checkedFieldListAll = item.checkedFieldListAll || {}
+                        this.checkedFieldList = item.checkedFieldList || {}
+                        this.checkedFieldListAll = item.checkedFieldListAll || {}
 
-                        this.fieldList = item.checkedFieldListAll || {}
+                        this.fieldList = {...(item.fieldListAll || {})}
 
 
                     }
                 })
             
-            console.log(this.checkedAssetObjList, '切换数据主体')
+            console.log(this.checkedAssetObjList,this.checkedFieldListAll, '切换数据主体')
             this.$nextTick(() => {
                 if('checkCategoryBox' in this.$refs) {
                     this.$refs.checkCategoryBox.echoChecked()
@@ -278,7 +278,7 @@ export default {
                     item.checkedFieldListAll[id] = checkedListAll
                 }
             })
-            console.log(this.checkedFieldListAll, this.mainBodyId, '多选框数据处理')
+            console.log(this.checkedAssetObjList, checkedListAll, '多选框数据处理')
         },
 
     }

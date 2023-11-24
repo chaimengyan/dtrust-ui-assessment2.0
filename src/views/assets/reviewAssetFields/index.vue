@@ -145,49 +145,6 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
           
         }
       },
-  
-      // create(row, done, loading) {
-      //   // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-      //   //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      //   // }
-      //   const {sceneNames, ...rest} = this.form
-        
-      //   addObj(rest)
-      //     .then(res => {
-      //       if(res.data.status == 200) {
-      //           this.getList(this.page);
-      //           done();
-      //           this.$message.success(res.data.message);
-      //       } else {
-      //           loading();
-      //       }
-      //   })
-      //   .catch(() => {
-      //       loading();
-      //   });
-      // },
-      // update(row, index, done, loading) {
-      //   // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-      //   //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      //   // }
-      //   putObj(this.form)
-      //     .then(res => {
-      //       if(res.data.status == 200) {
-      //           this.getList(this.page);
-      //           done();
-      //           // if(res.data.data === true) {
-      //           this.reassess(row.projectId)
-      //           // }
-      //           this.$message.success(res.data.message);
-      //       } else {
-      //           loading();
-      //       }
-      //   })
-      //   .catch(() => {
-      //       loading();
-      //   });
-      // },
-      
    
       selectionChange(list){
         this.ids = list.map(item => (item.projectId))

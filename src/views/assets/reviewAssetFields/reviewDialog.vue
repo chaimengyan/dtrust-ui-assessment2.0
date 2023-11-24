@@ -16,18 +16,14 @@
             />
   
         <div class="demo-drawer__footer">
-            <!-- <el-button 
-                type="primary"
-                :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit">{{saveBtnText}}</el-button> -->
               <el-button 
                 type="primary"
                 :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit">{{'通过'}}</el-button>
+                @click="relationFormSubmit(0)">{{'通过'}}</el-button>
               <el-button 
                 type="danger"
                 :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit">{{'拒绝'}}</el-button>
+                @click="relationFormSubmit(2)">{{'拒绝'}}</el-button>
             <el-button 
                 icon="el-icon-circle-close"
                 @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
@@ -81,29 +77,7 @@
      
     },
     methods: {
-      // saveField() {
-      //   this.fullscreenLoading = true
-      //   const dataList = this.$refs.selectField.getCheckedDataSubjectObjList()
-      //   this.fieldList = this.handleFieldList(dataList)
-      //   this.fieldList.forEach((item, index) => {
-      //     if(!('status' in item)){
-      //       this.fieldList[index].status = 1
-      //       this.fieldList[index].projectId = this.projectId
-      //     }
-      //   })
-      //   console.log(this.checkedDataSubjectObjList, 'checkedDataSubjectObjListcheckedDataSubjectObjList')
-  
-      //   assetsAddAttributes(this.fieldList).then(res => {
-      //       if(res.data.status === 200) {
-      //         getProjectAttributesListByProjectId(this.projectId).then(res => {
-      //           this.relationDialog = false
-      //           this.fullscreenLoading = false
-      //           this.$emit('saveSuccess', this.fieldList, this.checkedDataSubjectObjList, res.data.data)
-      //           this.$message.success('操作成功')
-      //         })
-      //       }
-      //     })
-      // },
+      
      
       // 根据资产id查询字段(业务场景用)
       getAttributesListByProjectId(id) {
@@ -111,8 +85,6 @@
               this.checkedDataSubjectObjList = this.handleEchoData(res.data.data)
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
-              this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
-              console.log(this.fieldList,this.echoCheckedDataSubjectList ,'this.echoCheckedDataSubjectList' );
           })
       },
       // 获取勾选的数据主体类型
@@ -120,12 +92,12 @@
         this.checkedDataSubjectObjList = checkedDataSubjectObjList
       },
       // 处理字段数据，用于回显字段列表
-      handleFieldList(data) {
+      handleFieldList(data, status) {
         return data.reduce((pre, cur, curIndex, arr) => {
             const Arr = Object.values(cur.checkedFieldListAll).flat()
             Arr.forEach((f,i)=> {
-                f.dataSubjectsVolume = f.dataSubjectsVolume || 0
-                f.identification = `${f.mainBodyId}+${f.attributesId}`
+              console.log(f, status, 'wwwwwww');
+                f.status = status
             })
             return pre.concat(Arr)
         }, [])
@@ -141,9 +113,13 @@
             if(!('checkedFieldListAll' in item)) {
                 item.checkedFieldListAll = {}
             }
+            if(!('fieldListAll' in item)) {
+                item.fieldListAll = {}
+            }
             item.checkedCategoryList.forEach((x, j) => {
-              item.checkedFieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
-              item.checkedFieldList[x] = item.checkedFieldListAll[x].map(a => a.attributesId)
+              // item.checkedFieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
+              item.fieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
+              // item.checkedFieldList[x] = item.checkedFieldListAll[x].map(a => a.attributesId)
             })
           })
           return data
@@ -165,9 +141,25 @@
       },
   
       // 提交关联字段
-      relationFormSubmit() {
-        this.fullscreenLoading = true
-        // this.$refs.fieldRelation.saveCurd()
+      relationFormSubmit(status) {
+        const dataList = this.$refs.selectField.getCheckedAssetObjList()
+        const isCheckField = dataList.every(item => {
+          return 'checkedFieldListAll' in item && item.checkedFieldListAll.length !== 0
+          })
+        if(isCheckField) {
+          this.fieldList = this.handleFieldList(dataList, status)
+            if(this.fieldList.length === 0) {
+              this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
+            } else {
+        // this.fullscreenLoading = true
+              auditAssetsField(this.fieldList).then(res => {
+
+              })
+              console.log(this.fieldList,status, 'this.fieldListthis.fieldList');
+            }
+        } else {
+          this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
+        }
       },
       // 子组件数据保存成功
       saveSuccess(isUpdate) {
