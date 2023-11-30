@@ -80,8 +80,8 @@
       
      
       // 根据资产id查询字段(业务场景用)
-      getAttributesListByProjectId(id) {
-        return getAttributesListByProjectId(id).then(res => {
+      getAttributesListByProjectId(query) {
+        return getAttributesListByProjectId(query).then(res => {
               this.checkedDataSubjectObjList = this.handleEchoData(res.data.data)
               this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
               this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
@@ -126,14 +126,14 @@
       },
     
       // 打开关联字段弹窗
-      relationBtn(row, relationDialogSize) {
+      relationBtn(row, status, relationDialogSize) {
         this.relationDialogSize = relationDialogSize
         this.fullscreenLoading = true
         this.active = 0
         this.projectId = row.projectId
         this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
         this.relationDialog = true
-        this.getAttributesListByProjectId(this.projectId).then(()  => {
+        this.getAttributesListByProjectId({status, projectId: this.projectId}).then(()  => {
           this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
           // this.$refs.dataSubject.echoChecked()
           this.fullscreenLoading = false

@@ -119,10 +119,11 @@ export function getProjectAttributesListByProjectId(id) {
 }
 
  // 根据资产id查询待审核字段
- export function getAttributesListByProjectId(id) {
+ export function getAttributesListByProjectId(query) {
     return request({
-        url: `/assets/assetsProjectAttributes/getAttributesListByProjectId/${id}`,
+        url: `/assets/assetsProjectAttributes/getAttributesListByProjectId`,
         method: 'get',
+        params: query
     })
 }
 
@@ -132,5 +133,14 @@ export function getProjectAttributesListByProjectId(id) {
         url: `/assets/assetsProjectAttributes/audit`,
         method: 'put',
         data: obj
+    })
+}
+
+// 资产历史版本分页查询
+export function getVersionProjectByPage(query) {
+    return request({
+        url: `/assets/assetsProject/getVersionProjectByPage`,
+        method: 'get',
+        params: query
     })
 }

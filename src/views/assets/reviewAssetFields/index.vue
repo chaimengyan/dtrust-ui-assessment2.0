@@ -50,14 +50,29 @@
             </el-button>
           </template>
           <template slot="menu" slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.待审核')" placement="top">
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleUpdate(scope.row, scope.index)"
+                @click="handleUpdate(scope.row, 1)"
                 /> 
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.已通过')" placement="top">
+              <el-button
+                v-if="permissions.assets_assetsManagement_edit"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row, 0)"
+                /> 
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.未通过')" placement="top">
+              <el-button
+                v-if="permissions.assets_assetsManagement_edit"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row, 2)"
+                /> 
             </el-tooltip>
           </template>
         </avue-crud>
@@ -199,8 +214,8 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
       handleRefreshChange() {
         this.getList(this.page);
       },
-      handleUpdate(row, index) {
-        this.$refs.reviewDialogRef.relationBtn(row, '100%')
+      handleUpdate(row, status) {
+        this.$refs.reviewDialogRef.relationBtn(row, status,'100%')
       },
     },
   };

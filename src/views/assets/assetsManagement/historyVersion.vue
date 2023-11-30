@@ -45,164 +45,9 @@
         <template slot="versionForm">
           <avue-input-number v-model="form.version" :min="curVersion"></avue-input-number>
         </template>
-        <template slot="menuLeft">
-          <el-button
-            v-if="permissions.assets_assetsManagement_add"
-            class="filter-item"
-            @click="$refs.crud.rowAdd()"
-            type="primary"
-            icon="el-icon-plus"
-            >{{$t('crudCommon.添加')}}
-          </el-button>
-          <el-button
-            v-if="permissions.assets_assetsManagement_find"
-            class="filter-item"
-            @click="findAsset"
-            type="primary"
-            icon="el-icon-position"
-            >{{$t('assetsManagement.发现资产')}}
-          </el-button>
-          <el-button
-            v-if="permissions.assets_assetsManagement_export"
-            class="filter-item"
-            @click="exportMode"
-            type="primary"
-            icon="el-icon-upload"
-            v-loading.fullscreen.lock="fullscreenLoading"
-            >{{$t('crudCommon.导出模板')}}
-          </el-button>
-          <el-button
-            v-if="permissions.assets_assetsManagement_import"
-            class="filter-item"
-            @click="importAsset"
-            type="primary"
-            icon="el-icon-document-add"
-            >{{$t('crudCommon.导入')}}
-          </el-button>
-          
-          <el-button
-            v-if="permissions.assets_assetsManagement_batchDel"
-            type="primary"
-            plain
-            icon="el-icon-delete"
-            @click="deleteBtn(false)"
-            >{{$t('crudCommon.批量删除')}} 
-          </el-button>
-        </template>
-        <template slot="menu" slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetsManagement_edit"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row, scope.index)"
-              /> 
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.关联')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetsManagement_relation"
-              type="text"
-              icon="el-icon-link"
-              @click="relationBtn(scope.row, scope.index)"
-              />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.历史记录')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetsManagement_history"
-              type="text"
-              icon="btn-icon-lishijilu"
-              @click="viewHistory(scope.row, scope.index)"
-              />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.评估')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetsManagement_assessment"
-              class="filter-item"
-              @click="openAssessment(scope.row)"
-              type="text"
-              icon="el-icon-message"
-              >
-            </el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetsManagement_del"
-              type="text"
-              icon="el-icon-delete"
-              @click="deleteBtn(scope.row, scope.index)"
-              />
-          </el-tooltip>
-        </template>
-        <template slot="sceneIdsForm">
-          <el-select v-model="form.sceneIds" multiple filterable  placeholder="请选择所属业务场景">
-            <el-option
-              v-for="item in sceneOptions"
-              :key="item.sceneId"
-              :label="item.sceneName"
-              :props="sceneProps"
-              :value="item.sceneId">
-            </el-option>
-          </el-select>
-        </template>
       </avue-crud>
     </basic-container>
-    <!-- <el-drawer size="100%" v-if="relationDialog" :visible.sync="relationDialog">
-      <div class="drawer-header" slot="title">
-        <span class="drawer-header-title" v-html="relationTitle"></span>
-        <div class="drawer-header-screen" @click="() => isFullscreen = !isFullscreen">
-          <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
-        </div>
-      </div>
-      <el-steps style="width: 60%;margin: 0 auto;" simple  :active="active" finish-status="success">
-        <el-step :title="$t('assetsManagement.选择数据主体')"></el-step>
-        <el-step :title="$t('assetsManagement.选择字段')"></el-step>
-        <el-step :title="$t('assetsManagement.字段配置')"></el-step>
-      </el-steps>
-      <DataSubject
-        v-show="active === 0"
-        ref="dataSubject"
-        :echoCheckedDataSubjectList="echoCheckedDataSubjectList"
-        @getCheckedDataSubject="getCheckedDataSubject"
-      />
-      <SelectField
-        v-show="active === 1"
-        ref="selectField" 
-        :defaultActive="defaultActive"
-        :projectId="projectId"
-        :checkedDataSubjectObjList="checkedDataSubjectObjList"
-        :isView="false"
-        />
-
-      <FieldRelation
-        v-show="active === 2"
-        ref="fieldRelation" 
-        :projectId="projectId"
-        :isView="false"
-        :fieldList="fieldList"
-        :saveBtnText="saveBtnText"
-        @saveSuccess="FieldRelationSaveSuccess"
-         />
-      <div class="demo-drawer__footer">
-          <el-button 
-            type="primary" 
-            v-if="active !== 0" 
-            icon="el-icon-top"
-            @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
-          <el-button 
-            type="primary" 
-            v-if="active !== 2" 
-            icon="el-icon-bottom"
-            @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
-          <el-button 
-            type="primary"
-            v-if="active === 2"
-            :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-            @click="relationFormSubmit">{{saveBtnText}}</el-button>
-          <el-button 
-            icon="el-icon-circle-close"
-            @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
-      </div>
-    </el-drawer> -->
+   
     <AssetsRelationField 
       ref="assetsRelationFieldRef"
       :isAssets="true"
@@ -322,23 +167,6 @@
         />
     </el-dialog>
     <el-dialog
-      v-if="historyVersionDialog" 
-      :title="$t('assetsManagement.历史版本号记录')" 
-      width="70%" 
-      :visible.sync="historyVersionDialog" 
-      append-to-body 
-      :fullscreen="isFullscreen">
-      <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetsManagement.历史版本号记录')}}</span>
-        <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
-          <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
-        </div>
-      </div>
-        <HistoryVersion
-          :projectId="projectId"
-        />
-    </el-dialog>
-    <el-dialog
       :title="$t('assetsManagement.地图')"
       width="70%"
       :visible.sync="showMap"
@@ -370,6 +198,7 @@ import {
   getAssetsProjectByPage,
   getAssetsProjectAttributesListByProjectId,
   putObj,
+  getVersionProjectByPage
 } from "@/api/assets/assetsManagement";
 import {
   getAllAssetsBusinessScene
@@ -378,7 +207,6 @@ import {
   getTableByName,
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
-import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
 import  AssetsRelationField from "@/views/assets/assetsManagement/assetsRelationField";
 import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
 import  SelectField from "@/views/assets/assetsManagement/selectField";
@@ -391,16 +219,14 @@ import { tableOption } from "@/const/crud/assets/assetsManagement";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "assetsManagement",
-  components: {HistoryVersion, 
-                AssetsRelationField,
-                DataSubject, 
-                SelectField, 
-                FieldRelation, 
-                Details, 
-                ReleaseForm, 
-                FindStart, 
-                History},
+  name: "historyVersion",
+  components: {AssetsRelationField, DataSubject, SelectField, FieldRelation, Details, ReleaseForm, FindStart, History},
+  props: {
+        projectId: {
+            type: Number,
+            default: 0
+        }
+    },
   data() {
     return {
       active: 0,
@@ -432,9 +258,7 @@ export default {
       // 启动评估弹窗
       assessmentDialog: false,
       saveBtnText: this.$t('assetsManagement.保存'),
-      
-      // 资产id
-      projectId: 0,
+     
       // 查看详情配置项
       viewColumn: [],
       // 查看详情数据
@@ -461,7 +285,6 @@ export default {
 
       // 历史记录弹窗
       historyDialog: false,
-      historyVersionDialog: false,
       showMap:false,
       map: null,
       searchLocation: '',
@@ -622,11 +445,12 @@ export default {
     },
     getList(page, params) {
       this.listLoading = true;
-      getAssetsProjectByPage(
+      getVersionProjectByPage(
         Object.assign(
           {
             current: page.currentPage,
             size: page.pageSize,
+            projectId: this.projectId
           },
           params
         )
@@ -661,7 +485,11 @@ export default {
       if(column.label === '版本号') {
         console.log(row, column, 'row, column');
         this.projectId = row.projectId
-        this.historyVersionDialog = true
+        this.viewColumn = this.$refs.crud.columnOption
+        this.rowData = row
+        this.detailsDialog = true
+        this.getAssetsProjectAttributesListByProjectId(row.projectId)
+        
       }
     },
 
