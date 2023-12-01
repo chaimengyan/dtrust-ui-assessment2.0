@@ -214,6 +214,7 @@ export default {
         const len = list.filter(item => item.attributesId === cur.attributesId)
         
         // debugger
+        cur.id = cur.identification
         if (len.length === 1) {
           pre[cur.attributesId] = cur;
           return pre;

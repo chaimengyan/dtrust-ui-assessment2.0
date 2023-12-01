@@ -68,3 +68,12 @@ export function getProjectAttributesBySceneId(sceneId) {
       params: query
     })
   }
+
+  // 业务场景审核(新增)
+export function auditScene(obj) {
+    return request({
+        url: `/assets/assetsBusinessScene/audit`,
+        method: 'put',
+        data: obj
+    })
+}

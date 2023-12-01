@@ -231,6 +231,7 @@ export default {
             this.checkedDataSubjectObjList.length !== 0 && this.checkedDataSubjectObjList.forEach((item,index) => {
                 if(item.mainBodyId === this.mainBodyId) {
                     item.checkedDataClass = val
+                    item.dataClassList = [...this.dataClassList]
                 }
             })
             this.getAllAttributesByIds(this.checkedCategoryList, this.checkedDataClass, this.mainBodyId, '')

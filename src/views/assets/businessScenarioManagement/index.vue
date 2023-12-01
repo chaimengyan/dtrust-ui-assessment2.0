@@ -113,6 +113,14 @@
               @click="deleteBtn(scope.row, scope.index)"
               />
           </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.审核')" placement="top">
+            <el-button
+              v-if="permissions.assets_businessScenario_del&&scope.row.status === 1"
+              type="text"
+              icon="el-icon-s-check"
+              @click="examineBtn(scope.row, scope.index)"
+              />
+          </el-tooltip>
         </template>
       </avue-crud>
     </basic-container>
@@ -293,7 +301,8 @@ import {
   delObj,
   getAssetsBusinessSceneByPage,
   putObj,
-  getProjectAttributesBySceneId
+  getProjectAttributesBySceneId,
+  auditScene
 } from "@/api/assets/businessScenarioManagement";
 import {
   getTableByName,
@@ -758,6 +767,31 @@ export default {
           });
         })
     },
+    examineBtn(row) {
+      this.$confirm(this.$t('crudCommon.是否通过审核'), this.$t('crudCommon.提示'), {
+        confirmButtonText: this.$t('crudCommon.通过'),
+        cancelButtonText: this.$t('crudCommon.不通过'),
+        type: "warning",
+      })
+        .then(() => {
+          this.auditScene({sceneId: row.sceneId, status: 2})
+        })
+        .catch(() => {
+          this.auditScene({sceneId: row.sceneId, status: 3})         
+        });
+    },
+    auditScene(obj) {
+      auditScene(obj).then((res) => {
+        if (res.data.status == 200) {
+          this.$message.success(res.data.message);
+          this.$refs.crud.toggleSelection()
+          this.handleRefreshChange();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    },
+   
   },
 };
 </script>

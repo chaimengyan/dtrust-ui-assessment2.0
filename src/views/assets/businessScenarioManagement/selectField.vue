@@ -193,10 +193,12 @@ export default {
     methods: {
         saveSuccess(fields, bodys, allData) {
             const asset = this.checkedAssetObjList[this.currentIndex];
-            
+            console.log(bodys, asset, 'ok')
             bodys.forEach(newItem => {
                 const findMain = asset.dataSubjectList.find(item => item.mainBodyId === newItem.mainBodyId);
                 if (findMain) {
+                    console.log(findMain, 'findMainfindMain')
+                    
                     const needAddMains = newItem.checkedCategoryListAll?.filter(item => !findMain.categoryList.find(newItem => newItem.categoryId === item.categoryId))
                     if (needAddMains?.length) {
                         findMain.categoryList.push(...needAddMains);
@@ -237,6 +239,15 @@ export default {
 
                     })
 
+                } else {
+                    asset.dataSubjectList.push({
+                        ...newItem,
+                        attributes: Object.values(newItem.checkedFieldListAll).flat(),
+                        categoryList: newItem.checkedCategoryListAll,
+                        mainBodyIdCp: `${newItem.mainBodyId}+${asset.projectId}`,
+                        fieldList: newItem.checkedFieldListAll,
+                        typeList: newItem.dataClassList?.filter(item => newItem.checkedDataClass?.includes(item.typeId)) || [],
+                    })
                 }
             })
             if (this.mainBodyIdCp) {

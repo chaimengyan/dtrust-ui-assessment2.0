@@ -62,7 +62,7 @@
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
-                icon="el-icon-edit"
+                icon="el-icon-circle-check"
                 @click="handleUpdate(scope.row, 0)"
                 /> 
             </el-tooltip>
@@ -70,7 +70,7 @@
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
-                icon="el-icon-edit"
+                icon="el-icon-circle-close"
                 @click="handleUpdate(scope.row, 2)"
                 /> 
             </el-tooltip>
