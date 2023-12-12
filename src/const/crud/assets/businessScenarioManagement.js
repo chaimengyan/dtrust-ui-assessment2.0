@@ -451,6 +451,9 @@ return option
 export const actRelationOption = (_this, isView, isOverHidden) => {
   return {
     selection: !isView,
+    selectable:(row,index)=>{
+      return !('children' in row);
+    },
     rowKey: 'id',
     rowParentKey: 'attributesId',
     reserveSelection:true,

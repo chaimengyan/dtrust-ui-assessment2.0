@@ -51,16 +51,17 @@
           </div>
           <el-form ref="sourceForm" :model="sourceForm" label-width="100px" style="width:50%">
             <el-form-item :label="$t('assetsManagement.字段来源')">
-              <el-select v-model="sourceForm.parentProjectAttributesIds" filterable multiple>
+              <el-select v-model="sourceForm.sourceName" filterable>
                 <el-option
                   v-for="item in sourceOptions"
-                  :key="item.parentId"
-                  :label="item.projectName"
-                  :value="item.parentId">
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  >
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('assetsManagement.数据数量')">
+            <el-form-item :label="$t('assetsManagement.字段数量')">
               <el-input-number v-model="sourceForm.dataSubjectsVolume" :min="0" />
             </el-form-item>
           </el-form>
@@ -117,7 +118,19 @@ export default {
         sourceDialog: false,
         rowIndex: '',
         sourceForm: {},
-        sourceOptions: [],
+        sourceOptions: [{
+          label: '直接来自个人',
+          value: '0'
+        }, {
+          label: '内部系统',
+          value: '1'
+        }, {
+          label: '第三方系统',
+          value: '2'
+        }, {
+          label: '离线导入',
+          value: '3'
+        }, ],
         identificationList: [],
         rowList: [],
         // 是否是批量关联
@@ -163,11 +176,10 @@ export default {
       // 初始化sourceForm
       initSourceForm() {
         this.sourceForm = {
-          parentProjectAttributesIds: [],
-          parentProjectAttributesNames: '',
+          sourceName: '',
           dataSubjectsVolume: 0,
         }
-        this.sourceOptions = []
+        // this.sourceOptions = []
       },
       // 搜索事件
       searchChange(param, done) {
@@ -207,7 +219,7 @@ export default {
         const obj = this.rowList.map(r => {
           return {attributesId: r.attributesId, projectId: this.projectId, mainBodyId: r.mainBodyId}
         })
-        this.getAssetsProjectAttributes(obj)
+        // this.getAssetsProjectAttributes(obj)
         this.isBatch = true
         this.sourceTitle = this.$t('assetsManagement.批量配置')
         this.initSourceForm()
@@ -239,16 +251,10 @@ export default {
         this.initSourceForm()
         this.sourceTitle = this.$t('assetsManagement.配置')
         this.rowIndex = row.identification
-        this.sourceForm.parentProjectAttributesNames = row.parentProjectAttributesNames
-        // 过滤初始字段来源
-        if(row.parentProjectAttributesIds?.length !== 0 && row.parentProjectAttributesIds?.includes(this.projectId)) {
-          this.sourceForm.parentProjectAttributesIds = []
-        } else {
-          this.sourceForm.parentProjectAttributesIds = row.parentProjectAttributesIds
-        }
+        this.sourceForm.sourceName = row.sourceName
         this.sourceForm.dataSubjectsVolume = row.dataSubjectsVolume
         this.sourceDialog = true
-        this.getAssetsProjectAttributesByAttributeId(row.attributesId, row.mainBodyId, this.projectId)
+        // this.getAssetsProjectAttributesByAttributeId(row.attributesId, row.mainBodyId, this.projectId)
       },
       
       // 获取字段来源
@@ -266,16 +272,6 @@ export default {
       },
       // 保存字段来源
       saveSource() {
-        const parentProjectAttributesNames = []
-        this.sourceOptions.forEach(item => {
-          if(this.sourceForm.parentProjectAttributesIds.includes(item.parentId)) {
-            parentProjectAttributesNames.push(item.projectName)
-          }
-        })
-        console.log(parentProjectAttributesNames, "parentProjectAttributesNames");
-        // 没有选字段来源时默认来源当前资产，选择字段来源时覆盖默认资产
-        this.sourceForm.parentProjectAttributesNames = parentProjectAttributesNames.length !== 0 ? parentProjectAttributesNames.toString() : this.sourceForm.parentProjectAttributesNames
-        
         if(this.isBatch) {
           this.fieldList.forEach((item,index) => {
             if(this.identificationList.includes(item.identification)) {

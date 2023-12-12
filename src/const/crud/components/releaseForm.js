@@ -15,6 +15,13 @@ export const releaseFormOption = (_this) => {
             span: 24,
         },
         {
+            label: _this.$t('evaluationRecord.问卷类型'),
+            prop: 'type',
+            type: 'select',
+            formslot: true,
+            span: 24,
+        },
+        {
             label: _this.$t('evaluationRecord.问卷'),
             prop: 'qnId',
             type: 'select',
@@ -27,8 +34,14 @@ export const releaseFormOption = (_this) => {
             span: 24,
         },
         {
+            label: _this.$t('evaluationRecord.指派方式'),
+            prop: 'mode',
+            formslot: true,
+            span: 24,
+        },
+        {
             label: _this.$t('evaluationRecord.被评估人'),
-            prop: 'evaluatorsHandle',
+            prop: 'evaluators',
             formslot: true,
             rules: [{
                 required: true,
@@ -39,7 +52,7 @@ export const releaseFormOption = (_this) => {
         },
         {
             label: _this.$t('evaluationRecord.审核人'),
-            prop: 'auditors',
+            prop: 'auditorIds',
             type: 'select',
             multiple: true,
             dicUrl: '/admin/user/getList',
@@ -52,6 +65,12 @@ export const releaseFormOption = (_this) => {
                 message: `${_this.$t('crudCommon.请选择')}${_this.$t('evaluationRecord.审核人')}`,
                 trigger: 'change'
             }],
+            span: 24,
+        },
+        {
+            label: _this.$t('evaluationRecord.审核方式'),
+            prop: 'sign',
+            formslot: true,
             span: 24,
         },
         {

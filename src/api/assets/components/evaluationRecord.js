@@ -3,7 +3,7 @@ import request from '@/router/axios'
 // 分页查询评估记录
 export function getRisksByPage (query) {
     return request({
-        url: '/assessment/risk/getRisksByPage',
+        url: '/assessment/evaluation/page',
         method: 'get',
         params: query
     })

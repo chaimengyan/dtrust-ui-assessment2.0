@@ -9,21 +9,28 @@
       
      
         <SelectField
+            v-if="fieldStatus === 1"
             ref="selectField" 
             :defaultActive="defaultActive"
             :checkedAssetObjList="checkedDataSubjectObjList"
             :isView="false"
             />
-  
-        <div class="demo-drawer__footer">
+        <FieldRelation
+          v-else
+          ref="fieldRelation" 
+          :projectId="projectId"
+          :isView="true"
+          :fieldList="fieldList"
+          />
+        <div class="demo-drawer__footer" v-if="fieldStatus === 1">
               <el-button 
                 type="primary"
-                :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit(0)">{{'通过'}}</el-button>
+                icon="el-icon-circle-check"
+                @click="relationFormSubmit(0)">{{$t('evaluationRecord.通过')}}</el-button>
               <el-button 
                 type="danger"
-                :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-                @click="relationFormSubmit(2)">{{'拒绝'}}</el-button>
+                icon="el-icon-circle-close"
+                @click="relationFormSubmit(2)">{{$t('evaluationRecord.拒绝')}}</el-button>
             <el-button 
                 icon="el-icon-circle-close"
                 @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
@@ -38,11 +45,12 @@
     auditAssetsField
   } from "@/api/assets/assetsManagement";
   import  SelectField from "@/views/assets/reviewAssetFields/selectField";
+  import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
   import { mapGetters } from "vuex";
   
   export default {
     name: "reviewDialog",
-    components: { SelectField},
+    components: { FieldRelation,SelectField},
     props: {
         isAssets: {
             type: Boolean,
@@ -68,7 +76,8 @@
         fieldList: [],
         isFullscreen: false,
         disabledKeys: null,
-        relationDialogSize: '100%'
+        relationDialogSize: '100%',
+        fieldStatus: 0,
       };
     },
     computed: {
@@ -96,7 +105,6 @@
         return data.reduce((pre, cur, curIndex, arr) => {
             const Arr = Object.values(cur.checkedFieldListAll).flat()
             Arr.forEach((f,i)=> {
-              console.log(f, status, 'wwwwwww');
                 f.status = status
             })
             return pre.concat(Arr)
@@ -127,14 +135,24 @@
     
       // 打开关联字段弹窗
       relationBtn(row, status, relationDialogSize) {
-        this.relationDialogSize = relationDialogSize
         this.fullscreenLoading = true
+        this.relationDialog = true
+
+        this.fieldStatus = status
+        this.relationDialogSize = relationDialogSize
         this.active = 0
         this.projectId = row.projectId
         this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
-        this.relationDialog = true
         this.getAttributesListByProjectId({status, projectId: this.projectId}).then(()  => {
-          this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
+          if(this.checkedDataSubjectObjList.length === 0) {
+            this.$message.error('暂无数据')
+            this.relationDialog = false
+            this.fullscreenLoading = false
+            return 
+          }
+          if([0,2].includes(status)){
+            this.fieldList = this.checkedDataSubjectObjList.map(x=>x.attributes).flat()
+          }
           // this.$refs.dataSubject.echoChecked()
           this.fullscreenLoading = false
         })
@@ -151,9 +169,11 @@
             if(this.fieldList.length === 0) {
               this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
             } else {
-        // this.fullscreenLoading = true
+              this.fullscreenLoading = true
               auditAssetsField(this.fieldList).then(res => {
-
+                this.$message.success(res.data.message)
+                this.relationDialog = false
+                this.fullscreenLoading = false
               })
               console.log(this.fieldList,status, 'this.fieldListthis.fieldList');
             }

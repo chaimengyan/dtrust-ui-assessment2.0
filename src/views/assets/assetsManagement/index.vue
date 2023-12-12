@@ -88,6 +88,14 @@
             @click="deleteBtn(false)"
             >{{$t('crudCommon.批量删除')}} 
           </el-button>
+          <el-button
+            v-if="permissions.assets_assetsManagement_batchDel"
+            type="primary"
+            plain
+            icon="el-icon-document-copy"
+            @click="copyBtn(false)"
+            >{{$t('crudCommon.批量复制')}} 
+          </el-button>
         </template>
         <template slot="menu" slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
@@ -130,6 +138,14 @@
               type="text"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"
+              />
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.复制')" placement="top">
+            <el-button
+              v-if="permissions.assets_assetsManagement_del"
+              type="text"
+              icon="el-icon-document-copy"
+              @click="copyBtn(scope.row, scope.index)"
               />
           </el-tooltip>
         </template>
@@ -370,6 +386,7 @@ import {
   getAssetsProjectByPage,
   getAssetsProjectAttributesListByProjectId,
   putObj,
+  copyObj
 } from "@/api/assets/assetsManagement";
 import {
   getAllAssetsBusinessScene
@@ -584,7 +601,9 @@ export default {
     getAssetsProjectAttributesListByProjectId(id) {
         return getAssetsProjectAttributesListByProjectId(id).then(res => {
             this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
+            console.log(this.echoCheckedDataSubjectList, '????????');
             this.fieldList = this.handleFieldList(this.echoCheckedDataSubjectList)
+            console.log(this.fieldList,'this.fieldList');
         })
     },
     // 获取勾选的数据主体类型
@@ -666,12 +685,16 @@ export default {
     },
 
     create(row, done, loading) {
-      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      // }
-      const {sceneNames, ...rest} = this.form
-      
-      addObj(rest)
+      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      }
+      let formReduce = {}
+      for(let key in this.form) {
+        if(key.substr(0, 1) !== '$') {
+          formReduce[key] = this.form[key]
+        }
+      }
+      addObj(formReduce)
         .then(res => {
           if(res.data.status == 200) {
               this.getList(this.page);
@@ -686,10 +709,16 @@ export default {
       });
     },
     update(row, index, done, loading) {
-      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      // }
-      putObj(this.form)
+      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      }
+      let formReduce = {}
+      for(let key in this.form) {
+        if(key.substr(0, 1) !== '$') {
+          formReduce[key] = this.form[key]
+        }
+      }
+      putObj(formReduce)
         .then(res => {
           if(res.data.status == 200) {
               this.getList(this.page);
@@ -797,7 +826,7 @@ export default {
     assessmentFormSubmit() {
       this.fullscreenLoading = false
       this.$refs.releaseForm.releaseSave()
-      this.assessmentDialog = false
+      // this.assessmentDialog = false
     },
 
     // 关闭评估弹窗
@@ -858,6 +887,29 @@ export default {
       })
         .then(() => {
           delObj(ids).then((res) => {
+            if (res.data.status === 200) {
+              this.$message.success(res.data.message);
+              this.$refs.crud.toggleSelection()
+              this.handleRefreshChange();
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
+        })
+    },
+    copyBtn(row) {
+      const ids = row ? [row.projectId] : this.ids
+      if(!ids.length) {
+        this.$message.error(this.$t('crudCommon.请选择要复制的数据'));
+        return
+      }
+      this.$confirm(this.$t('crudCommon.是否复制本条数据'), this.$t('crudCommon.提示'), {
+        confirmButtonText: this.$t('crudCommon.复制'),
+        cancelButtonText: this.$t('crudCommon.不复制'),
+        type: "warning",
+      })
+        .then(() => {
+          copyObj(ids).then((res) => {
             if (res.data.status === 200) {
               this.$message.success(res.data.message);
               this.$refs.crud.toggleSelection()

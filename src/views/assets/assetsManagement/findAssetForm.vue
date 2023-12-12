@@ -25,6 +25,10 @@
 
 <script>
 import { tableOption } from "@/const/crud/assets/assetsManagement";
+import {
+  getTableByName,
+  getAssetsFieldByTableName
+} from "@/api/customConfiguration/tableConfiguration";
 export default {
     name: "FindAssetForm",
     components: {
@@ -46,16 +50,31 @@ export default {
             findAssetForm: {},
             showMap:false,
             map: null,
+            findAssetFormOption: {},
         }
     },
     computed: {
-        findAssetFormOption() {
-            return tableOption(this, this.$route.query.tenantId, false, true)
-        },
+        // findAssetFormOption() {
+        //     return tableOption(this, this.$route.query.tenantId, false, true)
+        // },
     },
     created() {
+        this.getTable()
     },
     methods: {
+        //查询table/资产表格/表单配置
+        getTable() {
+            getTableByName('asset').then(tableRes => {
+                getAssetsFieldByTableName('asset').then(res => {
+                    const findAssetFormOption = {
+                        ...tableRes.data.data,
+                        column: res.data.data
+                    };
+                    tableOption(this, this.$route.query.tenantId, false, true, findAssetFormOption)
+                    // this.$refs.crud.refreshTable()
+                })
+            })
+        },
          openMap() {
             this.showMap = true
             if (this.map) return;

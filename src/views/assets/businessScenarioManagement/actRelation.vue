@@ -51,6 +51,7 @@
           </template>
           <template slot-scope="{row,index}" slot="menu">
             <el-button
+              v-if="!('children' in row)"
               type="text"
               size="small"
               icon="el-icon-setting"

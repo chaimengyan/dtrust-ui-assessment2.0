@@ -50,7 +50,7 @@
             </el-button>
           </template>
           <template slot="menu" slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.待审核')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.待审核')" placement="top">
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
@@ -58,7 +58,7 @@
                 @click="handleUpdate(scope.row, 1)"
                 /> 
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.已通过')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.通过')" placement="top">
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
@@ -66,7 +66,7 @@
                 @click="handleUpdate(scope.row, 0)"
                 /> 
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.未通过')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.拒绝')" placement="top">
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"

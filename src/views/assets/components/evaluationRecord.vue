@@ -18,28 +18,25 @@
                     <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
                 </template>
                 <!-- 被评估人 -->
-                <template slot="evaluatorName" slot-scope="scope">
+                <template slot="evaluators" slot-scope="scope">
                     <span>
-                        {{ evaluator(scope.row) }}
+                        {{ scope.row.evaluators.map(item => item.nickName).toString() }}
                     </span>
                 </template>
 
                 <!-- 审核人 -->
-                <template slot="auditorsNickName" slot-scope="scope">
+                <template slot="auditors" slot-scope="scope">
                     <span>
-                        <!-- <el-tag v-for="item, index in scope.row.auditorsNickName" :key="index">
-                            {{ item }}
-                        </el-tag> -->
-                        {{scope.row.auditorsNickName.join()}}
+                        {{scope.row.auditors.map(item => item.nickName).toString()}}
                     </span>
                 </template>
                 
                 <!-- 评估状态 -->
-                <template slot="assessStatus" slot-scope="scope">
+                <template slot="status" slot-scope="scope">
                     <span>
                         <el-tag 
-                            :type="assessStatusList[scope.row.assessStatus].type">
-                            {{ assessStatusList[scope.row.assessStatus].label }}
+                            :type="assessStatusList[scope.row.status].type">
+                            {{ assessStatusList[scope.row.status].label }}
                         </el-tag>
                     </span>
                 </template>
@@ -59,21 +56,21 @@
                 </template>
 
                 <!-- 风险点 -->
-                <template slot="questionLevels" slot-scope="scope">
+                <template slot="risks" slot-scope="scope">
                     <span>
-                        <div v-if="!scope.row.questionLevels||scope.row.questionLevels.length === 0">
+                        <div v-if="!scope.row.risks||scope.row.risks.length === 0">
                             {{$t('crudCommon.暂无')}}
                         </div>
                         <div class="questionLevels" v-else>
                             <div
                                 class="questionLevels-item"
-                                v-for="(item, index) in scope.row.questionLevels" 
-                                :style="`background-color:${tagColor[index]}`"
+                                v-for="(item, index) in scope.row.risks" 
+                                :style="`background-color:${item.color}`"
                                 :key="item.levelId"
                                 >
                                 <el-tooltip effect="dark" :content="item.levelName">
                                     <div class="questionLevels-item-font">
-                                        {{item.number}}
+                                        {{item.count}}
                                     </div>
                                 </el-tooltip>
                             </div>
@@ -83,16 +80,16 @@
                 </template>
 
                 <!-- 评分标准 -->
-                <template slot="type" slot-scope="scope">
+                <template slot="scoringCriteria" slot-scope="scope">
                     <span>
-                        {{ totalStandard[scope.row.type] || $t('crudCommon.暂无')}}
+                        {{ scope.row.scores[0] ? totalStandard[scope.row.scores[0].type] : $t('crudCommon.暂无')}}
                     </span>
                 </template>
 
                 <!-- 分数 -->
-                <template slot="grade" slot-scope="scope">
+                <template slot="scores" slot-scope="scope">
                     <span>
-                        {{ grade(scope.row.grade, scope.row.type).score || $t('crudCommon.暂无') }}
+                        {{ scope.row.scores[0] ? scope.row.scores[0].score : $t('crudCommon.暂无') }}
                     </span>
                 </template>
 
@@ -448,10 +445,10 @@
                         params
                     )
                 ).then(res => {
-                    this.recordList = []
-                    res.data.data.records.forEach((item, index) => {
-                        this.$set(this.recordList, index, {...item.assessInfoDTO, ...item.assessRisk, type: item.type})
-                    })
+                    this.recordList = res.data.data.records
+                    // res.data.data.records.forEach((item, index) => {
+                    //     this.$set(this.recordList, index, {...item.assessInfoDTO, ...item.assessRisk, type: item.type})
+                    // })
                     this.page.total = res.data.data.total;
                     this.listLoading = false;
                 });

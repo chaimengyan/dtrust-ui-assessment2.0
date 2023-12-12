@@ -48,6 +48,14 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
         },
     {
+        label: _this.$t('assetsManagement.修改来源'),
+        prop: 'evaluationName',
+        type: 'textarea',
+        span: 24,
+        minRows: 1,
+        overHidden: isOverHidden,
+        },
+    {
         label: _this.$t('businessScenarioManagement.编辑字段'),
         prop: 'projectUpdate',
         type: 'textarea',

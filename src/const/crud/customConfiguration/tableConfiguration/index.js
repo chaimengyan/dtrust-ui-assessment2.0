@@ -165,7 +165,7 @@ export const tableOption = (_this, isOverHidden) => {
         prop: 'entityName',
         span: 24,
         rules: [{
-          required: true,
+          required: false,
           message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
           trigger: 'blur'
         }],

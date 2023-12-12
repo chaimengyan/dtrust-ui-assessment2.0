@@ -378,12 +378,26 @@ export const fieldRelationOption = (_this, isView, isOverHidden) => {
       },
       {
         label:_this.$t('assetsManagement.字段来源'),
-        prop:'parentProjectAttributesNames',
+        prop:'sourceName',
+        type: 'select',
+        dicData: [{
+          label: '直接来自个人',
+          value: '0'
+        }, {
+          label: '内部系统',
+          value: '1'
+        }, {
+          label: '第三方系统',
+          value: '2'
+        }, {
+          label: '离线导入',
+          value: '3'
+        },],
         sortable:true,
         overHidden: isOverHidden,
       },
       {
-        label:_this.$t('assetsManagement.数据数量'),
+        label:_this.$t('assetsManagement.字段数量'),
         prop:'dataSubjectsVolume',
         sortable:true,
       },

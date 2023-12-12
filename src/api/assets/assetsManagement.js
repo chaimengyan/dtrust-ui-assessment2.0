@@ -84,6 +84,14 @@ export function delObj(idList) {
     })
 }
 
+// 资产复制
+export function copyObj(idList) {
+    return request({
+        url: `/assets/assetsProject/copyProject?idList=${idList}`,
+        method: 'put',
+    })
+}
+
 // 资产添加字段
 export function assetsAddAttributes (obj) {
     return request({

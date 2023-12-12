@@ -34,24 +34,44 @@ export const activitiesCategoryOptions = [
 
   // 评估记录问卷状态
 export const assessStatusList = {
-  1: {
+  0: {
       type: '',
-      label: i18n.t('enum.填写中')
+      label: i18n.t('enum.填写中'),
+      value: 0
+      },
+  1: {
+        type: 'info',
+        label: i18n.t('evaluationRecord.待审核'),
+        value: 1
       },
   2: {
       type: 'warning',
-      label: i18n.t('enum.审核中')
+      label: i18n.t('enum.审核中'),
+      value: 2
       },
   3: {
       type: 'success',
-      label: i18n.t('enum.通过')
+      label: i18n.t('enum.通过'),
+      value: 3
       },
   4: {
       type: 'danger',
-      label: i18n.t('enum.拒绝')
+      label: i18n.t('enum.拒绝'),
+      value: 4
       },
   5: {
-      type: 'danger',
-      label: i18n.t('enum.已驳回')
+      type: '',
+      label: i18n.t('enum.驳回中'),
+      value: 5
       },
+  6: {
+      type: 'info',
+      label: i18n.t('enum.已截止'),
+      value: 6
+  },
+  7: {
+      type: 'warning',
+      label: i18n.t('findList.已填写'),
+      value: 7
+  },
 }
