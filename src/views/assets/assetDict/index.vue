@@ -25,6 +25,7 @@
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button
               v-if="permissions.assets_assetDict_edit"
+              :disabled="scope.row.createBy === 'admin'"
               type="text"
               size="small"
               icon="el-icon-edit"
@@ -34,6 +35,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('assetDict.字典项')" placement="top">
             <el-button
               v-if="permissions.assets_assetDict_dictItem && scope.row.type === 'select'"
+              :disabled="scope.row.createBy === 'admin'"
               type="text"
               size="small"
               icon="el-icon-menu"

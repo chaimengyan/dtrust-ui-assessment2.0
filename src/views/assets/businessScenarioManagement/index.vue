@@ -693,16 +693,25 @@ export default {
       this.$refs.crud.rowEdit(row, index);
     },
     create(row, done, loading) {
-      if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
-        this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
+      // if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
+      //   this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
+      // }
+      // if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
+      //   this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
+      // }
+      // if(Array.isArray(this.form.dataSubjectsRegion)) {
+      //   this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
+      // }
+      let formReduce = {}
+      for(let key in this.form) {
+        if(Array.isArray(this.form[key])) {
+          this.form[key] = this.form[key].join()
+        }
+        if(key.substr(0, 1) !== '$') {
+          formReduce[key] = this.form[key]
+        }
       }
-      if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
-        this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
-      }
-      if(Array.isArray(this.form.dataSubjectsRegion)) {
-        this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
-      }
-      addObj(this.form)
+      addObj(formReduce)
         .then(res => {
           if(res.data.status == 200) {
               this.getList(this.page);
@@ -717,16 +726,25 @@ export default {
       });
     },
     update(row, index, done, loading) {
-      if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
-        this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
+      // if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
+      //   this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
+      // }
+      // if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
+      //   this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
+      // }
+      // if(Array.isArray(this.form.dataSubjectsRegion)) {
+      //   this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
+      // }
+      let formReduce = {}
+      for(let key in this.form) {
+        if(Array.isArray(this.form[key])) {
+          this.form[key] = this.form[key].join()
+        }
+        if(key.substr(0, 1) !== '$') {
+          formReduce[key] = this.form[key]
+        }
       }
-      if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
-        this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
-      }
-      if(Array.isArray(this.form.dataSubjectsRegion)) {
-        this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
-      }
-      putObj(this.form)
+      putObj(formReduce)
         .then(res => {
           if(res.data.status == 200) {
               this.getList(this.page);

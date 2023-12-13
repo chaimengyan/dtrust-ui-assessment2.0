@@ -685,11 +685,14 @@ export default {
     },
 
     create(row, done, loading) {
-      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      }
+      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      // }
       let formReduce = {}
       for(let key in this.form) {
+        if(Array.isArray(this.form[key])) {
+          this.form[key] = this.form[key].join()
+        }
         if(key.substr(0, 1) !== '$') {
           formReduce[key] = this.form[key]
         }
@@ -709,11 +712,14 @@ export default {
       });
     },
     update(row, index, done, loading) {
-      if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
-        this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
-      }
+      // if(Array.isArray(this.form.organizationalSecurityMeasures) || typeof this.form.organizationalSecurityMeasures === 'object') {
+      //   this.form.organizationalSecurityMeasures = this.form.organizationalSecurityMeasures.join()
+      // }
       let formReduce = {}
       for(let key in this.form) {
+        if(Array.isArray(this.form[key])) {
+          this.form[key] = this.form[key].join()
+        }
         if(key.substr(0, 1) !== '$') {
           formReduce[key] = this.form[key]
         }

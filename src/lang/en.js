@@ -76,7 +76,7 @@ export default {
     法规依据: 'Regulatory basis',
     评估管理: 'Assessment management',
     评估列表: 'Evaluation list',
-    风险治理: 'Risk governance',
+    审核风险: 'Audit risk',
     事项管理: 'Event management',
     风险评分: 'Risk score',
     数据仪表盘: 'Data Dashboard',

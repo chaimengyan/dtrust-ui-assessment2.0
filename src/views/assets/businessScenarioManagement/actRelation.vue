@@ -445,7 +445,8 @@ console.log(result, 'result');
       this.rowIndex = row.identification
       this.sourceDialog = true
       this.getAllAssetsActivities()
-      this.currentRow = this.fieldList.find(item => (item.id || item.attributesId) === (row.id || row.attributesId));
+      this.currentRow = this.fieldList.find(item => item.identification === row.identification);
+      console.log(this.currentRow,this.fieldList,row, 'currentRowcurrentRow');
     },
     
     // 保存关联信息

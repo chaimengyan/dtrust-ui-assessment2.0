@@ -208,11 +208,11 @@ export default {
                     
                     Object.keys(newItem.checkedFieldListAll).forEach(k => {
                         const findFields = findMain.fieldList[k] || []
-                        const newCheckFields = newItem.checkedFieldListAll[k]
-                        // let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
-                        //     if (item.id) return item;
-                        //     return this.findAttr(item.attributesId, allData)
-                        // });
+                        // const newCheckFields = newItem.checkedFieldListAll[k]
+                        let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
+                            if (item.id) return item;
+                            return this.findAttr(item.attributesId, allData)
+                        });
                         
                         const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.attributesId === newFields.attributesId))
                         
