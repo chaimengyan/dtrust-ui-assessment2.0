@@ -20,7 +20,7 @@
       />
       <SelectField
           v-show="active === 1"
-          ref="selectField" 
+          ref="selectField"
           :defaultActive="defaultActive"
           :projectId="projectId"
           :checkedDataSubjectObjList="checkedDataSubjectObjList"
@@ -31,7 +31,7 @@
       <FieldRelation
           v-if="isAssets"
           v-show="active === 2"
-          ref="fieldRelation" 
+          ref="fieldRelation"
           :projectId="projectId"
           :isView="false"
           :fieldList="fieldList"
@@ -39,27 +39,27 @@
           @saveSuccess="saveSuccess"
           />
       <div class="demo-drawer__footer">
-          <el-button 
-              type="primary" 
-              v-if="active !== 0" 
+          <el-button
+              type="primary"
+              v-if="active !== 0"
               icon="el-icon-top"
               @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
-          <el-button 
-              type="primary" 
-              v-if="active === 0 || active !== 2 && isAssets" 
+          <el-button
+              type="primary"
+              v-if="active === 0 || active !== 2 && isAssets"
               icon="el-icon-bottom"
               @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
-          <el-button 
-              type="primary" 
-              v-if="active === 1 && !isAssets" 
+          <el-button
+              type="primary"
+              v-if="active === 1 && !isAssets"
               icon="el-icon-check"
               @click="saveField">{{$t('assetsManagement.保存')}}</el-button>
-          <el-button 
+          <el-button
               type="primary"
               v-if="active === 2"
               :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
               @click="relationFormSubmit">{{saveBtnText}}</el-button>
-          <el-button 
+          <el-button
               icon="el-icon-circle-close"
               @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
       </div>
@@ -112,7 +112,7 @@ export default {
   computed: {
   },
   created() {
-   
+
   },
   methods: {
     // 下一步
@@ -142,7 +142,7 @@ export default {
         } else {
           this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
         }
-      } 
+      }
       // else {
       // this.active++
 
@@ -201,7 +201,7 @@ export default {
           const Arr = Object.values(cur.checkedFieldListAll).flat()
           Arr.forEach((f,i)=> {
               f.dataSubjectsVolume = f.dataSubjectsVolume || 0
-              f.identification = `${f.mainBodyId}+${f.attributesId}`
+            f.identification = `${this.projectId}+${f.mainBodyId}+${f.attributesId}`
           })
           return pre.concat(Arr)
       }, [])
@@ -224,7 +224,7 @@ export default {
         })
         return data
     },
-  
+
     // 打开关联字段弹窗
     relationBtn(row, relationDialogSize) {
       this.relationDialogSize = relationDialogSize
@@ -256,13 +256,13 @@ export default {
       this.fullscreenLoading = false
       // this.getList(this.page)
     },
-   
+
   },
 };
 </script>
 
 <style lang="scss" scoped>
-::v-deep  .avue-icon i { 
+::v-deep  .avue-icon i {
   font-size: 16px !important;
 }
 </style>

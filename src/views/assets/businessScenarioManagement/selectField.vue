@@ -33,7 +33,7 @@
                     </template>
                 </el-menu>
 
-                
+
             </el-aside>
             <el-container>
                 <!-- 数据分类 -->
@@ -46,7 +46,7 @@
                             {{item.typeName}}
                         </el-checkbox-button>
                     </el-checkbox-group> -->
-                    <CheckTag 
+                    <CheckTag
                         :data="dataClassList"
                         :defaultProp="defaultProp"
                         v-model="checkedDataClass"
@@ -90,7 +90,7 @@
                 </el-main>
             </el-container>
         </el-container>
-        <AssetsRelationField 
+        <AssetsRelationField
             ref="assetsRelationFieldRef"
             :isAssets="false"
             @saveSuccess="saveSuccess"
@@ -118,7 +118,7 @@ export default {
             type: Array,
             default: () => []
         },
-        
+
         isView: {
             type: Boolean,
             default: false
@@ -198,27 +198,25 @@ export default {
                 const findMain = asset.dataSubjectList.find(item => item.mainBodyId === newItem.mainBodyId);
                 if (findMain) {
                     console.log(findMain, 'findMainfindMain')
-                    
+
                     const needAddMains = newItem.checkedCategoryListAll?.filter(item => !findMain.categoryList.find(newItem => newItem.categoryId === item.categoryId))
                     if (needAddMains?.length) {
                         findMain.categoryList.push(...needAddMains);
                         findMain.checkedCategoryList.push(...needAddMains.map(item => item.categoryId));
                         findMain.checkedCategoryListAll.push(...needAddMains);
                     }
-                    
+
                     Object.keys(newItem.checkedFieldListAll).forEach(k => {
                         const findFields = findMain.fieldList[k] || []
                         // const newCheckFields = newItem.checkedFieldListAll[k]
                         let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
-                            console.log(item, 'itemmmmmmm');
                             if (item.id) return item;
-                            console.log(this.findAttr(item.attributesId, allData), 'this.findAttr(item.attributesId, allData)');
-
-                            return this.findAttr(item.attributesId, allData)
+                            console.log(item, allData, 'ppp')
+                            return this.findAttr(item.identification, allData)
                         });
-                        
-                        const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.attributesId === newFields.attributesId))
-                        
+
+                        const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.identification === newFields.identification))
+
                         findMain.fieldList = findMain.fieldList ? findMain.fieldList : {};
                         findMain.checkedFieldList = findMain.checkedFieldList ? findMain.checkedFieldList : {};
                         findMain.checkedFieldListAll = findMain.checkedFieldListAll ? findMain.checkedFieldListAll : {};
@@ -234,7 +232,7 @@ export default {
                         if (!findMain.checkedFieldListAll[k]) {
                             this.$set(findMain.checkedFieldListAll, k, [])
                         }
-                        
+
                         const filterFields = needAddFields.filter(item => !findMain.checkedFieldList[k].includes(item.attributesId))
                         findMain.fieldList[k].push(...filterFields);
                         findMain.checkedFieldListAll[k].push(...filterFields);
@@ -243,13 +241,19 @@ export default {
                     })
 
                 } else {
-                    console.log(asset.dataSubjectList,newItem, '??newItem');
+                  const filedList = {};
+                  Object.keys(newItem.checkedFieldListAll).map(k => {
+                    filedList[k] = newItem.checkedFieldListAll[k].map(item => {
+                      if (item.id) return item;
+                      return this.findAttr(item.identification, allData)
+                    });
+                  })
                     asset.dataSubjectList.push({
                         ...newItem,
                         attributes: Object.values(newItem.checkedFieldListAll).flat(),
                         categoryList: newItem.checkedCategoryListAll,
                         mainBodyIdCp: `${newItem.mainBodyId}+${asset.projectId}`,
-                        fieldList: newItem.checkedFieldListAll,
+                        fieldList,
                         typeList: newItem.dataClassList?.filter(item => newItem.checkedDataClass?.includes(item.typeId)) || [],
                     })
                 }
@@ -258,10 +262,11 @@ export default {
                 this.checkDataSubject(this.mainBodyIdCp);
             }
         },
-        findAttr(attributesId, data) {
+        findAttr(identification, data) {
+
             for(let i = 0; i < data.length; i++) {
                 const item = data[i];
-                const attr = item.attributes.find(item => item.attributesId === attributesId);
+                const attr = item.attributes.find(item => `${item.projectId}+${item.mainBodyId}+${item.attributesId}` === identification);
                 if (attr) {
                     return attr;
                 }
@@ -290,7 +295,7 @@ export default {
         handleChecked(index) {
             this.projectId = index*1
             this.projectName = this.checkedAssetObjList.find(item => item.projectId === this.projectId).projectName
-            
+
         },
         // 选择数据主体类型
         checkDataSubject(index) {
@@ -317,7 +322,7 @@ export default {
                     }
                 })
             })
-            
+
             console.log(this.checkedAssetObjList, '切换数据主体')
             this.$nextTick(() => {
                 if('checkCategoryBox' in this.$refs) {
@@ -331,9 +336,9 @@ export default {
                     }
                  })
             })
-            
+
         },
-      
+
         // 点击字段类别多选框事件
         handleCategoryCheckedChange(checkedList, checkedListAll) {
             this.checkedCategoryList = checkedList
@@ -365,7 +370,7 @@ export default {
         handleFieldCheckedChange(checkedList, checkedListAll, id) {
             checkedListAll.forEach((item,index) => {
                 item.projectName = this.projectName
-                
+
                 item.mainBodyIdCp = this.mainBodyIdCp
 
                 item.mainBodyId = this.mainBodyId

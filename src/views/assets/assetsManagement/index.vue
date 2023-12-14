@@ -35,7 +35,7 @@
             </span>
         </template>
         <template slot="sceneIds" slot-scope="scope">
-           {{ scope.row.sceneNames ? scope.row.sceneNames.toString() : $t('crudCommon.暂无') }} 
+           {{ scope.row.sceneNames ? scope.row.sceneNames.toString() : $t('crudCommon.暂无') }}
         </template>
 
         <!-- 经纬度 -->
@@ -79,14 +79,14 @@
             icon="el-icon-document-add"
             >{{$t('crudCommon.导入')}}
           </el-button>
-          
+
           <el-button
             v-if="permissions.assets_assetsManagement_batchDel"
             type="primary"
             plain
             icon="el-icon-delete"
             @click="deleteBtn(false)"
-            >{{$t('crudCommon.批量删除')}} 
+            >{{$t('crudCommon.批量删除')}}
           </el-button>
           <el-button
             v-if="permissions.assets_assetsManagement_batchDel"
@@ -94,7 +94,7 @@
             plain
             icon="el-icon-document-copy"
             @click="copyBtn(false)"
-            >{{$t('crudCommon.批量复制')}} 
+            >{{$t('crudCommon.批量复制')}}
           </el-button>
         </template>
         <template slot="menu" slot-scope="scope">
@@ -104,7 +104,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row, scope.index)"
-              /> 
+              />
           </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.关联')" placement="top">
             <el-button
@@ -182,7 +182,7 @@
       />
       <SelectField
         v-show="active === 1"
-        ref="selectField" 
+        ref="selectField"
         :defaultActive="defaultActive"
         :projectId="projectId"
         :checkedDataSubjectObjList="checkedDataSubjectObjList"
@@ -191,7 +191,7 @@
 
       <FieldRelation
         v-show="active === 2"
-        ref="fieldRelation" 
+        ref="fieldRelation"
         :projectId="projectId"
         :isView="false"
         :fieldList="fieldList"
@@ -199,36 +199,36 @@
         @saveSuccess="FieldRelationSaveSuccess"
          />
       <div class="demo-drawer__footer">
-          <el-button 
-            type="primary" 
-            v-if="active !== 0" 
+          <el-button
+            type="primary"
+            v-if="active !== 0"
             icon="el-icon-top"
             @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
-          <el-button 
-            type="primary" 
-            v-if="active !== 2" 
+          <el-button
+            type="primary"
+            v-if="active !== 2"
             icon="el-icon-bottom"
             @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
-          <el-button 
+          <el-button
             type="primary"
             v-if="active === 2"
             :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
             @click="relationFormSubmit">{{saveBtnText}}</el-button>
-          <el-button 
+          <el-button
             icon="el-icon-circle-close"
             @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
       </div>
     </el-drawer> -->
-    <AssetsRelationField 
+    <AssetsRelationField
       ref="assetsRelationFieldRef"
       :isAssets="true"
       @saveSuccess="FieldRelationSaveSuccess"
     />
-    <el-dialog 
-      :title="$t('assetsManagement.查看资产详情')" 
-      width="70%" 
-      v-if="detailsDialog" 
-      :visible.sync="detailsDialog" 
+    <el-dialog
+      :title="$t('assetsManagement.查看资产详情')"
+      width="70%"
+      v-if="detailsDialog"
+      :visible.sync="detailsDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
         <span class="dialog-header-title">{{$t('assetsManagement.查看资产详情')}}</span>
@@ -237,19 +237,19 @@
         </div>
       </div>
       <Details
-        ref="details" 
+        ref="details"
         :projectId="projectId"
         :viewColumn="viewColumn"
         :rowData="rowData"
         :fieldList="fieldList"
         />
     </el-dialog>
-    <el-dialog 
-      :title="$t('assetsManagement.启动评估')" 
+    <el-dialog
+      :title="$t('assetsManagement.启动评估')"
       width="35%"
-      v-if="assessmentDialog" 
+      v-if="assessmentDialog"
       :visible.sync="assessmentDialog"
-      :close-on-click-modal="false" 
+      :close-on-click-modal="false"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
         <span class="dialog-header-title">{{$t('assetsManagement.启动评估')}}</span>
@@ -257,7 +257,7 @@
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-      <ReleaseForm 
+      <ReleaseForm
         ref="releaseForm"
           :typeIds="2"
           :evaluationItem="{assetsId: projectId}"
@@ -269,12 +269,12 @@
       </div>
     </el-dialog>
 
-    <el-dialog 
-      :title="$t('assetsManagement.发现资产')" 
-      width="70%" 
-      v-if="findDialog" 
+    <el-dialog
+      :title="$t('assetsManagement.发现资产')"
+      width="70%"
+      v-if="findDialog"
       :visible.sync="findDialog"
-      :close-on-click-modal="false" 
+      :close-on-click-modal="false"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
         <span class="dialog-header-title">{{$t('assetsManagement.发现资产')}}</span>
@@ -293,10 +293,10 @@
       </div>
     </el-dialog>
     <el-dialog
-      :title="$t('crudCommon.导入')" 
-      width="35%" 
-      :visible.sync="importDialog" 
-      append-to-body 
+      :title="$t('crudCommon.导入')"
+      width="35%"
+      :visible.sync="importDialog"
+      append-to-body
       :close-on-click-modal="false"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -321,11 +321,11 @@
         </el-upload>
     </el-dialog>
     <el-dialog
-      v-if="historyDialog" 
-      :title="$t('assetsManagement.历史记录')" 
-      width="70%" 
-      :visible.sync="historyDialog" 
-      append-to-body 
+      v-if="historyDialog"
+      :title="$t('assetsManagement.历史记录')"
+      width="70%"
+      :visible.sync="historyDialog"
+      append-to-body
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
         <span class="dialog-header-title">{{$t('assetsManagement.历史记录')}}</span>
@@ -338,11 +338,11 @@
         />
     </el-dialog>
     <el-dialog
-      v-if="historyVersionDialog" 
-      :title="$t('assetsManagement.历史版本号记录')" 
-      width="70%" 
-      :visible.sync="historyVersionDialog" 
-      append-to-body 
+      v-if="historyVersionDialog"
+      :title="$t('assetsManagement.历史版本号记录')"
+      width="70%"
+      :visible.sync="historyVersionDialog"
+      append-to-body
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
         <span class="dialog-header-title">{{$t('assetsManagement.历史版本号记录')}}</span>
@@ -368,14 +368,14 @@
         </div>
       </div>
       <div>{{$t('assetsManagement.当前位置')}} {{ form.hostingLocation }} <br/>
-           {{$t('assetsManagement.当前经纬度')}} {{ form.lng }}, {{ form.lat }} 
+           {{$t('assetsManagement.当前经纬度')}} {{ form.lng }}, {{ form.lat }}
       </div>
       <div id="baiduMap" />
       <div slot="footer" class="dialog-footer">
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="saveLatlng">{{$t('assetsManagement.保存')}}</el-button>
       </div>
     </el-dialog>
-      
+
   </div>
 </template>
 
@@ -409,14 +409,14 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "assetsManagement",
-  components: {HistoryVersion, 
+  components: {HistoryVersion,
                 AssetsRelationField,
-                DataSubject, 
-                SelectField, 
-                FieldRelation, 
-                Details, 
-                ReleaseForm, 
-                FindStart, 
+                DataSubject,
+                SelectField,
+                FieldRelation,
+                Details,
+                ReleaseForm,
+                FindStart,
                 History},
   data() {
     return {
@@ -449,7 +449,7 @@ export default {
       // 启动评估弹窗
       assessmentDialog: false,
       saveBtnText: this.$t('assetsManagement.保存'),
-      
+
       // 资产id
       projectId: 0,
       // 查看详情配置项
@@ -462,12 +462,12 @@ export default {
 
       // 导入弹窗
       importDialog: false,
-      
+
       // 文件列表
       fileList: [],
 
       fullscreenLoading: false,
-      
+
       defaultActive: '',
       // 回显勾选的主体类型
       echoCheckedDataSubjectList: [],
@@ -537,8 +537,8 @@ export default {
         this.form.lat = this.form.lat ? this.form.lat : 39.915
         this.form.hostingLocation = this.form.hostingLocation ? this.form.hostingLocation : '北京市'
         const point = new BMapGL.Point(this.form.lng, this.form.lat);
-        
-        this.map.centerAndZoom(point, 15); 
+
+        this.map.centerAndZoom(point, 15);
         const marker = new BMapGL.Marker(point);  // 创建标注
         this.map.addOverlay(marker); // 将标注添加到地图中
         const geoc = new BMapGL.Geocoder();
@@ -589,7 +589,7 @@ export default {
         } else {
           this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
         }
-      } 
+      }
       // else {
       // this.active++
 
@@ -619,7 +619,7 @@ export default {
             const Arr = Object.values(cur.checkedFieldListAll).flat()
             Arr.forEach((f,i)=> {
               f.dataSubjectsVolume = f.dataSubjectsVolume || 0
-              f.identification = `${f.mainBodyId}+${f.attributesId}`
+              f.identification = `${this.projectId}+${f.mainBodyId}+${f.attributesId}`
             })
             return pre.concat(Arr)
           }, [])
@@ -678,7 +678,7 @@ export default {
         this.rowData = row
         this.detailsDialog = true
         this.getAssetsProjectAttributesListByProjectId(row.projectId)
-        
+
       }
       if(column.label === '版本号') {
         console.log(row, column, 'row, column');
@@ -765,7 +765,7 @@ export default {
     importAsset() {
       this.importDialog = true
 
-    },  
+    },
     // 导出模板
     exportMode() {
       this.fullscreenLoading = true
@@ -779,7 +779,7 @@ export default {
             this.download(blobUrl, fileName)
             this.fullscreenLoading = false
             this.$message.success(this.$t('crudCommon.导出成功'));
-            
+
         })
     },
     // 下载文件
@@ -825,7 +825,7 @@ export default {
       this.fullscreenLoading = false
       this.getList(this.page)
     },
-    
+
     // 打开评估弹窗
     openAssessment(row) {
         this.projectId = row.projectId
@@ -865,7 +865,7 @@ export default {
       this.historyDialog = true
       this.projectId = row.projectId
     },
-    
+
     selectionChange(list){
       this.ids = list.map(item => (item.projectId))
     },
