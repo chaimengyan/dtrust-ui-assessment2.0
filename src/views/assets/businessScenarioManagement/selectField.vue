@@ -210,7 +210,10 @@ export default {
                         const findFields = findMain.fieldList[k] || []
                         // const newCheckFields = newItem.checkedFieldListAll[k]
                         let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
+                            console.log(item, 'itemmmmmmm');
                             if (item.id) return item;
+                            console.log(this.findAttr(item.attributesId, allData), 'this.findAttr(item.attributesId, allData)');
+
                             return this.findAttr(item.attributesId, allData)
                         });
                         
@@ -240,6 +243,7 @@ export default {
                     })
 
                 } else {
+                    console.log(asset.dataSubjectList,newItem, '??newItem');
                     asset.dataSubjectList.push({
                         ...newItem,
                         attributes: Object.values(newItem.checkedFieldListAll).flat(),

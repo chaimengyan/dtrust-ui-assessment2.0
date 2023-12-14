@@ -48,6 +48,14 @@
               @click="deleteBtn(false)"
               >{{$t('crudCommon.批量删除')}} 
             </el-button>
+            <el-button
+              v-if="permissions.assets_assetsManagement_batchDel"
+              type="primary"
+              plain
+              icon="el-icon-delete"
+              @click="confirmBtn(false)"
+              >{{$t('crudCommon.批量确认')}} 
+            </el-button>
           </template>
           <template slot="menu" slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.待审核')" placement="top">
@@ -174,6 +182,29 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
         this.$confirm(this.$t('crudCommon.是否删除本条数据'), this.$t('crudCommon.提示'), {
           confirmButtonText: this.$t('crudCommon.删除'),
           cancelButtonText: this.$t('crudCommon.不删除'),
+          type: "warning",
+        })
+          .then(() => {
+            delObj(ids).then((res) => {
+              if (res.data.status === 200) {
+                this.$message.success(res.data.message);
+                this.$refs.crud.toggleSelection()
+                this.handleRefreshChange();
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          })
+      },
+      confirmBtn(row) {
+        const ids = row ? [row.projectId] : this.ids
+        if(!ids.length) {
+          this.$message.error(this.$t('crudCommon.请选择要确认的数据'));
+          return
+        }
+        this.$confirm(this.$t('crudCommon.是否确认本条数据'), this.$t('crudCommon.提示'), {
+          confirmButtonText: this.$t('crudCommon.确认'),
+          cancelButtonText: this.$t('crudCommon.不确认'),
           type: "warning",
         })
           .then(() => {

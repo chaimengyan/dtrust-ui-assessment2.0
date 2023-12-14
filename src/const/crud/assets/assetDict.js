@@ -472,6 +472,9 @@ export const tableDictItemOption = (_this, isOverHidden) => {
     label: _this.$t('assetDict.数据值'),
     prop: 'infoValue',
     span: 24,
+    type: 'textarea',
+    minRows: 1,
+    maxlength: 50,
     rules: [{
       required: true,
       message: `${_this.$t('crudCommon.请输入')}${_this.$t('assetDict.数据值')}`,
@@ -482,6 +485,9 @@ export const tableDictItemOption = (_this, isOverHidden) => {
     label: _this.$t('crudCommon.描述'),
     prop: 'description',
     span: 24,
+    type: 'textarea',
+    minRows: 1,
+    maxlength: 50,
     overHidden: isOverHidden,
   }, {
     label: _this.$t('assetDict.排序'),

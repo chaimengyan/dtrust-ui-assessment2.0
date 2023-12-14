@@ -183,6 +183,7 @@ export default {
         if(JSON.stringify(this.searchParam) !== '{}') {
           this.handleFilter(this.searchParam)
         } else {
+          console.log(this.fieldList, 'this.fieldList///');
           this.pageList = deepClone(this.fieldList)
           this.onLoad(this.page, this.fieldList)
         }
@@ -215,7 +216,8 @@ export default {
         const len = list.filter(item => item.attributesId === cur.attributesId)
         
         // debugger
-        cur.id = cur.identification
+        // cur.id = cur.identification
+        console.log(cur, pre, '????>>>>>>>>');
         if (len.length === 1) {
           pre[cur.attributesId] = cur;
           return pre;
@@ -235,6 +237,8 @@ export default {
         pre[cur.attributesId].children.push(cur)
         return pre;
       }, {})
+      console.log(data, '????data');
+
       return Object.values(data);
     },
     // 初始化sourceForm

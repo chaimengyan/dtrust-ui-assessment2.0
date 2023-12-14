@@ -35,6 +35,7 @@
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
               <el-button
                 v-if="permissions.field_dataClassification_edit"
+                :disabled="scope.row.createBy === 'admin'"
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row, scope.index)"
@@ -43,6 +44,7 @@
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
               <el-button
                 v-if="permissions.field_dataClassification_del"
+                :disabled="scope.row.createBy === 'admin'"
                 type="text"
                 icon="el-icon-delete"
                 @click="deleteBtn(scope.row, scope.index)"

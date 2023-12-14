@@ -45,58 +45,61 @@
         </template>
       </avue-crud>
     </basic-container>
-    <el-dialog
+    <el-drawer
+      size="70%"
       v-if="dialogFormVisible"
       :visible.sync="dialogFormVisible"
       :title="$t('assetDict.字典项管理')"
       @close="dictItemVisible"
       :close-on-click-modal="false" 
         :fullscreen="isFullscreen">
-      <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetDict.字典项管理')}}</span>
-        <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
-          <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
-        </div>
+      <div class="drawer-header" slot="title">
+          <span class="drawer-header-title" >{{$t('assetDict.字典项管理')}}</span>
+          <div class="drawer-header-screen" @click="() => isFullscreen = !isFullscreen">
+            <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+          </div>
       </div>
-      <avue-crud
-        ref="crudItem"
-        :page.sync="itemPage"
-        :data="tableDictItemData"
-        v-model="form"
-        :before-open="handleBeforeOpen"
-        :option="tableDictItemOption"
-        @size-change="itemSizeChange"
-        @current-change="itemCurrentChange"
-        @row-update="handleItemUpdate"
-        @row-save="handleItemSave"
-        >
-        <template slot="menuRight" slot-scope="{size}">
-          <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray(false)"></el-button>
-        </template>
-        <template
-          slot-scope="scope"
-          slot="menu">
-          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetDict_edit"
-              type="text"
-              size="small"
-              icon="el-icon-edit"
-              @click="itemEditBtn(scope.row,scope.index)"
-              />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
-            <el-button
-              v-if="permissions.assets_assetDict_del"
-              type="text"
-              size="small"
-              icon="el-icon-delete"
-              @click="rowItemDel(scope.row,scope.index)"
-              />
-          </el-tooltip>
-        </template>
-      </avue-crud>
-    </el-dialog>
+      <basic-container>
+        <avue-crud
+          ref="crudItem"
+          :page.sync="itemPage"
+          :data="tableDictItemData"
+          v-model="form"
+          :before-open="handleBeforeOpen"
+          :option="tableDictItemOption"
+          @size-change="itemSizeChange"
+          @current-change="itemCurrentChange"
+          @row-update="handleItemUpdate"
+          @row-save="handleItemSave"
+          >
+          <template slot="menuRight" slot-scope="{size}">
+            <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray(false)"></el-button>
+          </template>
+          <template
+            slot-scope="scope"
+            slot="menu">
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
+              <el-button
+                v-if="permissions.assets_assetDict_edit"
+                type="text"
+                size="small"
+                icon="el-icon-edit"
+                @click="itemEditBtn(scope.row,scope.index)"
+                />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
+              <el-button
+                v-if="permissions.assets_assetDict_del"
+                type="text"
+                size="small"
+                icon="el-icon-delete"
+                @click="rowItemDel(scope.row,scope.index)"
+                />
+            </el-tooltip>
+          </template>
+        </avue-crud>
+      </basic-container>
+    </el-drawer>
   </div>
 </template>
 
@@ -271,7 +274,7 @@
         this.form.fieldId = this.fieldId
         done()
       },
-      handleItemSave (row, done) {
+      handleItemSave (row, done, loading) {
         this.$confirm(this.$t('assetDict.保存后将影响所有历史数据是否继续保存'), this.$t('crudCommon.提示'), {
             confirmButtonText: this.$t('crudCommon.确定'),
             cancelButtonText: this.$t('crudCommon.取消'),
@@ -282,19 +285,20 @@
                 this.getDictItemList();
                 done();
                 this.$message.success(res.data.message);
-            } else {
-                loading();
             }
-        })
+          })
           .catch(() => {
-              loading();
+            loading();
           });
         })
+        .catch(() => {
+          loading();
+        });
       },
       itemEditBtn(row) {
         this.$refs.crudItem.rowEdit(row)
       },
-      handleItemUpdate (row, index, done) {
+      handleItemUpdate (row, index, done, loading) {
         this.$confirm(this.$t('assetDict.保存后将影响所有历史数据是否继续保存'), this.$t('crudCommon.提示'), {
             confirmButtonText: this.$t('crudCommon.确定'),
             cancelButtonText: this.$t('crudCommon.取消'),
@@ -305,14 +309,14 @@
                   this.getDictItemList();
                   done();
                   this.$message.success(res.data.message);
-              } else {
-                  loading();
               }
-          })
-          .catch(() => {
-              loading();
+          }).catch(() => {
+            loading();
           });
         })
+        .catch(() => {
+          loading();
+        });
       },
       itemSizeChange(pageSize) {
         this.itemPage.pageSize = pageSize
@@ -340,4 +344,6 @@
 </script>
 
 <style lang="scss" scoped>
+.itemBox{
+}
 </style>

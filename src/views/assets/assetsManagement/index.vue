@@ -533,7 +533,10 @@ export default {
         const cityCtrl = new BMapGL.CityListControl();  // 添加城市列表控件
         this.map.addControl(cityCtrl);
         this.map.enableScrollWheelZoom(true) // 滚轮放大缩小地图
-        const point = new BMapGL.Point(this.form.lng||116.404, this.form.lat||39.915);
+        this.form.lng = this.form.lng ? this.form.lng : 116.404
+        this.form.lat = this.form.lat ? this.form.lat : 39.915
+        this.form.hostingLocation = this.form.hostingLocation ? this.form.hostingLocation : '北京市'
+        const point = new BMapGL.Point(this.form.lng, this.form.lat);
         
         this.map.centerAndZoom(point, 15); 
         const marker = new BMapGL.Marker(point);  // 创建标注

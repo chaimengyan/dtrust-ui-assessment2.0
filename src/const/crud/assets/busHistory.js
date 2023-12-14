@@ -26,21 +26,21 @@ export const tableOption = (_this, isOverHidden) => {
         viewDisplay: false
     }, {
         width: 100,
-        label: _this.$t('businessScenarioManagement.业务场景变化'),
+        label: _this.$t('assetsManagement.属性变化'),
         prop: 'sceneChange',
         type: 'textarea',
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
     }, {
-        label: _this.$t('assetsManagement.新增字段'),
+        label: _this.$t('assetsManagement.新增关联'),
         prop: 'projectAdd',
         type: 'textarea',
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
     }, {
-        label: _this.$t('assetsManagement.删除字段'),
+        label: _this.$t('assetsManagement.删除关联'),
         prop: 'projectDel',
         type: 'textarea',
         span: 24,
@@ -48,7 +48,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
         },
     {
-        label: _this.$t('assetsManagement.修改来源'),
+        label: _this.$t('assetsManagement.来源评估'),
         prop: 'evaluationName',
         type: 'textarea',
         span: 24,
@@ -56,7 +56,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
         },
     {
-        label: _this.$t('businessScenarioManagement.编辑字段'),
+        label: _this.$t('businessScenarioManagement.处理活动变更'),
         prop: 'projectUpdate',
         type: 'textarea',
         span: 24,
@@ -81,17 +81,7 @@ export const tableOption = (_this, isOverHidden) => {
         addDisplay: false,
         overHidden: isOverHidden,
     },
-    {
-        width: 120,
-        label: _this.$t('crudCommon.修改时间'),
-        prop: 'updateTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        editDisabled: false,
-        addDisplay: false,
-        editDisplay: false,
-        span: 24,
-    }, {
+     {
         label: _this.$t('crudCommon.关键字'),
         hide: true,
         prop: 'keyword',

@@ -442,7 +442,7 @@ export default {
         const isCheckField = dataList.every(item => item.checkedFieldListAll.length !== 0 )
         if(isCheckField) {
           this.fieldList = this.handleFieldList(dataList)
-          console.log(this.fieldList, '点击下一步-字段列表数据')
+          console.log(this.fieldList,dataList, '点击下一步-字段列表数据')
             if(this.fieldList.length === 0) {
               this.$message.error(this.$t('businessScenarioManagement.请选择资产下面的字段'))
             } else {
