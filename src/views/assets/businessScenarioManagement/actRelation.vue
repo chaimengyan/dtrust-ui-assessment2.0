@@ -217,7 +217,6 @@ export default {
         
         // debugger
         // cur.id = cur.identification
-        console.log(cur, pre, '????>>>>>>>>');
         if (len.length === 1) {
           pre[cur.attributesId] = cur;
           return pre;

@@ -9,7 +9,24 @@
                             :label="item.label"
                             :key="index"
                             >
-                            {{handelData(rowData,item.prop)}}
+                            <template v-if="['projectIcon','projectColor' ].includes(item.prop)">
+                                <div v-if="item.prop === 'projectIcon'" class="cells">
+                                    <div>
+                                        {{rowData.projectIcon }}
+                                    </div>
+                                    <i :class="rowData.projectIcon"></i>
+                                </div>
+                                <div v-if="item.prop === 'projectColor'" class="cells">
+                                    <div>
+                                        {{rowData.projectColor}}
+                                    </div>
+                                    <el-color-picker disabled v-model="rowData.projectColor"></el-color-picker>
+                                </div>
+                            </template>
+                            
+                            <template v-else>
+                                {{handelData(rowData,item.prop)}}
+                            </template>
                         </el-descriptions-item>
                     </template>
                 </el-descriptions>
@@ -82,5 +99,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.cells{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 </style>

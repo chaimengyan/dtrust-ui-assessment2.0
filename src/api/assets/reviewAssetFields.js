@@ -18,3 +18,12 @@ export function getFindJobsByPage(query) {
         params: query
     })
 }
+
+// 资产一键审核
+export function batchAudit(obj) {
+    return request({
+        url: '/assets/assetsProject/audit',
+        method: 'put',
+        data: obj
+    })
+}

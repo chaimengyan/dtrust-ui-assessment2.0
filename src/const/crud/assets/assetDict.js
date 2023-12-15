@@ -20,26 +20,28 @@ export const tableOption = (_this, isOverHidden) => {
   column: [{
     label: '字段label',
     prop: 'label',
+    tip: '列标题',
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.字段label')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   }, {
     label: '字段value',
     prop: 'prop',
+    tip: '列标题的内容属性名称',
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.字段value')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },
   {
-    label: '类型',
+    label: '表格类型',
     prop: 'parentId',
     type:'select',
     span: 24,
@@ -54,106 +56,109 @@ export const tableOption = (_this, isOverHidden) => {
     },
     rules: [{
         required: true,
-        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.类型')}`,
         trigger: 'change'
       }],
   },{
-    label: 'fixed',
+    label: '列是否固定',
     prop: 'fixed',
     value: false,
     type: 'switch',
     span: 24,
+    tip: '列是否固定在左侧或者右侧，true 表示固定在左侧',
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.fixed')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'span',
+    label: '栅格占据的列数',
     prop: 'span',
     value: 24,
     type: 'number',
+    tip: '最大为24，撑满一行',
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.栅格占据的列数')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'hide',
+    label: '列是否隐藏',
     prop: 'hide',
     value: false,
     type: 'switch',
+    tip: '表格中该列是否隐藏',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.hide')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'editDisplay',
+    label: '表单编辑时项是否显示',
     prop: 'editDisplay',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.editDisplay')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'addDisplay',
+    label: '表单新增时项是否显示',
     prop: 'addDisplay',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.addDisplay')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'display',
+    label: '弹出表单是否显示',
     prop: 'display',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'required',
+    label: '是否必填',
     prop: 'required',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   }, {
-    label: 'message',
+    label: '检验信息',
     prop: "message",
     value: '此项必填',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   }, {
-    label: 'trigger',
+    label: '校验触发方式',
     prop: "triggerValue",
     value: 'blur',
     span: 24,
@@ -169,19 +174,20 @@ export const tableOption = (_this, isOverHidden) => {
     ],
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'overHidden',
+    label: '超出隐藏',
     prop: 'overHidden',
     value: true,
     type: 'switch',
+    tip: '当内容过长被隐藏时显示 tooltip',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
@@ -198,7 +204,7 @@ export const tableOption = (_this, isOverHidden) => {
   //   overHidden: isOverHidden,
   // },
   {
-    label: 'type',
+    label: '组件类型',
     prop: 'type',
     type: 'select',
     value: 'input',
@@ -250,158 +256,162 @@ export const tableOption = (_this, isOverHidden) => {
     ],
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
-    label: 'props',
-    prop: 'props',
-    span: 24,
-    rules: [{
-      required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
-    label: 'dicUrl',
-    prop: 'dicUrl',
-    span: 24,
-    rules: [{
-      required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },
+  // {
+  //   label: 'props',
+  //   prop: 'props',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
+  // {
+  //   label: '数据字典接口url地址',
+  //   prop: 'dicUrl',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
   {
-    label: 'formslot',
+    label: '该项是否使用表单插槽',
     prop: 'formslot',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'filterable',
+    label: '是否可搜索',
     prop: 'filterable',
     value: true,
+    tip: '仅对下拉系列组件生效',
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'width',
+    label: '对应列的宽度',
     prop: 'width',
     value: null,
     type: 'number',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'multiple',
+    label: '是否多选',
     prop: 'multiple',
     value: true,
+    tip: '仅对下拉系列组件生效',
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'editDisabled',
+    label: '表单编辑时项是否禁止',
     prop: 'editDisabled',
     value: false,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'format',
+    label: '显示值时间格式',
     prop: 'format',
     value: 'yyyy-MM-dd',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'valueFormat',
+    label: '真实值的时间格式',
     prop: 'valueFormat',
     value: 'yyyy/MM/dd',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'searchSpan',
+    label: '搜索项框栅列',
     prop: 'searchSpan',
     value: 10,
     type: 'number',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'searchRange',
+    label: '搜索项为范围搜索',
     prop: 'searchRange',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'search',
+    label: '是否为搜索项',
     prop: 'search',
     value: false,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: 'sortable',
+    label: '对应列是否可以排序',
     prop: 'sortable',
     value: true,
     type: 'switch',
     span: 24,
     rules: [{
       required: false,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,

@@ -16,17 +16,16 @@
           @row-save="create"
           @selection-change="selectionChange"
           :data="list"
-          @cell-click="cellClick"
         >
         <template slot="menuRight" slot-scope="{size}">
           <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
         </template>
           <!-- 资产名称 -->
-          <template slot="projectName" slot-scope="scope">
+          <!-- <template slot="projectName" slot-scope="scope">
               <span class="projectName">
                   {{scope.row.projectName}}
               </span>
-          </template>
+          </template> -->
           <template slot="sceneIds" slot-scope="scope">
              {{ scope.row.sceneNames ? scope.row.sceneNames.toString() : $t('crudCommon.暂无') }} 
           </template>
@@ -95,6 +94,7 @@
     delObj,
     getAssetsProjectAttributesListByProjectId,
     putObj,
+    batchAudit
   } from "@/api/assets/reviewAssetFields";
   import {
   getAssetsProjectByPage,
@@ -203,21 +203,33 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
           return
         }
         this.$confirm(this.$t('crudCommon.是否确认本条数据'), this.$t('crudCommon.提示'), {
-          confirmButtonText: this.$t('crudCommon.确认'),
-          cancelButtonText: this.$t('crudCommon.不确认'),
+          confirmButtonText: this.$t('crudCommon.通过'),
+          cancelButtonText: this.$t('crudCommon.不通过'),
           type: "warning",
         })
           .then(() => {
-            delObj(ids).then((res) => {
-              if (res.data.status === 200) {
-                this.$message.success(res.data.message);
-                this.$refs.crud.toggleSelection()
-                this.handleRefreshChange();
-              } else {
-                this.$message.error(res.data.message);
-              }
-            });
+            const obj = ids.map(x => {
+              return {projectId: x, status: 0}
+            })
+            this.batchAudit(obj)
           })
+          .catch(() => {
+            const obj = ids.map(x => {
+              return {projectId: x, status: 2}
+            })
+            this.batchAudit(obj)
+          })
+      },
+      batchAudit(obj) {
+        batchAudit(obj).then((res) => {
+          if (res.data.status === 200) {
+            this.$message.success(res.data.message);
+            this.$refs.crud.toggleSelection()
+            this.handleRefreshChange();
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       },
       sizeChange(pageSize) {
         this.page.pageSize = pageSize;

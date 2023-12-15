@@ -9,7 +9,24 @@
                             :label="item.label"
                             :key="index"
                             >
-                            {{handelData(rowData,item.prop)}}
+                            <template v-if="['sceneIcon','sceneColor' ].includes(item.prop)">
+                                <div v-if="item.prop === 'sceneIcon'" class="cells">
+                                    <div>
+                                        {{rowData.sceneIcon }}
+                                    </div>
+                                    <i :class="rowData.sceneIcon"></i>
+                                </div>
+                                <div v-if="item.prop === 'sceneColor'" class="cells">
+                                    <div>
+                                        {{rowData.sceneColor}}
+                                    </div>
+                                    <el-color-picker disabled v-model="rowData.sceneColor"></el-color-picker>
+                                </div>
+                            </template>
+                            
+                            <template v-else>
+                                {{handelData(rowData,item.prop)}}
+                            </template>
                         </el-descriptions-item>
                     </template>
                 </el-descriptions>
@@ -25,7 +42,7 @@
             <el-tab-pane :label="$t('businessScenarioManagement.业务场景评估记录')">
                 <EvaluationRecord 
                     ref="evaluationRecord"
-                    :queryId="{businessScenarioId: sceneId}"
+                    :queryId="{sceneId: sceneId}"
                 />
             </el-tab-pane>
         </el-tabs>
@@ -84,5 +101,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.cells{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 </style>

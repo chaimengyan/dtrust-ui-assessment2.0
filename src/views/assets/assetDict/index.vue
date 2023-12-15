@@ -197,16 +197,14 @@
         this.$refs.crud.rowEdit(row)
       },
       // 修改字典
-      handleUpdate(row, index, done) {
+      handleUpdate(row, index, done, loading) {
         row.rules = null
         putAssetsField(row).then(res => {
             if(res.data.status == 200) {
                 this.getList(this.page);
                 done();
                 this.$message.success(res.data.message);
-            } else {
-                loading();
-            }
+            } 
         })
         .catch(() => {
             loading();
@@ -214,14 +212,12 @@
       },
 
       // 新增字典
-      handleSave(row, done) {
+      handleSave(row, done, loading) {
         addAssetsField(row).then(res => {
             if(res.data.status == 200) {
                 this.getList(this.page);
                 done();
                 this.$message.success(res.data.message);
-            } else {
-                loading();
             }
         })
         .catch(() => {
