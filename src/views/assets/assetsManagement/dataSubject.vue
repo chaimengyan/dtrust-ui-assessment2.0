@@ -4,7 +4,7 @@
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.mainBodyId">
                     <div class="grid-content bg-purple">
-                        <el-checkbox :label="item.mainBodyId" :disabled="disabledKeys ? disabledKeys.includes(item.mainBodyId) : false">
+                        <el-checkbox :label="item.mainBodyId">
                             {{item.mainBodyName}}
                         </el-checkbox>
                     </div>
@@ -19,22 +19,17 @@ import {
 } from "@/api/fieldManagement/dataSubjectType";
 export default {
     name: "DataSubject",
-    components: {
-        
+    inject: ['echoCheckedDataSubjectList'],
+    computed: {
+        echo() {
+            return this.echoCheckedDataSubjectList()
+        }
     },
     props: {
         projectId: {
             type: Number,
             default: 0
-        },
-        echoCheckedDataSubjectList: {
-            type: Array,
-            default: () => []
-        },
-        disabledKeys: {
-            type: Array,
-            default: null
-        },
+        }
     },
     data() {
       return {
@@ -42,37 +37,31 @@ export default {
         dataSubjectList: [],
         // 已选数据主体类型id
         checkedDataSubjectList: [],
-        // 已选数据主体类型对象
-        checkedDataSubjectObjList: [],
+        checkedDataSubjectOptions: []
       };
-    },
-    watch: {
-    
     },
     created() {
         this.getMainBodList()
-      
     },
     methods: {
-        // 回显选中
-        echoChecked() {
-            this.checkedDataSubjectList = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
-            this.handleCheckedChange(this.checkedDataSubjectList)
+        setDefaultValue() {
+            if (this.echo.length) {
+                this.checkedDataSubjectList = this.echo.map(item => item.mainBodyId) || []
+                this.handleCheckedChange(this.checkedDataSubjectList)
+            }
         },
         // 查询所有数据主体
         getMainBodList() {
             getMainBodList().then(res => {
                 this.dataSubjectList = res.data.data
+                this.setDefaultValue()
             })
         },
         // 选择数据主体事件
         handleCheckedChange(val) {
-          this.checkedDataSubjectObjList = val.map((item,index) => {
-            return this.echoCheckedDataSubjectList.find(e => (e.mainBodyId ===item)) || this.dataSubjectList.find(d => (d.mainBodyId ===item))
-          })
-          this.$emit('getCheckedDataSubject', this.checkedDataSubjectList, [...this.checkedDataSubjectObjList])
+          this.checkedDataSubjectOptions = this.dataSubjectList.filter(item => val.includes(item.mainBodyId))
+            this.$emit('change', this.checkedDataSubjectOptions)
         },
-
     }
 }
 </script>

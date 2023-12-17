@@ -10,7 +10,7 @@
                     background-color="#dadde2"
                     text-color="#303133"
                     >
-                    <template v-for="item in checkedDataSubjectObjList">
+                    <template v-for="item in checkedMain">
                         <el-menu-item :index="item.mainBodyId.toString()" :key="item.mainBodyId">
                             {{item.mainBodyName}}
                         </el-menu-item>
@@ -18,57 +18,21 @@
                 </el-menu>
             </el-aside>
             <el-container>
-                <!-- 数据分类 -->
-                <el-header class="dataClass">
-                    <!-- <el-checkbox-group v-model="checkedDataClass" size="medium" @change="handleDataClassCheckedChange">
-                        <el-checkbox-button
+                <div class="select-field-content">
+                    <div>
+                        <el-tag
                             v-for="item in dataClassList"
-                            :label="item.typeId"
-                            :key="item.typeId">
-                            {{item.typeName}}
-                        </el-checkbox-button>
-                    </el-checkbox-group> -->
-                    <CheckTag 
-                        :data="dataClassList"
-                        :defaultProp="defaultProp"
-                        v-model="checkedDataClass"
-                        @change="handleDataClassCheckedChange"
-                    />
-                </el-header>
-                <el-main class="field">
-                    <!-- 字段类别 -->
-                    <el-aside class="category" width="200px">
-                        <CheckBox
-                            ref="checkCBox"
-                            :disabledKeys="disabled ? disabledSelectAllKeys : null"
-                            :echoCheckedList="checkedCategoryList"
-                            :dataList="categoryList"
-                            :parentName="$t('assetsManagement.全选')"
-                            itemId="categoryId"
-                            itemName="categoryName"
-                            @handleCheckedChange="handleCategoryCheckedChange"
-                        />
-                    </el-aside>
-                        <!-- 字段主数据 -->
-                            <div class="fieldList" >
-                                <template v-for="item in checkedCategoryListAll">
-                                    <CheckBox
-                                        ref="checkBox"
-                                        :disabledKeys="disabled ? disabledSelectKeys[item.categoryId] : null"
-                                        :echoCheckedList="checkedFieldList[item.categoryId]"
-                                        :echoCheckedListAll="checkedFieldListAll[item.categoryId]"
-                                        :dataList="fieldList[item.categoryId]"
-                                        :parentName="item.categoryName"
-                                        itemId="attributesId"
-                                        itemName="attributesName"
-                                        :key="item.categoryId"
-                                        @handleCheckedChange="(...arg) => handleFieldCheckedChange(...arg, item.categoryId)"
-                                    
-                                />
-                                </template>
-                            </div>
-
-                </el-main>
+                            :key="item.typeId.toString()"
+                            :type="activeDataClass.includes(item.typeId) ? 'success' : 'info'"
+                            class="mx-1"
+                            effect="dark"
+                            @click="handleClickDataClass(item.typeId)"
+                        >
+                            {{ item.typeName }}
+                        </el-tag>
+                    </div>
+                    <CheckBox ref="checkbox" :checkId="mainBodyId" :checkAllFields="checkAllFields" :renderList="renderList" @handleCheckedChange="handleCheckedChange" />
+                </div>
             </el-container>
         </el-container>
     </basic-container>
@@ -84,204 +48,219 @@ import {
   getTypeList
 } from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
-import CheckTag from "@/components/CheckTag"
-import { deepClone } from "@/util/util";
+import { uniqueId } from 'lodash'
+import {getChildrenById} from "@/util/util";
 export default {
     name: "SelectField",
     components: {
         CheckBox,
-        CheckTag
+    },
+    inject: ['echoCheckedDataSubjectList', 'checkedMainBody'],
+    computed: {
+        echo() {
+            return this.echoCheckedDataSubjectList()
+        },
+        checkedMain() {
+            return this.checkedMainBody()
+        },
+        defaultActive() {
+            return this.checkedMain && this.checkedMain.length ? this.checkedMain[0].mainBodyId.toString() : ''
+        },
     },
     props: {
-        defaultActive: {
-            type: String,
-            default: ''
-        },
-        checkedDataSubjectObjList: {
-            type: Array,
-            default: () => []
-        },
-        disabledKeys: {
-            type: Array,
-            default: null
-        },
         projectId: {
             type: Number,
             default: 0
         },
-        isView: {
-            type: Boolean,
-            default: false
-        },
     },
     data() {
       return {
-
-        //字段类别
-        // 已选字段类别
-        checkedCategoryList: [],
         // 全部字段类别
         categoryList: [],
-        // 已选字段类别完整数据
-        checkedCategoryListAll: [],
 
-        // 数据分类
-        // 已选数据分类
-        checkedDataClass: [],
         // 全部数据分类
         dataClassList: [],
-        defaultProp: {
-            label: 'typeName',
-            value: 'typeId'
-        },
 
-        // 字段主数据
-        // 已选字段ids
-        checkedFieldList: {},
         // 全部字段
         fieldList: {},
-        // 已选字段完整数据
-        checkedFieldListAll: {},
-
-        // 数据主体类型id
-        mainBodyId: 0,
-        // 数据主体类型name
-        mainBodyName: '',
-        disabled: false,
-        disabledCheckboxKeys: false,
-
-        disabledSelectKeys: {},
-        disabledSelectAllKeys: {},
-
+          // 选中的dataClass
+        activeDataClass: [],
+          // 所有选中数据结构体
+        checkAllFields: [],
+          // 渲染多选框数据结构体
+          renderList: [],
+          // 选中的主体
+          mainBodyId: 0,
       };
-    },
-    watch: {
-        checkedDataSubjectObjList(val) {
-            console.log(this.checkedDataSubjectObjList ,'checkedDataSubjectObjList')
-        },
     },
     created() {
         this.getCategoryList()
         this.getTypeList()
     },
     methods: {
-        //  获取选中的全部数据(传递给父组件)
-        getCheckedDataSubjectObjList() {
-            return this.checkedDataSubjectObjList
+        mounted() {
+            this.buildRenderList()
+            this.buildEchoFields()
         },
-        // 选择数据主体类型
-        handleChecked(index) {
-            this.mainBodyId = index*1
-            this.mainBodyName = this.checkedDataSubjectObjList.find(item => item.mainBodyId === this.mainBodyId).mainBodyName
-            this.checkedDataSubjectObjList.length !== 0 && this.checkedDataSubjectObjList.forEach((item,index) => {
-                if(item.mainBodyId === this.mainBodyId) {
-                    this.checkedCategoryList = item.checkedCategoryList || []
-                    this.checkedCategoryListAll = item.checkedCategoryListAll || []
-
-                    this.disabled = this.disabledKeys ? this.disabledKeys.includes(item.mainBodyId) : false;
-
-                    this.checkedDataClass = item.checkedDataClass || []
-
-                    this.checkedFieldList = item.checkedFieldList || {}
-                    this.checkedFieldListAll = item.checkedFieldListAll || {}
-
-                    this.disabledSelectKeys = deepClone(this.checkedFieldList);
-                    this.disabledSelectAllKeys = deepClone(this.checkedCategoryList);
-
-                }
-            })
-            console.log(this.checkedDataSubjectObjList ,this.checkedDataClass,'切换主体类型数据')
+        setValue() {
             this.$nextTick(() => {
-                if('checkCBox' in this.$refs) {
-                    this.$refs.checkCBox.echoChecked()
-                }
-            })
-            this.getAllAttributesByIds(this.checkedCategoryList, this.checkedDataClass, this.mainBodyId, '')
-        },
-        // 获取字段类别
-        getCategoryList() {
-            getCategoryList().then(res => {
-                this.categoryList = res.data.data
+                this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
             })
         },
-        // 点击字段类别多选框事件
-        handleCategoryCheckedChange(checkedList, checkedListAll) {
-            this.checkedCategoryList = checkedList
-            this.checkedCategoryListAll = checkedListAll
-            this.checkedDataSubjectObjList.length !== 0 && this.checkedDataSubjectObjList.forEach((item,index) => {
-                if(item.mainBodyId === this.mainBodyId) {
-                    item.checkedCategoryList = checkedList
-                    item.checkedCategoryListAll = checkedListAll
-                }
-            })
-            this.getAllAttributesByIds(this.checkedCategoryList, this.checkedDataClass, this.mainBodyId, '')
-        },
-
         // 获取数据分类
         getTypeList() {
             getTypeList().then(res => {
                 this.dataClassList = res.data.data
             })
         },
-
-        // 数据分类多选框点击事件
-        handleDataClassCheckedChange(val) {
-            console.log(val, "vallll");
-            // this.checkedDataClass = val
-            this.checkedDataSubjectObjList.length !== 0 && this.checkedDataSubjectObjList.forEach((item,index) => {
-                if(item.mainBodyId === this.mainBodyId) {
-                    item.checkedDataClass = val
-                    item.dataClassList = [...this.dataClassList]
-                }
-            })
-            this.getAllAttributesByIds(this.checkedCategoryList, this.checkedDataClass, this.mainBodyId, '')
-        },
-
-        // 获取字段
-        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, attributesName) {
-            getAllAttributesByIds(categoryIds, typeIds, mainBodyId, attributesName).then(res => {
-                this.fieldList = res.data.data.reduce((pre, cur, curIndex, arr)=> {
-                    const obj = {}
-                    const idKey = cur.categoryId
-                    const itemValue = arr.filter(item => item.categoryId === idKey)
-                    obj[idKey] = itemValue
-                    return {...pre, ...obj}
-                }, {})
-                this.$nextTick(() => {
-                    if('checkBox' in this.$refs) {
-                        this.$refs.checkBox.forEach(item => {
-                            item.echoChecked()
-                        })
-                    }
-                
+        // 获取字段类别
+        getCategoryList() {
+            getCategoryList().then(res => {
+                this.categoryList = res.data.data
+                this.categoryList.forEach(item => {
+                    item._id = item.categoryId
+                    item.label = item.categoryName
+                    item.value = item.categoryId
+                    item.list = []
+                    item.show = true
                 })
             })
         },
 
-        // 点击字段多选框事件
-        handleFieldCheckedChange(checkedList, checkedListAll, id) {
-            
-            checkedListAll.forEach((item,index) => {
-                item.mainBodyId = this.mainBodyId
-                item.mainBodyName = this.mainBodyName
+        // 构建多选框显示结构数据
+        buildRenderList() {
+            this.renderList = this.checkedMain.map((item) => ({
+                _id: item.mainBodyId.toString(),
+                list: this.categoryList
+            }))
+        },
+
+
+        // 构建多选框选中回显信息
+        /**
+         * {
+         *     _id: 1,
+         *     checked: [
+         *         { _id: 2, checked: [] }
+         *     ]
+         * }
+         *
+         * {
+         *     _id: 1,
+         *     label: '',
+         *     value: '',
+         *     show: false,
+         *     list: [
+         *         { _id: 1. label: '', value: '', show: false, list: [] }
+         *     ]
+         * }
+         */
+        buildEchoFields() {
+            this.checkAllFields = this.echo.map(main => ({
+                _id: main.mainBodyId.toString(),
+                checked: this.buildCheckboxList(main.categoryList, main.attributes)
+            }))
+        },
+        buildCheckboxList(categoryList, attributes){
+            return categoryList.map((item) => {
+                const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
+                const attrIds = attrs.map((item) => {
+                    return { _id: item.attributesId, checked: [] };
+                })
+                return { _id: item.categoryId, checked: attrIds }
             })
+        },
 
-            this.checkedFieldList[id] = checkedList
-            this.checkedFieldListAll[id] = checkedListAll
+        handleClickDataClass(typeId) {
+            const index = this.activeDataClass.findIndex(v => v === typeId)
+            if (index !== -1) {
+                return this.activeDataClass.splice(index, 1)
+            }
+            this.activeDataClass.push(typeId)
+        },
 
-            this.checkedDataSubjectObjList.length !== 0 && this.checkedDataSubjectObjList.forEach((item,index) => {
-                if(item.mainBodyId === this.mainBodyId) {
-                    if(!('checkedFieldList' in item)) {
-                        item.checkedFieldList = {}
+        // 选择数据主体类型
+        handleChecked(index) {
+            this.mainBodyId = index;
+            this.setValue();
+        },
+
+
+
+        // 数据分类多选框点击事件
+        handleDataClassCheckedChange(val) {
+        },
+
+
+        // 获取字段
+        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
+            const [itemList] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, categoryIds)
+
+            return getAllAttributesByIds(categoryIds, typeIds, mainBodyId, '').then(res => {
+                const attrs = res.data.data || [];
+                if (!attrs.length) {
+                    return;
+                }
+                attrs.forEach(item => {
+                    item._id = uniqueId()
+                    item.label = item.attributesName
+                    item.value = item._id
+                    item.show = true
+                    item.list = []
+                })
+                itemList.list = attrs
+                checked.push(...attrs.map(item => {
+                    return {
+                        _id: item._id,
+                        checked: []
                     }
-                    if(!('checkedFieldListAll' in item)) {
-                        item.checkedFieldListAll = {}
+                }))
+
+            })
+        },
+
+        // 取消多选框时，删除选中的数据/删除节点list数据, 返回需要新增的id数组
+        deleteCheckedOrList(data, checkedList, checkId) {
+            const [itemList, itemChecked] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, checkId)
+
+            itemList.list.forEach(item => {
+                item.show = checkedList.includes(item._id);
+
+                if (!item.show) {
+                    const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
+                    if (i !== -1) {
+                        itemChecked.checked.splice(i, 1)
                     }
-                    item.checkedFieldList[id] = checkedList
-                    item.checkedFieldListAll[id] = checkedListAll
                 }
             })
-            console.log(this.checkedFieldListAll, this.mainBodyId, '多选框数据处理')
+            const needAddIds = checkedList.filter(_id => !itemChecked.checked.find(item => item._id === _id))
+
+            return [needAddIds, itemChecked, itemList]
+        },
+
+        // 点击字段多选框事件
+        async handleCheckedChange(checkedList, checkId) {
+            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
+
+            // 找到新增id，调用接口设置选中和节点
+            if (needAddIds.length) {
+
+                for (let i = 0; i < needAddIds.length; i++) {
+                    const currentValue = needAddIds[i]
+                    const item = itemList.list.find(item => (item._id === currentValue) && item.show)
+                    // item 为true，可以不用调接口
+                    const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
+                    itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
+                    if (!item?.list?.length) {
+                        await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
+                    }
+                }
+            }
+
+
+            this.checkAllFields = [...this.checkAllFields]
+            this.renderList = [...this.renderList]
+            this.setValue()
         },
 
     }
@@ -301,6 +280,20 @@ export default {
     border-radius: 6px;
     margin-bottom: 50px;
     box-shadow: 2px 3px 12px 6px gainsboro;
+
+    ::v-deep .el-card__body {
+        padding: 0;
+    }
+
+    .select-field-content {
+        flex: 1;
+        width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
     .dataSubject {
         padding-top: 45px;
         background-color: #eaf4fd;
@@ -313,15 +306,6 @@ export default {
         display: flex;
         // align-items: center;
         justify-content: center;
-    }
-    .dataClass {
-        border-left: 1px solid gainsboro;
-        border-bottom: 1px solid gainsboro;
-        background-color: #eaf4fd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px !important;
     }
     .field {
         display: flex;

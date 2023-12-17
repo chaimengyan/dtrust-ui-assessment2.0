@@ -162,63 +162,6 @@
         </template>
       </avue-crud>
     </basic-container>
-    <!-- <el-drawer size="100%" v-if="relationDialog" :visible.sync="relationDialog">
-      <div class="drawer-header" slot="title">
-        <span class="drawer-header-title" v-html="relationTitle"></span>
-        <div class="drawer-header-screen" @click="() => isFullscreen = !isFullscreen">
-          <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
-        </div>
-      </div>
-      <el-steps style="width: 60%;margin: 0 auto;" simple  :active="active" finish-status="success">
-        <el-step :title="$t('assetsManagement.选择数据主体')"></el-step>
-        <el-step :title="$t('assetsManagement.选择字段')"></el-step>
-        <el-step :title="$t('assetsManagement.字段配置')"></el-step>
-      </el-steps>
-      <DataSubject
-        v-show="active === 0"
-        ref="dataSubject"
-        :echoCheckedDataSubjectList="echoCheckedDataSubjectList"
-        @getCheckedDataSubject="getCheckedDataSubject"
-      />
-      <SelectField
-        v-show="active === 1"
-        ref="selectField"
-        :defaultActive="defaultActive"
-        :projectId="projectId"
-        :checkedDataSubjectObjList="checkedDataSubjectObjList"
-        :isView="false"
-        />
-
-      <FieldRelation
-        v-show="active === 2"
-        ref="fieldRelation"
-        :projectId="projectId"
-        :isView="false"
-        :fieldList="fieldList"
-        :saveBtnText="saveBtnText"
-        @saveSuccess="FieldRelationSaveSuccess"
-         />
-      <div class="demo-drawer__footer">
-          <el-button
-            type="primary"
-            v-if="active !== 0"
-            icon="el-icon-top"
-            @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
-          <el-button
-            type="primary"
-            v-if="active !== 2"
-            icon="el-icon-bottom"
-            @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
-          <el-button
-            type="primary"
-            v-if="active === 2"
-            :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
-            @click="relationFormSubmit">{{saveBtnText}}</el-button>
-          <el-button
-            icon="el-icon-circle-close"
-            @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
-      </div>
-    </el-drawer> -->
     <AssetsRelationField
       ref="assetsRelationFieldRef"
       :isAssets="true"
@@ -492,9 +435,6 @@ export default {
   },
   computed: {
     ...mapGetters(["permissions", "userInfo"]),
-    // option() {
-    //   return tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, {})
-    // },
   },
   created() {
     this.getList(this.page)
@@ -561,40 +501,6 @@ export default {
 
     saveLatlng() {
       this.showMap = false
-    },
-    // 下一步
-    nextStep() {
-      if(this.active === 0) {
-        if(this.checkedDataSubjectObjList.length === 0) {
-          this.$message.error(this.$t('assetsManagement.请至少选择一个主体类型'))
-        } else {
-          this.defaultActive = this.checkedDataSubjectObjList[0].mainBodyId + ''
-
-          this.$refs.selectField.handleChecked(this.defaultActive)
-          console.log(this.defaultActive, 'mmmm');
-          this.active++
-        }
-      }else if(this.active === 1) {
-        const dataList = this.$refs.selectField.getCheckedDataSubjectObjList()
-        const isCheckField = dataList.every(item => {
-          return 'checkedFieldListAll' in item && item.checkedFieldListAll.length !== 0
-          })
-        if(isCheckField) {
-          this.fieldList = this.handleFieldList(dataList)
-            if(this.fieldList.length === 0) {
-              this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-            } else {
-              this.active++
-            }
-        } else {
-          this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-        }
-      }
-      // else {
-      // this.active++
-
-      // }
-      // this.active++
     },
     // 上一步
     previousStep() {
@@ -672,7 +578,6 @@ export default {
     // 点击资产名称查看详情
     cellClick(row, column) {
       if(column.label === this.$t('assetsManagement.资产名称')) {
-        console.log(row, column, 'row, column');
         this.projectId = row.projectId
         this.viewColumn = this.$refs.crud.columnOption
         this.rowData = row
@@ -681,7 +586,6 @@ export default {
 
       }
       if(column.label === '版本号') {
-        console.log(row, column, 'row, column');
         this.projectId = row.projectId
         this.historyVersionDialog = true
       }
@@ -846,18 +750,7 @@ export default {
 
     // 打开关联字段弹窗
     relationBtn(row) {
-      this.$refs.assetsRelationFieldRef.relationBtn(row, '100%')
-      return
-      this.fullscreenLoading = true
-      this.active = 0
-      this.projectId = row.projectId
-      this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
-      this.relationDialog = true
-      this.getAssetsProjectAttributesListByProjectId(this.projectId).then(()  => {
-        this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
-        this.$refs.dataSubject.echoChecked()
-        this.fullscreenLoading = false
-      })
+      this.$refs.assetsRelationFieldRef.relationBtn(row)
     },
 
     // 查看历史记录

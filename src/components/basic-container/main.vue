@@ -21,6 +21,7 @@ export default {
 
 <style lang="scss">
 .basic-container {
+    width: 100%;
   padding: 8px 10px;
   border-radius: 10px;
   box-sizing: border-box;

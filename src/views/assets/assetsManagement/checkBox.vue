@@ -1,39 +1,49 @@
 <template>
     <basic-container>
-        <el-checkbox :disabled="disabledKeys" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">{{parentName}}</el-checkbox>
-        <div style="margin: 15px 0;"></div>
-        <el-checkbox-group v-model="checkedList" @change="handleCheckedChange">
+<!--        <el-checkbox :indeterminate="isIndeterminate" v-model="isCheckAll" @input="handleCheckAllChange">{{parentName}}</el-checkbox>-->
+<!--        <div style="margin: 15px 0;"></div>-->
+        <el-checkbox-group class="checkbox-group" :value="checkedIdList" @input="handleCheckedChange">
             <el-checkbox
+                class="checkbox-item"
                 :indeterminate="isViceIndeterminate"
-                style="margin: 10px;"
-                v-for="item in dataList"
-                :label="item[itemId]"
-                :key="item[itemId]"
-                :disabled="'disabled' in item ? item.disabled : (disabledKeys ? disabledKeys.includes(item[itemId]) : false)"
+                style="margin: 10px 0px;"
+                v-for="item in list"
+                :label="item.value"
+                :key="item.value"
                 >
-                {{item[itemName]}}
+                <div>
+                    {{item.label}} --{{item.show}} -- {{checkedIdList}}
+                </div>
+
+                <CheckBox
+                    v-if="item.list.length"
+                    v-show="item.show"
+                    class="checkbox-group-child"
+                    :data-checkId="item._id"
+                    ref="child"
+                    :parentName="item.label"
+                    :check-all-fields="checkAllFields"
+                    :renderList="renderList"
+                    @handleCheckedChange="handleCheckedChange"
+                />
             </el-checkbox>
         </el-checkbox-group>
     </basic-container>
 </template>
 
 <script>
-import {deepClone} from '@/util/util'
+import {getChildrenById} from "@/util/util";
+
 export default {
     name: "CheckBox",
     props: {
         // 回显已选数据
-        echoCheckedList: {
+        checkAllFields: {
             type: Array,
             default: () => []
         },
         // 回显已选完整数据
-        echoCheckedListAll: {
-            type: Array,
-            default: () => []
-        },
-        // 全部数据
-        dataList: {
+        renderList: {
             type: Array,
             default: () => []
         },
@@ -41,18 +51,6 @@ export default {
         parentName: {
             type: String,
             default: '全选'
-        },
-        itemId: {
-            type: String,
-            default: ''
-        },
-        itemName: {
-            type: String,
-            default: ''
-        },
-        disabledKeys: {
-            type: Boolean,
-            default: false
         },
     },
     data() {
@@ -62,51 +60,72 @@ export default {
         // 副全选按钮样式
         isViceIndeterminate: false,
         // 是否全选
-        checkAll: false,
+        isCheckAll: false,
         // 已选数据id
+          checkedIdList: [],
         checkedList: [],
-        // 已选数据全部
-        checkedListAll: [],
+          list: [],
+          checkId: ''
       };
     },
-    watch: {
-    },
-    created() {
-    },
     methods: {
-        // 回显选中
-        echoChecked() {
-            console.log(this.checkedList, 'this.checkedListthis.checkedListthis.checkedList');
-            this.checkedList = deepClone(this.echoCheckedList)
-            this.handleCheckedChange(this.checkedList)
+        setDefaultValue(checkId) {
+            this.checkId = checkId;
+            this.setRenderList()
         },
-        // 点击全选按钮事件
-        handleCheckAllChange(val) {
-            this.checkedList = val ? this.dataList.map(item => (item[this.itemId])) : [];
-            this.checkedListAll = val ? this.dataList : [];
-            this.isIndeterminate = false;
-            this.$emit('handleCheckedChange', this.checkedList, this.checkedListAll)
-        },
+        setRenderList() {
+            const [itemList, itemChecked] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, this.checkId)
+            this.list = [...(itemList.list || [])]
+            this.checkedList = [...(itemChecked?.checked || [])]
+            this.setCheckIds()
 
-        // 点击多选框事件
-        handleCheckedChange(value) {
-            console.log(value, 'vvvvvv');
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.dataList.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataList.length;
-            if(this.echoCheckedListAll.length !== 0) {
-                this.checkedListAll = value.map((item,index) => {
-                    return this.echoCheckedListAll.find(e => (e[this.itemId] ===item)) || this.dataList.find(d => (d[this.itemId] ===item))
+            setTimeout(() => {
+                this.$refs.child?.forEach(item => {
+                    const id = item.$el.getAttribute('data-checkid')
+                    item.setDefaultValue(Number(id))
                 })
-            } else {
-                this.checkedListAll = this.dataList.filter(item => (this.checkedList.includes(item[this.itemId])))
-            }
-            
-            this.$emit('handleCheckedChange', this.checkedList, this.checkedListAll)
+            })
+
+        },
+        setCheckIds() {
+            this.checkedIdList = this.checkedList?.map(item => item._id) || [];
+        },
+        // 点击多选框事件
+        handleCheckedChange(value, checkId) {
+            this.$emit('handleCheckedChange', value, checkId || this.checkId)
         },
     }
 }
 </script>
 <style lang="scss" scoped>
+.checkbox-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
 
+    ::v-deep .el-checkbox__label {
+        line-height: 15px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: flex-start;
+        width: 50%;
+        flex-shrink: 0;
+
+        .checkbox-group-child {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            background: #f3f2f2;
+
+            ::v-deep .el-card {
+                background: transparent !important;
+            }
+        }
+    }
+}
 </style>

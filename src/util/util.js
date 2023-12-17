@@ -373,7 +373,7 @@ export function downBlobFile(url, query, fileName) {
   });
 }
 
-/** 
+/**
  * 从数组中删除指定对象
  *  _arr:数组
  *  _obj:需删除的对象
@@ -418,4 +418,23 @@ export function getFileFromUrl(url, fileName) {
       // 发送
       xhr.send();
   });
+}
+
+// 递归返回字段, 同步获取两个数据源
+export function getChildrenById(data, _id, field) {
+    const { d1, d2 } = data;
+    const { k1, k2 } = field || { k1: 'list', k2: 'checked' };
+    for (let i = 0; i < d1.length; i++) {
+        const item1 = d1[i]
+        const item2 = d2.find(item => item._id === item1._id)
+        if (item1._id === _id) {
+            return [item1, item2];
+        }
+        if (item1[k1] && item1[k1].length) {
+            const is = getChildrenById({ d1: item1[k1], d2: item2[k2] }, _id, field)
+            if (is) {
+                return is;
+            }
+        }
+    }
 }
