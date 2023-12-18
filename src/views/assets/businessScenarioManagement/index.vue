@@ -74,6 +74,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_edit"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row, scope.index)"
@@ -82,6 +83,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.关联')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_relation"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-link"
               @click="relationBtn(scope.row, scope.index)"
@@ -98,6 +100,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.评估')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_assessment"
+              :disabled="!handleDataPermissions('update', scope.row)"
               class="filter-item"
               type="text"
               @click="openAssessment(scope.row)"
@@ -108,6 +111,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_del"
+              :disabled="!handleDataPermissions('delete', scope.row)"
               type="text"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"
@@ -116,6 +120,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.审核')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_del&&scope.row.status === 1"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-s-check"
               @click="examineBtn(scope.row, scope.index)"

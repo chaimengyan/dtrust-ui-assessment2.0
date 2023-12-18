@@ -60,6 +60,7 @@
             <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.待审核')" placement="top">
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
+                :disabled="!handleDataPermissions('update', scope.row)"
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row, 1)"

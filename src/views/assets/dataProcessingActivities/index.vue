@@ -67,6 +67,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
             <el-button
               v-if="permissions.assets_dataProcessingActivities_edit"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit"
               @click="addOrEditBtn('edit', scope.row)"
@@ -75,6 +76,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
             <el-button
               v-if="permissions.assets_dataProcessingActivities_del"
+              :disabled="!handleDataPermissions('delete', scope.row)"
               type="text"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"

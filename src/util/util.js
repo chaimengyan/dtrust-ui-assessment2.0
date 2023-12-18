@@ -1,7 +1,7 @@
 import {validatenull} from "./validate";
 import request from "@/router/axios";
 import * as CryptoJS from "crypto-js";
-
+import store from '@/store'
 // 数据合并
 export function mergeRecursive(source, target) {
   for (let index in target) {
@@ -243,6 +243,53 @@ export const findParent = (menu, id) => {
       }
     }
   }
+};
+
+// 判断当前传入的字段值是否存在于树数据中
+export function searchTree(nodesArr, searchKey) {
+  for (let _i = 0; _i < nodesArr.length; _i++) {
+      if (nodesArr[_i].id === searchKey) {
+        // 这个return自己想要的结果就行
+          return true
+      } else {
+          if (nodesArr[_i].children && nodesArr[_i].children.length > 0) {
+            // 如果是vue文件，注意下面换成this.searchTree
+              let res = searchTree(nodesArr[_i].children, searchKey);
+              return res
+          }
+      }
+  }
+  return false
+}
+
+/**
+ * @btnType {string} 按钮类型:inquire查询，delete删除，update修改
+ * @belongTo {number} 所属部门
+ * @createBy {string} 创建人
+ */
+export function handleDataPermissions(btnType, row) {
+  // 定义变量内容
+  const { dataPermissionDepts, deletePermissionDepts, updatePermissionDepts, sysUser } = store.state.user.infoRest;
+  if(btnType === 'inquire') {
+      if(dataPermissionDepts.length !== 0) {
+         return searchTree(dataPermissionDepts, row.belongTo)
+      }else {
+          return sysUser.username === row.createBy 
+      }
+  }else if(btnType === 'delete') {
+      if(deletePermissionDepts.length !== 0) {
+          return searchTree(deletePermissionDepts, row.belongTo)
+       }else {
+           return sysUser.username === row.createBy 
+       }
+  }else {
+      if(updatePermissionDepts.length !== 0) {
+          return searchTree(updatePermissionDepts, row.belongTo)
+       }else {
+           return sysUser.username === row.createBy 
+       }
+  }
+ 
 };
 
 /**

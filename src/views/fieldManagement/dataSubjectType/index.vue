@@ -43,6 +43,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
             <el-button
               v-if="permissions.field_dataSubjectType_edit"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row, scope.index)"
@@ -51,6 +52,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('fieldManagement.计算数量')" placement="top">
             <el-button
               v-if="permissions.field_dataSubjectType_calculation"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit-outline"
               @click="calculation(scope.row, scope.index)"
@@ -59,6 +61,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
             <el-button
               v-if="permissions.field_dataSubjectType_del"
+              :disabled="!handleDataPermissions('delete', scope.row)"
               type="text"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"
