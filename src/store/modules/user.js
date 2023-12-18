@@ -32,7 +32,7 @@ const user = {
     state: {
         userInfo: {},
         permissions: {},
-        depts: [],
+        infoRest: {},
         roles: [],
         menu: getStore({
             name: 'menu'
@@ -67,10 +67,11 @@ const user = {
             return new Promise((resolve, reject) => {
                 getUserInfo().then((res) => {
                     const data = res.data.data || {}
+                    const {sysUser, roles, permissions, ...rest} = data
                     commit('SET_USER_INFO', data.sysUser)
-                    commit('SET_ROLES', data.roles || [])
-                    commit('SET_PERMISSIONS', data.permissions || [])
-                    commit('SET_DEPTS', data.depts)
+                    commit('SET_ROLES', roles || [])
+                    commit('SET_PERMISSIONS', permissions || [])
+                    commit('SET_INFO_REST', rest)
                     resolve(data)
                 }).catch((err) => {
                     reject()
@@ -111,7 +112,7 @@ const user = {
                 logout().then(() => {
                     commit('SET_MENU', [])
                     commit('SET_PERMISSIONS', [])
-                    commit('SET_DEPTS', [])
+                    commit('SET_INFO_REST', {})
                     commit('SET_USER_INFO', {})
                     commit('SET_ACCESS_TOKEN', '')
                     commit('SET_REFRESH_TOKEN', '')
@@ -129,7 +130,7 @@ const user = {
             return new Promise(resolve => {
                 commit('SET_MENU', [])
                 commit('SET_PERMISSIONS', [])
-                commit('SET_DEPTS', [])
+                commit('SET_INFO_REST', {})
                 commit('SET_USER_INFO', {})
                 commit('SET_ACCESS_TOKEN', '')
                 commit('SET_REFRESH_TOKEN', '')
@@ -190,8 +191,8 @@ const user = {
             }
             state.permissions = list
         },
-        SET_DEPTS: (state, depts) => {
-            state.depts = depts
+        SET_INFO_REST: (state, infoRest) => {
+            state.infoRest = infoRest
         }
 
     }

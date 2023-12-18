@@ -73,7 +73,7 @@
           </el-button>
           <el-button
             v-if="permissions.assets_assetsManagement_import"
-            class="filter-item"
+            class="filter-item"            
             @click="importAsset"
             type="primary"
             icon="el-icon-document-add"
@@ -101,6 +101,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_edit"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row, scope.index)"
@@ -109,6 +110,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.关联')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_relation"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-link"
               @click="relationBtn(scope.row, scope.index)"
@@ -125,6 +127,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.评估')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_assessment"
+              :disabled="!handleDataPermissions('update', scope.row)"
               class="filter-item"
               @click="openAssessment(scope.row)"
               type="text"
@@ -135,6 +138,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_del"
+              :disabled="!handleDataPermissions('delete', scope.row)"
               type="text"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"
@@ -143,6 +147,7 @@
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.复制')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_del"
+              :disabled="!handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-document-copy"
               @click="copyBtn(scope.row, scope.index)"

@@ -15,7 +15,7 @@ import router from "./router/router";
 import store from "./store";
 import i18n from './lang/';
 import { language, messages } from './lang/';
-import { loadStyle,loadScript, downBlobFile } from "@/util/util";
+import { loadStyle,loadScript, downBlobFile, handleDataPermissions } from "@/util/util";
 import { validatenull } from "@/util/validate";
 import * as urls from "@/config/env";
 import { iconfontUrl, iconfontVersion } from "@/config/env";
@@ -32,6 +32,7 @@ import './icons' // icon
 // 挂载常用全局方法，import 引入
 Vue.prototype.validatenull = validatenull;
 Vue.prototype.downBlobFile = downBlobFile;
+Vue.prototype.handleDataPermissions = handleDataPermissions;
 
 // DictResolver.install()
 
