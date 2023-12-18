@@ -1,8 +1,8 @@
 <template>
     <basic-container>
         <el-row :gutter="20">
-            <el-checkbox-group v-model="checkedAssetIds" @change="handleChange">
-                <el-col :span="6" v-for="item in assetsList" :key="item.projectId">
+            <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
+                <el-col :span="6" v-for="item in dataSubjectList" :key="item.projectId">
                     <div class="grid-content bg-purple">
                         <el-checkbox :label="item.projectId">
                             {{item.projectName}}
@@ -15,155 +15,83 @@
 </template>
 <script>
 import {
-  getAllAssetsProject
-} from "@/api/assets/assetsManagement";
-import {
-  getProjectAttributesListByProjectId
+    getAllAssetsProject
 } from "@/api/assets/assetsManagement";
 export default {
-    name: "RelatedAssets",
-    components: {
-        
+    name: "DataSubject",
+    inject: ['echoCheckedDataSubjectList'],
+    computed: {
+        echo() {
+            return this.echoCheckedDataSubjectList()
+        }
     },
     props: {
-        echoCheckedAssetObjList: {
-            type: Array,
-            default: () => []
-        },
+        projectId: {
+            type: Number,
+            default: 0
+        }
     },
     data() {
-      return {
-        // 资产列表
-        assetsList: [],
-        // 已选资产id
-        checkedAssetIds: [],
-        // 已选资产对象
-        checkedAssetObjList: [],
-      };
-    },
-    watch: {
-      
+        return {
+            // 数据主体列表
+            dataSubjectList: [],
+            // 已选数据主体类型id
+            checkedDataSubjectList: [],
+            checkedDataSubjectOptions: []
+        };
     },
     created() {
-        this.getAllAssetsProject()
-       
+        this.getMainBodList()
     },
     methods: {
-        // 回显选中
-        echoChecked() {
-            this.checkedAssetIds = this.echoCheckedAssetObjList.map(item => {
-              this.getProjectAttributesListByProjectId(item.projectId)
-              return item.projectId
-            })
-        },
-        // 查询所有资产
-        getAllAssetsProject() {
-            getAllAssetsProject().then(res => {
-                this.assetsList = res.data.data
-            })
-        },
-        // 选择资产事件
-        handleChange(val) {
-          const lastId = val.length === 0 ? '' : val[val.length-1]
-          this.getProjectAttributesListByProjectId(lastId)
-
-        },
-        // 处理数据后向父组件传值
-        handleCheckedAssetObjList() {
-          this.checkedAssetObjList = this.checkedAssetIds.map((item,index) => {
-            return this.assetsList.find(d => (d.projectId ===item))
-          })
-          return this.checkedAssetObjList
-        },
-
-         // 根据资产id查询字段 
-         getProjectAttributesListByProjectId(id) {
-            if(id === '' || 'dataSubjectList' in this.assetsList.find(p => p.projectId === id)) {
-              this.handleCheckedAssetObjList()
-            } else {
-              getProjectAttributesListByProjectId(id).then(res => {
-                const a = this.handleEchoData(res.data.data, id)
-                this.assetsList.forEach((item, index) => {
-                    if(item.projectId === id) {
-                      this.$set(item, 'dataSubjectList', a)
-                    }
-                })
-                this.handleCheckedAssetObjList()
-              })
+        setDefaultValue() {
+            if (this.echo.length) {
+                this.checkedDataSubjectList = this.echo.map(item => item.projectId) || []
+                this.handleCheckedChange(this.checkedDataSubjectList)
             }
         },
-
-        // 处理关联字段接口返回数据，用于回显关联字段组件
-        handleEchoData(data, projectId) {
-            data.forEach((item,index) => {
-                this.echoCheckedAssetObjList.forEach(asset => {
-                  if(asset.projectId === projectId) {
-                    asset.dataSubjectList.forEach(e => {
-                      if(e.mainBodyId === item.mainBodyId){
-                        item.checkedCategoryList = e.checkedCategoryList
-                        item.checkedDataClass = e.checkedDataClass
-                        item.checkedFieldList = e.checkedFieldList
-                        item.checkedFieldListAll = e.checkedFieldListAll
-
-                        // 取消勾选字段后再次勾选仍回显之前的字段关联信息
-                        item.attributes.forEach((f, i, arr) => {
-                          e.attributes.forEach(ef => {
-                            if(f.attributesId === ef.attributesId) {
-                              arr[i] = ef
-                            }
-                          })
-                        })
-
-                      }
-                    })
-                  }
-                })
-                item.dataClassList = item.typeList
-
-                item.mainBodyIdCp = `${item.mainBodyId.toString()}+${projectId.toString()}`
-                
-                if(!('fieldList' in item)) {
-                    item.fieldList = {}
-                }
-                item.categoryList.forEach((x, j) => { // 字段回显
-                    item.fieldList[x.categoryId] = item.attributes.filter(a => x.categoryId === a.categoryId)
-                })
-              })
-            return data
+        getMainBodList() {
+            getAllAssetsProject().then(res => {
+                this.dataSubjectList = res.data.data
+                this.setDefaultValue()
+            })
         },
-      
-
+        // 选择数据主体事件
+        handleCheckedChange(val) {
+            this.checkedDataSubjectOptions = this.dataSubjectList.filter(item => val.includes(item.projectId))
+            this.$emit('change', this.checkedDataSubjectOptions)
+        },
     }
 }
 </script>
 <style lang="scss" scoped>
-    .el-row {
+.el-row {
     margin-bottom: 20px;
     &:last-child {
-      margin-bottom: 0;
+        margin-bottom: 0;
     }
-  }
-  .el-col {
+}
+.el-col {
     border-radius: 4px;
-  }
-  .bg-purple-dark {
+}
+.bg-purple-dark {
     background: #99a9bf;
-  }
-  .bg-purple {
+}
+.bg-purple {
     background: #f5f9fe;
-  }
-  .bg-purple-light {
+}
+.bg-purple-light {
     background: #e5e9f2;
-  }
-  .grid-content {
+}
+.grid-content {
     border-radius: 4px;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  .row-bg {
+}
+.row-bg {
     padding: 10px 0;
     background-color: #f9fafc;
-  }
+}
 </style>

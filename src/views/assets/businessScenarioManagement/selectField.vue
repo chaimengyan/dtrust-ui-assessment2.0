@@ -1,401 +1,294 @@
 <template>
     <basic-container>
-       <el-container class="fieldContainer">
-           <!-- 数据主体类型 -->
-            <el-aside class="dataSubject"  width="300px">
+        <el-container class="fieldContainer">
+            <!-- 数据主体类型 -->
+            <el-aside class="dataSubject"  width="200px">
                 <el-menu
                     class="el-menu-vertical-demo"
-                    @open="handleChecked"
-                    @select="checkDataSubject"
+                    @select="handleChecked"
                     :default-active="defaultActive"
-                    unique-opened
                     background-color="#dadde2"
                     text-color="#303133"
-                    >
-                    <template v-for="(item, index) in checkedAssetObjList">
-                        <el-submenu :index="item.projectId.toString()" :key="item.projectId">
-                            <template slot="title">
-                                <div style="display: flex;justify-content: space-around;">
-                                    <div>
-                                        {{item.projectName}}
-                                    </div>
-                                    <div @click="addFields(item, index)">
-                                        <i class="el-icon-circle-plus-outline" ></i>
-                                    </div>
+                >
+                    {{ checkedProjectBody }}
+                    <el-submenu v-for="item in checkedProjectBody" :index="item.projectId.toString()" :key="item.projectId">
+                        <template slot="title">
+                            <div style="display: flex;justify-content: space-around;">
+                                <div>
+                                    {{item.projectName}}
                                 </div>
-                            </template>
-                            <template v-for="i in item.dataSubjectList">
-                                <el-menu-item :index="`${i.mainBodyId.toString()}+${item.projectId.toString()}`" :key="i.mainBodyId" >
-                                    {{i.mainBodyName}}
-                                </el-menu-item>
-                            </template>
-                        </el-submenu>
-                    </template>
+                                <div>
+                                    <i class="el-icon-circle-plus-outline" ></i>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-for="i in item.dataSubjectList">
+                            <el-menu-item :index="`${i.mainBodyId.toString()}+${item.projectId.toString()}`" :key="i.mainBodyId" >
+                                {{i.mainBodyName}}
+                            </el-menu-item>
+                        </template>
+                    </el-submenu>
                 </el-menu>
-
-
             </el-aside>
             <el-container>
-                <!-- 数据分类 -->
-                <el-header class="dataClass">
-                    <!-- <el-checkbox-group v-model="checkedDataClass" size="medium" @change="handleDataClassCheckedChange">
-                        <el-checkbox-button
+                <div class="select-field-content">
+                    <div>
+                        <el-tag
                             v-for="item in dataClassList"
-                            :label="item.typeId"
-                            :key="item.typeId">
-                            {{item.typeName}}
-                        </el-checkbox-button>
-                    </el-checkbox-group> -->
-                    <CheckTag
-                        :data="dataClassList"
-                        :defaultProp="defaultProp"
-                        v-model="checkedDataClass"
-                        @change="handleDataClassCheckedChange"
-                    />
-                </el-header>
-                <el-main class="field">
-                    <!-- 字段类别 -->
-                    <el-aside class="category" width="200px">
-                        <CheckBox
-                            ref="checkCategoryBox"
-                            :echoCheckedList="checkedCategoryList"
-                            :dataList="categoryList"
-                            :parentName="$t('assetsManagement.全选')"
-                            itemId="categoryId"
-                            itemName="categoryName"
-                            @handleCheckedChange="handleCategoryCheckedChange"
-                        />
-                    </el-aside>
-                        <!-- 字段主数据 -->
-                        <div class="fieldList" >
-                            <!-- <el-input
-                                placeholder="输入关键字进行过滤"
-                                v-model="filterText">
-                            </el-input> -->
-                            <template v-for="item in checkedCategoryListAll">
-                                <CheckBox
-                                    ref="checkBox"
-                                    :echoCheckedList="checkedFieldList[item.categoryId]"
-                                    :echoCheckedListAll="checkedFieldListAll[item.categoryId]"
-                                    :dataList="fieldList[item.categoryId]"
-                                    :parentName="item.categoryName"
-                                    itemId="attributesId"
-                                    itemName="attributesName"
-                                    :key="item.categoryId"
-                                    @handleCheckedChange="(...arg) => handleFieldCheckedChange(...arg, item.categoryId)"
-                                />
-                            </template>
-                        </div>
-
-                </el-main>
+                            :key="item.typeId.toString()"
+                            :type="activeDataClass.includes(item.typeId) ? 'success' : 'info'"
+                            class="mx-1"
+                            effect="dark"
+                            @click="handleClickDataClass(item.typeId)"
+                        >
+                            {{ item.typeName }}
+                        </el-tag>
+                    </div>
+                    <CheckBox ref="checkbox" :checkId="mainBodyId" :checkAllFields="checkAllFields" :renderList="renderList" @handleCheckedChange="handleCheckedChange" />
+                </div>
             </el-container>
         </el-container>
-        <AssetsRelationField
-            ref="assetsRelationFieldRef"
-            :isAssets="false"
-            @saveSuccess="saveSuccess"
-        />
     </basic-container>
 </template>
 <script>
+import {
+    getAllAttributesByIds
+} from "@/api/fieldManagement/fieldMasterData";
+import {
+    getTypeList
+} from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
-import CheckTag from "@/components/CheckTag"
-import  AssetsRelationField from "@/views/assets/assetsManagement/assetsRelationField";
-
+import { uniqueId } from 'lodash'
+import {getChildrenById} from "@/util/util";
 export default {
     name: "SelectField",
     components: {
-        AssetsRelationField,
         CheckBox,
-        CheckTag
     },
-    props: {
-        defaultActive: {
-            type: String,
-            default: ''
+    inject: ['echoCheckedDataSubjectList', 'checkedMainBody'],
+    computed: {
+        echo() {
+            return this.echoCheckedDataSubjectList()
         },
-        checkedAssetObjList: {
-            type: Array,
-            default: () => []
+        checkedProjectBody() {
+            return this.checkedProjectBody()
         },
-
-        isView: {
-            type: Boolean,
-            default: false
+        defaultActive() {
+            // dataSubjectList
+            const [first = {}] = this.checkedProjectBody || []
+            const [main] = first.dataSubjectList || []
+            return main ? main.mainBodyId.toString() : ''
         },
     },
     data() {
-      return {
-        // 过滤值
-        filterText: '',
-        // 过滤后的值
-        filterList: {},
+        return {
+            // 全部字段类别
+            categoryList: [],
 
-        //字段类别
-        // 已选字段类别
-        checkedCategoryList: [],
-        // 全部字段类别
-        categoryList: [],
-        // 已选字段类别完整数据
-        checkedCategoryListAll: [],
+            // 全部数据分类
+            dataClassList: [],
 
-        // 数据分类
-        // 已选数据分类
-        checkedDataClass: [],
-        // 全部数据分类
-        dataClassList: [],
-        defaultProp: {
-            label: 'typeName',
-            value: 'typeId'
-        },
-
-        // 字段主数据
-        // 已选字段ids
-        checkedFieldList: {},
-        // 全部字段
-        fieldList: {},
-        // 已选字段完整数据
-        checkedFieldListAll: {},
-
-        // 数据主体类型组合id
-        mainBodyIdCp: '',
-        // 数据主体类型id
-        mainBodyId: 0,
-        // 数据主体类型name
-        mainBodyName: '',
-        // 主体列表
-        dataSubjectList: [],
-        // 已选主体ids
-        checkedDataSubjectIds: [],
-        // 已选主体全对象
-        checkedDataSubjectObjList: [],
-
-        // 资产id
-        projectId: 0,
-        // 资产name
-        projectName: '',
-        // 资产列表
-        assetObjList: [],
-        currentIndex: undefined,
-      };
-    },
-    watch: {
-        'filterText':  {
-            handler() {
-                this.filterNode(this.filterText, this.fieldList);
-            },
-            immediate:true
-        }
+            // 全部字段
+            fieldList: {},
+            // 选中的dataClass
+            activeDataClass: [],
+            // 所有选中数据结构体
+            checkAllFields: [],
+            // 渲染多选框数据结构体
+            renderList: [],
+            // 选中的主体
+            mainBodyId: 0,
+        };
     },
     created() {
-
+        // this.getTypeList()
     },
     methods: {
-        saveSuccess(fields, bodys, allData) {
-            const asset = this.checkedAssetObjList[this.currentIndex];
-            console.log(bodys, asset, 'ok')
-            bodys.forEach(newItem => {
-                const findMain = asset.dataSubjectList.find(item => item.mainBodyId === newItem.mainBodyId);
-                if (findMain) {
-                    console.log(findMain, 'findMainfindMain')
+        mounted() {
+            // this.buildRenderList()
+            // this.buildEchoFields()
+        },
+        setValue() {
+            // this.$nextTick(() => {
+            //     this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
+            // })
+        },
+        getAttrs() {
+            // 获取所有存在的attr
+            const allAttrs = this.getAllAttrs();
+            // 获取所有选中attr的ids
+            const allCheckedIds = this.getAllCheckedIds()
+            return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getAllAttrs() {
+            const result = []
+            this.renderList.forEach(main => {
+                main.list.forEach(item => {
+                    result.push(...item.list.map(item => ({
+                        ...item,
+                        mainBodyId: main._id,
+                        mainBodyName: main.name,
+                    })))
+                })
+            })
+            return result;
+        },
+        getAllCheckedIds() {
+            const result = []
+            this.checkAllFields.forEach(item => {
+                item.checked.forEach(item => {
+                    result.push(...item.checked.map(item => item._id))
+                })
+            })
+            return result;
+        },
+        // 获取数据分类
+        getTypeList() {
+            getTypeList().then(res => {
+                this.dataClassList = res.data.data
+            })
+        },
 
-                    const needAddMains = newItem.checkedCategoryListAll?.filter(item => !findMain.categoryList.find(newItem => newItem.categoryId === item.categoryId))
-                    if (needAddMains?.length) {
-                        findMain.categoryList.push(...needAddMains);
-                        findMain.checkedCategoryList.push(...needAddMains.map(item => item.categoryId));
-                        findMain.checkedCategoryListAll.push(...needAddMains);
-                    }
+        // 构建多选框显示结构数据
+        buildRenderList() {
+            this.renderList = this.checkedMain.map((item) => ({
+                _id: item.mainBodyId.toString(),
+                name: item.mainBodyName,
+                list: this.categoryList.map(item => ({...item}))
+            }))
+        },
 
-                    Object.keys(newItem.checkedFieldListAll).forEach(k => {
-                        const findFields = findMain.fieldList[k] || []
-                        // const newCheckFields = newItem.checkedFieldListAll[k]
-                        let newCheckFields = newItem.checkedFieldListAll[k].map(item => {
-                            if (item.id) return item;
-                            console.log(item, allData, 'ppp')
-                            return this.findAttr(item.identification, allData)
-                        });
 
-                        const needAddFields = newCheckFields.filter(newFields => !findFields.find(item => item.identification === newFields.identification))
+        // 构建多选框选中回显信息
+        /**
+         * {
+         *     _id: 1,
+         *     checked: [
+         *         { _id: 2, checked: [] }
+         *     ]
+         * }
+         *
+         * {
+         *     _id: 1,
+         *     label: '',
+         *     value: '',
+         *     show: false,
+         *     list: [
+         *         { _id: 1. label: '', value: '', show: false, list: [] }
+         *     ]
+         * }
+         */
+        buildEchoFields() {
+            this.checkAllFields = this.checkedMain.map(main => {
+                const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
 
-                        findMain.fieldList = findMain.fieldList ? findMain.fieldList : {};
-                        findMain.checkedFieldList = findMain.checkedFieldList ? findMain.checkedFieldList : {};
-                        findMain.checkedFieldListAll = findMain.checkedFieldListAll ? findMain.checkedFieldListAll : {};
-
-                        if (!findMain.fieldList[k]) {
-                            this.$set(findMain.fieldList, k, [])
-                        }
-
-                        if (!findMain.checkedFieldList[k]) {
-                            this.$set(findMain.checkedFieldList, k, [])
-
-                        }
-                        if (!findMain.checkedFieldListAll[k]) {
-                            this.$set(findMain.checkedFieldListAll, k, [])
-                        }
-
-                        const filterFields = needAddFields.filter(item => !findMain.checkedFieldList[k].includes(item.attributesId))
-                        findMain.fieldList[k].push(...filterFields);
-                        findMain.checkedFieldListAll[k].push(...filterFields);
-                        findMain.checkedFieldList[k].push(...filterFields.map(item => item.attributesId));
-
-                    })
-
-                } else {
-                  const filedList = {};
-                  Object.keys(newItem.checkedFieldListAll).map(k => {
-                    filedList[k] = newItem.checkedFieldListAll[k].map(item => {
-                      if (item.id) return item;
-                      return this.findAttr(item.identification, allData)
-                    });
-                  })
-                    asset.dataSubjectList.push({
-                        ...newItem,
-                        attributes: Object.values(newItem.checkedFieldListAll).flat(),
-                        categoryList: newItem.checkedCategoryListAll,
-                        mainBodyIdCp: `${newItem.mainBodyId}+${asset.projectId}`,
-                        fieldList,
-                        typeList: newItem.dataClassList?.filter(item => newItem.checkedDataClass?.includes(item.typeId)) || [],
-                    })
+                return {
+                    _id: main.mainBodyId.toString(),
+                    checked: checked ? this.buildCheckboxList(checked.categoryList, checked.attributes) : []
                 }
             })
-            if (this.mainBodyIdCp) {
-                this.checkDataSubject(this.mainBodyIdCp);
-            }
         },
-        findAttr(identification, data) {
-
-            for(let i = 0; i < data.length; i++) {
-                const item = data[i];
-                const attr = item.attributes.find(item => `${item.projectId}+${item.mainBodyId}+${item.attributesId}` === identification);
-                if (attr) {
-                    return attr;
-                }
-            }
-        },
-        addFields(item, index) {
-            this.currentIndex = index;
-            this.$refs.assetsRelationFieldRef.relationBtn(item, '50%')
-        },
-        filterNode(value, data) {
-            console.log(data, '过滤qq')
-            if (!value) return this.filterList = data;
-            const vals = Object.values(data).flat().filter(i => i.attributesName.indexOf(value) !== -1)
-            vals.forEach(a => {
-                this.filterList[a.categoryId] = vals.filter(x => x.categoryId === a.categoryId)
+        buildCheckboxList(categoryList, attributes){
+            return categoryList.map((item) => {
+                const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
+                const attrIds = attrs.map((item) => {
+                    return { _id: item.attributesId, checked: [] };
+                })
+                return { _id: item.categoryId, checked: attrIds }
             })
-            console.log(vals, this.filterList, '过滤')
-
         },
 
-        //  获取选中的全部数据(传递给父组件)
-        getCheckedAssetObjList() {
-            return this.checkedAssetObjList
+        handleClickDataClass(typeId) {
+            const index = this.activeDataClass.findIndex(v => v === typeId)
+            if (index !== -1) {
+                return this.activeDataClass.splice(index, 1)
+            }
+            this.activeDataClass.push(typeId)
         },
-        // 选择资产
-        handleChecked(index) {
-            this.projectId = index*1
-            this.projectName = this.checkedAssetObjList.find(item => item.projectId === this.projectId).projectName
 
-        },
         // 选择数据主体类型
-        checkDataSubject(index) {
-            const asset = this.checkedAssetObjList.find(x => x.projectId === this.projectId)
-            this.mainBodyId = index.split('+')[0]*1
-            this.mainBodyIdCp = index
-            this.mainBodyName = asset.dataSubjectList.find(item => item.mainBodyId === this.mainBodyId).mainBodyName
-            console.log(this.checkedAssetObjList, 'this.checkedAssetObjList')
-            this.checkedAssetObjList.forEach((asset, index) => {
-                asset.dataSubjectList.length !== 0 && asset.dataSubjectList.forEach((item,index) => {
-                    if(item.mainBodyIdCp === this.mainBodyIdCp) {
-
-                        this.categoryList = item.categoryList
-                        this.checkedCategoryList = item.checkedCategoryList || []
-                        this.checkedCategoryListAll = item.checkedCategoryListAll || []
-
-                        this.dataClassList = item.dataClassList
-                        this.checkedDataClass = item.checkedDataClass || []
-
-                        this.checkedFieldList = item.checkedFieldList || {}
-                        this.checkedFieldListAll = item.checkedFieldListAll || {}
-
-                        this.fieldList = item.fieldList
-                    }
-                })
-            })
-
-            console.log(this.checkedAssetObjList, '切换数据主体')
-            this.$nextTick(() => {
-                if('checkCategoryBox' in this.$refs) {
-                    this.$refs.checkCategoryBox.echoChecked()
-                }
-                this.$nextTick(() => {
-                    if('checkBox' in this.$refs) {
-                        this.$refs.checkBox.forEach(item => {
-                            item.echoChecked()
-                        })
-                    }
-                 })
-            })
-
+        handleChecked(index) {
+            this.mainBodyId = index;
+            this.setValue();
         },
 
-        // 点击字段类别多选框事件
-        handleCategoryCheckedChange(checkedList, checkedListAll) {
-            this.checkedCategoryList = checkedList
-            this.checkedCategoryListAll = checkedListAll
-            this.checkedAssetObjList.forEach((asset,index) => {
-                asset.dataSubjectList.length !== 0 && asset.dataSubjectList.forEach((item,index) => {
-                    if(item.mainBodyIdCp === this.mainBodyIdCp) {
-                        item.checkedCategoryList = checkedList
-                        item.checkedCategoryListAll = checkedListAll
-                    }
-                })
-            })
-        },
 
 
         // 数据分类多选框点击事件
         handleDataClassCheckedChange(val) {
-            console.log(val, 'vallllll');
-            this.checkedAssetObjList.forEach((asset,index) => {
-                asset.dataSubjectList.length !== 0 && asset.dataSubjectList.forEach((item,index) => {
-                    if(item.mainBodyIdCp === this.mainBodyIdCp) {
-                        item.checkedDataClass = val
-                    }
+        },
+
+
+        // 获取字段
+        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
+            const itemList = getChildrenById(this.renderList, categoryIds, 'list')
+
+            return getAllAttributesByIds(categoryIds, typeIds, mainBodyId, '').then(res => {
+                const attrs = res.data.data || [];
+                if (!attrs.length) {
+                    return;
+                }
+                attrs.forEach(item => {
+                    item._id = uniqueId() + uniqueId()
+                    item.label = item.attributesName
+                    item.value = item._id
+                    item.show = true
+                    item.list = []
                 })
+                itemList.list = attrs
+                checked.push(...attrs.map(item => {
+                    return {
+                        _id: item._id,
+                        checked: []
+                    }
+                }))
+
             })
         },
 
-        // 点击字段多选框事件
-        handleFieldCheckedChange(checkedList, checkedListAll, id) {
-            checkedListAll.forEach((item,index) => {
-                item.projectName = this.projectName
+        // 取消多选框时，删除选中的数据/删除节点list数据, 返回需要新增的id数组
+        deleteCheckedOrList(data, checkedList, checkId) {
+            const itemList = getChildrenById(this.renderList, checkId, 'list')
+            const itemChecked = getChildrenById(this.checkAllFields, checkId, 'checked')
 
-                item.mainBodyIdCp = this.mainBodyIdCp
+            itemList.list.forEach(item => {
+                item.show = checkedList.includes(item._id);
 
-                item.mainBodyId = this.mainBodyId
-                item.mainBodyName = this.mainBodyName
-                item.parentProjectName = item.parentProjectAttributesNames ? item.parentProjectAttributesNames : item.parentProjectName
-            })
-
-            this.checkedFieldList[id] = checkedList
-            this.checkedFieldListAll[id] = checkedListAll
-
-            this.checkedAssetObjList.forEach((asset,index) => {
-                asset.dataSubjectList.length !== 0 && asset.dataSubjectList.forEach((item,index) => {
-                    if(item.mainBodyIdCp === this.mainBodyIdCp) {
-                        if(!('checkedFieldList' in item)) {
-                        item.checkedFieldList = {}
-                        }
-                        if(!('checkedFieldListAll' in item)) {
-                            item.checkedFieldListAll = {}
-                        }
-                        item.checkedFieldList[id] = checkedList
-                        item.checkedFieldListAll[id] = checkedListAll
+                if (!item.show && itemChecked) {
+                    const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
+                    if (i !== -1) {
+                        itemChecked.checked.splice(i, 1)
                     }
-                })
+                }
             })
-            console.log(this.checkedFieldListAll, this.mainBodyId, '多选框数据处理')
+            const needAddIds = checkedList.filter(_id => !itemChecked?.checked.find(item => item._id === _id))
+
+            return [needAddIds, itemChecked, itemList]
+        },
+
+        // 点击字段多选框事件
+        async handleCheckedChange(checkedList, checkId) {
+            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
+
+            // 找到新增id，调用接口设置选中和节点
+            if (needAddIds.length) {
+
+                for (let i = 0; i < needAddIds.length; i++) {
+                    const currentValue = needAddIds[i]
+                    const item = itemList.list.find(item => (item._id === currentValue) && item.show)
+                    // item 为true，可以不用调接口
+                    const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
+                    itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
+                    if (!item?.list?.length) {
+                        await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
+                    }
+                }
+            }
+
+
+            this.checkAllFields = [...this.checkAllFields]
+            this.renderList = [...this.renderList]
+            this.setValue()
         },
 
     }
@@ -415,8 +308,22 @@ export default {
     border-radius: 6px;
     margin-bottom: 50px;
     box-shadow: 2px 3px 12px 6px gainsboro;
+
+    ::v-deep .el-card__body {
+        padding: 0;
+    }
+
+    .select-field-content {
+        flex: 1;
+        width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
     .dataSubject {
-        padding-top: 50px;
+        padding-top: 45px;
         background-color: #eaf4fd;
     }
     .category {
@@ -427,15 +334,6 @@ export default {
         display: flex;
         // align-items: center;
         justify-content: center;
-    }
-    .dataClass {
-        border-left: 1px solid gainsboro;
-        border-bottom: 1px solid gainsboro;
-        background-color: #eaf4fd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px !important;
     }
     .field {
         display: flex;

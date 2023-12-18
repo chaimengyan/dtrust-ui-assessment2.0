@@ -137,54 +137,56 @@
         <el-step :title="$t('assetsManagement.字段配置')"></el-step>
       </el-steps>
 
-      <RelatedAssets
-        v-show="active === 0"
-        ref="relatedAssets" 
-        :echoCheckedAssetObjList="echoCheckedAssetObjList"
-        />
+        <template v-if="!fullscreenLoading">
+            <RelatedAssets
+                v-show="active === 0"
+                ref="relatedAssets"
+                @change="onDataSubject"
+            />
 
-      <SelectField
-        v-show="active === 1"
-        ref="selectField" 
-        :defaultActive="defaultActive"
-        :checkedAssetObjList="checkedAssetObjList"
-        :isView="false"
-        />
+          <SelectField
+            v-show="active === 1"
+            ref="selectField"
+            />
+        </template>
 
-      <ActRelation
-        v-show="active === 2"
-        ref="actRelation" 
-        :fieldList="fieldList"
-        :sceneId="sceneId"
-        :saveBtnText="saveBtnText"
-        @saveSuccess="saveSuccess"
-         />
+
+
+
+<!--      <ActRelation-->
+<!--        v-show="active === 2"-->
+<!--        ref="actRelation" -->
+<!--        :fieldList="fieldList"-->
+<!--        :sceneId="sceneId"-->
+<!--        :saveBtnText="saveBtnText"-->
+<!--        @saveSuccess="saveSuccess"-->
+<!--         />-->
       <div class="demo-drawer__footer">
-          <el-button 
-            type="primary" 
-            v-if="active !== 0" 
+          <el-button
+            type="primary"
+            v-if="active !== 0"
             icon="el-icon-top"
             @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
-          <el-button 
-            type="primary" 
-            v-if="active !== 2" 
+          <el-button
+            type="primary"
+            v-if="active !== 2"
             icon="el-icon-bottom"
             @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
-          <el-button 
-            type="primary" 
-            v-if="active === 2" 
+          <el-button
+            type="primary"
+            v-if="active === 2"
             :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
             @click="relationFormSubmit">{{saveBtnText}}</el-button>
-          <el-button 
+          <el-button
             icon="el-icon-circle-close"
             @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
       </div>
     </el-drawer>
-    <el-dialog 
-      :title="$t('assetsManagement.启动评估')" 
-      width="35%" 
-      v-if="assessmentDialog" 
-      :close-on-click-modal="false" 
+    <el-dialog
+      :title="$t('assetsManagement.启动评估')"
+      width="35%"
+      v-if="assessmentDialog"
+      :close-on-click-modal="false"
       :visible.sync="assessmentDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -193,7 +195,7 @@
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-      <ReleaseForm 
+      <ReleaseForm
         ref="releaseForm"
         :typeIds="1"
         :evaluationItem="{businessScenarioId: sceneId}"
@@ -206,8 +208,8 @@
     </el-dialog>
     <el-dialog
       title="查看业务场景详情"
-      width="70%" 
-      v-if="detailsDialog" 
+      width="70%"
+      v-if="detailsDialog"
       :visible.sync="detailsDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -217,7 +219,7 @@
         </div>
       </div>
       <Details
-        ref="details" 
+        ref="details"
         :sceneId="sceneId"
         :viewColumn="viewColumn"
         :rowData="rowData"
@@ -226,9 +228,9 @@
     </el-dialog>
     <el-dialog
       :title="$t('businessScenarioManagement.发现业务场景')"
-      width="70%" 
-      v-if="findDialog" 
-      :close-on-click-modal="false" 
+      width="70%"
+      v-if="findDialog"
+      :close-on-click-modal="false"
       :visible.sync="findDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -248,10 +250,10 @@
       </div>
     </el-dialog>
     <el-dialog
-      :title="$t('crudCommon.导入')" 
-      width="35%" 
-      :visible.sync="importDialog" 
-      :close-on-click-modal="false" 
+      :title="$t('crudCommon.导入')"
+      width="35%"
+      :visible.sync="importDialog"
+      :close-on-click-modal="false"
       append-to-body
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -276,10 +278,10 @@
         </el-upload>
     </el-dialog>
     <el-dialog
-      v-if="historyDialog" 
+      v-if="historyDialog"
       :title="$t('assetsManagement.历史记录')"
-       width="70%" 
-       :visible.sync="historyDialog" 
+       width="70%"
+       :visible.sync="historyDialog"
        append-to-body
        :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
@@ -329,6 +331,12 @@ export default {
     FindStart,
     BusHistory
     },
+    provide() {
+        return {
+            echoCheckedDataSubjectList: () => this.echoCheckedAssetObjList,
+            checkedProjectBody: () => this.checkedProjectBody,
+        }
+    },
   data() {
     return {
       active: 0,
@@ -347,7 +355,7 @@ export default {
       checkedDataSubjectObjList: [],
       // 字段
       fieldList: [],
-      
+
 
       // 发现业务场景弹窗
       findDialog: false,
@@ -357,11 +365,10 @@ export default {
 
       // 导入弹窗
       importDialog: false,
-      
+
       // 文件列表
       fileList: [],
 
-      defaultActive: '',
 
       fullscreenLoading: false,
 
@@ -385,7 +392,9 @@ export default {
       rowData: {},
       isOverHidden: true,
       isFullscreen: false,
-      option: {}
+      option: {},
+
+        checkedProjectBody: [],
     };
   },
   computed: {
@@ -399,6 +408,11 @@ export default {
     this.getTable()
   },
   methods: {
+      // 选中project保存option到父组件
+      onDataSubject(checkedDataSubjectOptions) {
+          this.checkedProjectBody = [...checkedDataSubjectOptions]
+      },
+
     //查询table/业务场景表格/表单配置
     getTable() {
       this.fullscreenLoading = true
@@ -421,37 +435,11 @@ export default {
     },
     // 下一步
     nextStep() {
-      if(this.active === 0) {
-        this.checkedAssetObjList = this.$refs.relatedAssets.handleCheckedAssetObjList()
-        if(this.checkedAssetObjList.length === 0) {
-          this.$message.error(this.$t('businessScenarioManagement.请至少选择一个资产'))
-        } else {
-          this.active++
-          const p = this.checkedAssetObjList[0].projectId + ''
-          this.defaultActive = this.checkedAssetObjList[0].dataSubjectList[0].mainBodyIdCp
-          this.$nextTick(() => {
-            this.$refs.selectField.handleChecked(p)
-            this.$refs.selectField.checkDataSubject(this.defaultActive)
-          })
+        this.active++
+        if (this.active === 1) {
+            this.$refs.selectField.mounted()
+            this.$refs.selectField.setValue()
         }
-      }else if(this.active === 1) {
-        const dataList = this.$refs.selectField.getCheckedAssetObjList()
-          .map(a => a.dataSubjectList)
-          .flat()
-          .filter(d => 'checkedFieldListAll' in d)
-        const isCheckField = dataList.every(item => item.checkedFieldListAll.length !== 0 )
-        if(isCheckField) {
-          this.fieldList = this.handleFieldList(dataList)
-          console.log(this.fieldList,dataList, '点击下一步-字段列表数据')
-            if(this.fieldList.length === 0) {
-              this.$message.error(this.$t('businessScenarioManagement.请选择资产下面的字段'))
-            } else {
-              this.active++
-            }
-        } else {
-          this.$message.error(this.$t('businessScenarioManagement.请选择资产下面的字段'))
-        }
-      } 
     },
     // 上一步
     previousStep() {
@@ -490,7 +478,7 @@ export default {
 
     // 重新评估
     reassess(sceneId) {
-      this.$confirm(this.$t('businessScenarioManagement.是否对本业务场景发起新的评估'), 
+      this.$confirm(this.$t('businessScenarioManagement.是否对本业务场景发起新的评估'),
       this.$t('crudCommon.提示'), {
         confirmButtonText: this.$t('crudCommon.确定'),
         cancelButtonText: this.$t('crudCommon.取消'),
@@ -552,7 +540,6 @@ export default {
       this.relationDialog = true
       this.getProjectAttributesBySceneId(this.sceneId).then(()  => {
         this.saveBtnText = this.echoCheckedAssetObjList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
-        this.$refs.relatedAssets.echoChecked()
         this.fullscreenLoading = false
       })
     },
@@ -582,18 +569,7 @@ export default {
     handleEchoData(data) {
       data.forEach((asset,index) => {
         asset.dataSubjectList.forEach((item, itemIndex) => {
-          item.checkedCategoryList = item.categoryList.map(x => x.categoryId) || [] //字段类别勾选回显
-          item.checkedDataClass = item.typeList.map(x => x.typeId) || [] //数据分类勾选回显
-          if(!('checkedFieldList' in item)) {
-              item.checkedFieldList = {}
-          }
-          if(!('checkedFieldListAll' in item)) {
-              item.checkedFieldListAll = {}
-          }
-          item.checkedCategoryList.forEach((x, j) => {// 字段勾选回显
-            item.checkedFieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
-            item.checkedFieldList[x] = item.checkedFieldListAll[x].map(a => a.attributesId)
-          })
+          item.mainBodyId = `${asset.projectId}.${item.mainBodyId}`
         })
       })
       return data
@@ -601,7 +577,7 @@ export default {
     // 导入资产
     importAsset() {
       this.importDialog = true
-    },  
+    },
     // 导出模板
     exportMode() {
       this.fullscreenLoading = true
@@ -761,7 +737,7 @@ export default {
           loading();
       });
     },
-    
+
     deleteBtn(row) {
       const ids = row ? [row.sceneId] : this.ids
       if(!ids.length) {
@@ -795,7 +771,7 @@ export default {
           this.auditScene({sceneId: row.sceneId, status: 2})
         })
         .catch(() => {
-          this.auditScene({sceneId: row.sceneId, status: 3})         
+          this.auditScene({sceneId: row.sceneId, status: 3})
         });
     },
     auditScene(obj) {
@@ -809,7 +785,7 @@ export default {
         }
       });
     },
-   
+
   },
 };
 </script>
