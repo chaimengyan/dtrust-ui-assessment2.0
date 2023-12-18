@@ -422,16 +422,13 @@ export function getFileFromUrl(url, fileName) {
 
 // 递归返回字段, 同步获取两个数据源
 export function getChildrenById(data, _id, field) {
-    const { d1, d2 } = data;
-    const { k1, k2 } = field || { k1: 'list', k2: 'checked' };
-    for (let i = 0; i < d1.length; i++) {
-        const item1 = d1[i]
-        const item2 = d2.find(item => item._id === item1._id)
-        if (item1._id === _id) {
-            return [item1, item2];
+    for (let i = 0; i < data.length; i++) {
+        const item = data[i]
+        if (item._id === _id) {
+            return item;
         }
-        if (item1[k1] && item1[k1].length) {
-            const is = getChildrenById({ d1: item1[k1], d2: item2[k2] }, _id, field)
+        if (item[field] && item[field].length) {
+            const is = getChildrenById(item[field], _id, field)
             if (is) {
                 return is;
             }

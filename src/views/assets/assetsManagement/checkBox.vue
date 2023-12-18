@@ -12,7 +12,7 @@
                 :key="item.value"
                 >
                 <div>
-                    {{item.label}} --{{item.show}} -- {{checkedIdList}}
+                    {{item.label}}
                 </div>
 
                 <CheckBox
@@ -74,7 +74,8 @@ export default {
             this.setRenderList()
         },
         setRenderList() {
-            const [itemList, itemChecked] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, this.checkId)
+            const itemList = getChildrenById(this.renderList, this.checkId, 'list')
+            const itemChecked = getChildrenById(this.checkAllFields, this.checkId, 'checked')
             this.list = [...(itemList.list || [])]
             this.checkedList = [...(itemChecked?.checked || [])]
             this.setCheckIds()

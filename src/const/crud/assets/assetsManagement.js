@@ -12,12 +12,12 @@ function getSelectOption(item, tenantId) {
 }
 
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
-  
+
 
   option.column.forEach((item, index) => {
     item.isOverHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
-   
+
     if (item.dicUrl) {
       getSelectOption(item, tenantId);
     }
@@ -35,7 +35,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
   });
   //fieldType iconList searchLabelWidth width
   _this.option = option
-  
+
 // const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
 // return option
 // return {
@@ -54,7 +54,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
   //   addBtn: false,
   //   viewBtn:false,
   //   menuWidth:150,
-  //   height: 500, 
+  //   height: 500,
   //   rowKey: 'projectId',
   //   column: [{
   //     fixed: true,
@@ -195,7 +195,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
   //     filterable: true,
   //     dicUrl: `${APIurl}internal_or3rd_party`,
   //     overHidden: isOverHidden,
-  //   }, 
+  //   },
   //   // {
   //   //   label: _this.$t('assetsManagement.储存格式'),
   //   //   prop: 'storageFormat',
@@ -220,7 +220,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
   //   //   filterable: true,
   //   //   dicUrl: `${APIurl}hosting_type`,
   //   //   overHidden: isOverHidden,
-  //   // }, 
+  //   // },
   //   {
   //     label: _this.$t('assetsManagement.托管方'),
   //     prop: 'hostingProvider',
@@ -337,7 +337,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
 export const fieldRelationOption = (_this, isView, isOverHidden) => {
   return {
     selection: !isView,
-    rowKey: 'identification',
+    rowKey: '_id',
     reserveSelection:true,
     menu: !isView,
     align:'center',
@@ -406,8 +406,7 @@ export const fieldRelationOption = (_this, isView, isOverHidden) => {
         prop:'keyword',
         search: true,
         hide: true
-      }, 
+      },
     ]
   }
 }
-  

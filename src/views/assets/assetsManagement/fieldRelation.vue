@@ -34,14 +34,14 @@
             </template>
           </avue-crud>
         </div>
-      
-        
-        <el-dialog 
-          :title="sourceTitle" 
-          v-if="sourceDialog" 
-          :visible.sync="sourceDialog" 
+
+
+        <el-dialog
+          :title="sourceTitle"
+          v-if="sourceDialog"
+          :visible.sync="sourceDialog"
           append-to-body
-          :close-on-click-modal="false" 
+          :close-on-click-modal="false"
           :fullscreen="isFullscreen">
           <div class="dialog-header" slot="title">
             <span class="dialog-header-title">{{sourceTitle}}</span>
@@ -67,11 +67,11 @@
           </el-form>
 
           <div slot="footer" class="dialog-footer">
-              <el-button 
-                type="primary" 
+              <el-button
+                type="primary"
                 :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
                 @click="saveSource">{{saveBtnText}}</el-button>
-              <el-button 
+              <el-button
                 icon="el-icon-circle-close"
                 @click="sourceDialog = false">{{$t('assetsManagement.取消')}}</el-button>
           </div>
@@ -89,10 +89,6 @@ import {fieldRelationOption} from "@/const/crud/assets/assetsManagement"
 export default {
     name: "FieldRelation",
     props: {
-      fieldList: {
-          type: Array,
-          default: () => []
-      },
       projectId: {
         type: Number,
         default: 0
@@ -139,21 +135,8 @@ export default {
         sourceTitle: this.$t('assetsManagement.配置'),
         isFullscreen: false,
         isOverHidden: true,
+          attrs: []
       };
-    },
-    watch: {
-      fieldList: {
-        handler(newVal, oldVal) {
-          if(JSON.stringify(this.searchParam) !== '{}') {
-            this.handleFilter(this.searchParam)
-          } else {
-            this.pageList = deepClone(this.fieldList)
-            this.onLoad(this.page, this.fieldList)
-          }
-            
-        }
-        
-      },
     },
     computed: {
       option() {
@@ -163,13 +146,17 @@ export default {
     created() {
     },
     methods: {
+        init(data) {
+            this.attrs = data;
+            this.onLoad(this.page, this.attrs)
+        },
       changeArray() {
         this.isOverHidden = !this.isOverHidden
         fieldRelationOption(this, this.isView, this.isOverHidden)
       },
       onLoad(page, pageList) {
         this.page.total = pageList.length
-        this.temporaryFieldList = deepClone(pageList)
+        this.temporaryFieldList = [...pageList]
         .splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
       },
 
@@ -190,7 +177,7 @@ export default {
       // 搜索
       handleFilter(param) {
         this.page.currentPage = 1;
-        this.pageList = deepClone(this.fieldList)
+        this.pageList = deepClone(this.attrs)
         if ('keyword' in param) {
           this.pageList = this.pageList.filter(x => {
             return x.mainBodyName.indexOf(param.keyword) !== -1 || x.attributesName.indexOf(param.keyword) !== -1 || (x.parentProjectAttributesNames && x.parentProjectAttributesNames.indexOf(param.keyword) !== -1)
@@ -202,19 +189,18 @@ export default {
       // 清空搜索
       searchReset() {
         this.searchParam = {}
-        this.pageList = deepClone(this.fieldList)
-        this.onLoad(this.page, this.fieldList)
+        this.pageList = [...this.attrs]
+        this.onLoad(this.page, this.attrs)
       },
 
       // 多选选中
       selectionChange(list){
-        this.identificationList = list.map(item => (item.identification))
+        this.identificationList = list.map(item => (item._id))
         this.rowList = list
       },
 
       // 批量关联弹窗
       batchCheckSource() {
-        console.log(this.rowList, 'rowListrowList');
         if(this.identificationList.length === 0) return this.$message.error(this.$t('assetsManagement.请至少选择一个字段'))
         const obj = this.rowList.map(r => {
           return {attributesId: r.attributesId, projectId: this.projectId, mainBodyId: r.mainBodyId}
@@ -229,34 +215,33 @@ export default {
 
       // 保存表格数据
       saveCurd() {
-        this.fieldList.forEach((item, index) => {
-          this.fieldList[index].projectId = this.projectId
+        this.attrs.forEach((item, index) => {
+          this.attrs[index].projectId = this.projectId
         })
-        if(!this.fieldList[0]) {
+        if(!this.attrs[0]) {
           this.$message.error(this.$t('assetsManagement.请选择需要关联的字段'))
         } else {
-          assetsAddAttributes(this.fieldList).then(res => {
+          assetsAddAttributes(this.attrs).then(res => {
             if(res.data.status === 200) {
               this.$emit('saveSuccess', res.data.data)
               this.$message.success(res.data.message)
             }
           })
         }
-        
+
       },
       // 添加关联
       checkSource(row, index) {
-        console.log(row, 'rowwwww');
         this.isBatch = false
         this.initSourceForm()
         this.sourceTitle = this.$t('assetsManagement.配置')
-        this.rowIndex = row.identification
+        this.rowIndex = row._id
         this.sourceForm.sourceName = row.sourceName
         this.sourceForm.dataSubjectsVolume = row.dataSubjectsVolume
         this.sourceDialog = true
         // this.getAssetsProjectAttributesByAttributeId(row.attributesId, row.mainBodyId, this.projectId)
       },
-      
+
       // 获取字段来源
       getAssetsProjectAttributesByAttributeId(fieldId, mainBodyId, assetsId) {
         getAssetsProjectAttributesByAttributeId(fieldId, mainBodyId, assetsId).then(res => {
@@ -273,15 +258,16 @@ export default {
       // 保存字段来源
       saveSource() {
         if(this.isBatch) {
-          this.fieldList.forEach((item,index) => {
-            if(this.identificationList.includes(item.identification)) {
-              this.$set(this.fieldList, index, {...item, ...this.sourceForm})
+          this.attrs.forEach((item,index) => {
+            if(this.identificationList.includes(item._id)) {
+              this.$set(this.attrs, index, {...item, ...this.sourceForm})
             }
           })
         } else {
-          this.fieldList.forEach((item,index) => {
-            if(item.identification === this.rowIndex) {
-              this.$set(this.fieldList, index, {...item, ...this.sourceForm})
+          this.attrs.forEach((item,index) => {
+            if(item._id === this.rowIndex) {
+              this.$set(this.attrs[index], 'dataSubjectsVolume', this.sourceForm.dataSubjectsVolume)
+              this.$set(this.attrs[index], 'sourceName', this.sourceForm.sourceName)
             }
           })
         }

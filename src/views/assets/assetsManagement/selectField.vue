@@ -107,6 +107,35 @@ export default {
                 this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
             })
         },
+        getAttrs() {
+            // 获取所有存在的attr
+            const allAttrs = this.getAllAttrs();
+            // 获取所有选中attr的ids
+            const allCheckedIds = this.getAllCheckedIds()
+            return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getAllAttrs() {
+            const result = []
+            this.renderList.forEach(main => {
+                main.list.forEach(item => {
+                    result.push(...item.list.map(item => ({
+                        ...item,
+                        mainBodyId: main._id,
+                        mainBodyName: main.name,
+                    })))
+                })
+            })
+            return result;
+        },
+        getAllCheckedIds() {
+            const result = []
+            this.checkAllFields.forEach(item => {
+                item.checked.forEach(item => {
+                    result.push(...item.checked.map(item => item._id))
+                })
+            })
+            return result;
+        },
         // 获取数据分类
         getTypeList() {
             getTypeList().then(res => {
@@ -131,7 +160,8 @@ export default {
         buildRenderList() {
             this.renderList = this.checkedMain.map((item) => ({
                 _id: item.mainBodyId.toString(),
-                list: this.categoryList
+                name: item.mainBodyName,
+                list: this.categoryList.map(item => ({...item}))
             }))
         },
 
@@ -156,10 +186,14 @@ export default {
          * }
          */
         buildEchoFields() {
-            this.checkAllFields = this.echo.map(main => ({
-                _id: main.mainBodyId.toString(),
-                checked: this.buildCheckboxList(main.categoryList, main.attributes)
-            }))
+            this.checkAllFields = this.checkedMain.map(main => {
+                const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
+
+                return {
+                    _id: main.mainBodyId.toString(),
+                    checked: checked ? this.buildCheckboxList(checked.categoryList, checked.attributes) : []
+                }
+            })
         },
         buildCheckboxList(categoryList, attributes){
             return categoryList.map((item) => {
@@ -194,7 +228,7 @@ export default {
 
         // 获取字段
         getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
-            const [itemList] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, categoryIds)
+            const itemList = getChildrenById(this.renderList, categoryIds, 'list')
 
             return getAllAttributesByIds(categoryIds, typeIds, mainBodyId, '').then(res => {
                 const attrs = res.data.data || [];
@@ -202,7 +236,7 @@ export default {
                     return;
                 }
                 attrs.forEach(item => {
-                    item._id = uniqueId()
+                    item._id = uniqueId() + uniqueId()
                     item.label = item.attributesName
                     item.value = item._id
                     item.show = true
@@ -221,19 +255,20 @@ export default {
 
         // 取消多选框时，删除选中的数据/删除节点list数据, 返回需要新增的id数组
         deleteCheckedOrList(data, checkedList, checkId) {
-            const [itemList, itemChecked] = getChildrenById({ d1: this.renderList, d2: this.checkAllFields }, checkId)
+            const itemList = getChildrenById(this.renderList, checkId, 'list')
+            const itemChecked = getChildrenById(this.checkAllFields, checkId, 'checked')
 
             itemList.list.forEach(item => {
                 item.show = checkedList.includes(item._id);
 
-                if (!item.show) {
+                if (!item.show && itemChecked) {
                     const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
                     if (i !== -1) {
                         itemChecked.checked.splice(i, 1)
                     }
                 }
             })
-            const needAddIds = checkedList.filter(_id => !itemChecked.checked.find(item => item._id === _id))
+            const needAddIds = checkedList.filter(_id => !itemChecked?.checked.find(item => item._id === _id))
 
             return [needAddIds, itemChecked, itemList]
         },

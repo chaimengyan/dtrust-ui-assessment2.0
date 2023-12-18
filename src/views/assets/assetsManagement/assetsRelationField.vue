@@ -22,20 +22,18 @@
             ref="selectField"
             :projectId="projectId"
         />
-
+        <FieldRelation
+            v-show="active === 2"
+            ref="fieldRelation"
+            :projectId="projectId"
+            :isView="false"
+            :saveBtnText="saveBtnText"
+            @saveSuccess="saveSuccess"
+            />
       </template>
 
 
-<!--      <FieldRelation-->
-<!--          v-if="isAssets"-->
-<!--          v-show="active === 2"-->
-<!--          ref="fieldRelation"-->
-<!--          :projectId="projectId"-->
-<!--          :isView="false"-->
-<!--          :fieldList="fieldList"-->
-<!--          :saveBtnText="saveBtnText"-->
-<!--          @saveSuccess="saveSuccess"-->
-<!--          />-->
+
       <div class="demo-drawer__footer">
           <el-button
               type="primary"
@@ -118,6 +116,10 @@ export default {
             this.$refs.selectField.mounted()
             this.$refs.selectField.setValue()
         }
+        if (this.active === 2) {
+            const attrs = this.$refs.selectField.getAttrs()
+            this.$refs.fieldRelation.init(attrs)
+        }
     },
     // 上一步
     previousStep() {
@@ -152,13 +154,13 @@ export default {
     // 提交关联字段
     relationFormSubmit() {
       this.fullscreenLoading = true
-      // this.$refs.fieldRelation.saveCurd()
+      this.$refs.fieldRelation.saveCurd()
     },
     // 子组件数据保存成功
     saveSuccess(isUpdate) {
-      // this.$emit('saveSuccess', isUpdate)
-      // this.relationDialog = false
-      // this.fullscreenLoading = false
+      this.$emit('saveSuccess', isUpdate)
+      this.relationDialog = false
+      this.fullscreenLoading = false
     },
 
   },
