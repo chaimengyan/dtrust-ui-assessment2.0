@@ -122,6 +122,8 @@ export default {
                         ...item,
                         mainBodyId: main._id,
                         mainBodyName: main.name,
+                        sourceName: '',
+                        dataSubjectsVolume: 0,
                     })))
                 })
             })
