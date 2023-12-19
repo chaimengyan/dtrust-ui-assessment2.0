@@ -319,6 +319,7 @@ import ReleaseForm from "@/views/assets/components/releaseForm";
 import  Details from "@/views/assets/businessScenarioManagement/details";
 import  FindStart from "@/views/assets/components/findStart";
 import BusHistory from "@/views/assets/businessScenarioManagement/busHistory";
+import {uniqueId} from "lodash";
 
 export default {
   name: "businessScenarioManagement",
@@ -439,6 +440,7 @@ export default {
         if (this.active === 1) {
             this.$refs.selectField.mounted()
             this.$refs.selectField.setValue()
+            console.log(this.checkedProjectBody, 'ok')
         }
     },
     // 上一步
@@ -548,8 +550,8 @@ export default {
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {
           this.echoCheckedAssetObjList = this.handleEchoData(res.data.data)
-          const data = this.echoCheckedAssetObjList.map(a => a.dataSubjectList).flat()
-          this.fieldList = this.handleFieldList(data)
+          // const data = this.echoCheckedAssetObjList.map(a => a.dataSubjectList).flat()
+          // this.fieldList = this.handleFieldList(data)
       })
     },
 
@@ -570,6 +572,9 @@ export default {
       data.forEach((asset,index) => {
         asset.dataSubjectList.forEach((item, itemIndex) => {
           item.mainBodyId = `${asset.projectId}.${item.mainBodyId}`
+            item.attributes.forEach(item => {
+                item._id = uniqueId()
+            })
         })
       })
       return data

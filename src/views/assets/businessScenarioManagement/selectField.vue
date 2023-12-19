@@ -10,8 +10,7 @@
                     background-color="#dadde2"
                     text-color="#303133"
                 >
-                    {{ checkedProjectBody }}
-                    <el-submenu v-for="item in checkedProjectBody" :index="item.projectId.toString()" :key="item.projectId">
+                    <el-submenu v-for="item in menuList" :index="item.projectId.toString()" :key="item.projectId">
                         <template slot="title">
                             <div style="display: flex;justify-content: space-around;">
                                 <div>
@@ -23,7 +22,7 @@
                             </div>
                         </template>
                         <template v-for="i in item.dataSubjectList">
-                            <el-menu-item :index="`${i.mainBodyId.toString()}+${item.projectId.toString()}`" :key="i.mainBodyId" >
+                            <el-menu-item :index="`${i.mainBodyId}`" :key="i.mainBodyId" >
                                 {{i.mainBodyName}}
                             </el-menu-item>
                         </template>
@@ -65,17 +64,16 @@ export default {
     components: {
         CheckBox,
     },
-    inject: ['echoCheckedDataSubjectList', 'checkedMainBody'],
+    inject: ['echoCheckedDataSubjectList', 'checkedProjectBody'],
     computed: {
         echo() {
             return this.echoCheckedDataSubjectList()
         },
-        checkedProjectBody() {
+        checkedBody() {
             return this.checkedProjectBody()
         },
         defaultActive() {
-            // dataSubjectList
-            const [first = {}] = this.checkedProjectBody || []
+            const [first = {}] = this.echo || []
             const [main] = first.dataSubjectList || []
             return main ? main.mainBodyId.toString() : ''
         },
@@ -98,20 +96,22 @@ export default {
             renderList: [],
             // 选中的主体
             mainBodyId: 0,
+            menuList: [],
+            mainList: []
         };
     },
     created() {
-        // this.getTypeList()
+        this.getTypeList()
     },
     methods: {
         mounted() {
-            // this.buildRenderList()
-            // this.buildEchoFields()
+            this.buildRenderList()
+            this.buildEchoFields()
         },
         setValue() {
-            // this.$nextTick(() => {
-            //     this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
-            // })
+            this.$nextTick(() => {
+                this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
+            })
         },
         getAttrs() {
             // 获取所有存在的attr
@@ -151,11 +151,45 @@ export default {
 
         // 构建多选框显示结构数据
         buildRenderList() {
-            this.renderList = this.checkedMain.map((item) => ({
-                _id: item.mainBodyId.toString(),
-                name: item.mainBodyName,
-                list: this.categoryList.map(item => ({...item}))
-            }))
+            this.menuList = []
+            this.mainList = []
+            this.checkedBody.forEach(item => {
+                const project = this.echo.find(echo => echo.projectId === item.projectId)
+                this.menuList.push(project ? project : item)
+                if (project) {
+                    return this.mainList.push(...(project.dataSubjectList || []))
+                }
+            })
+
+            this.renderList = this.mainList.map((item) => {
+                const list = item.categoryList.map(c => {
+
+                    return {
+                        _id: c.categoryId,
+                        label: c.categoryName,
+                        value: c.categoryId,
+                        show: false,
+                        list: this.filterAttrs(item.attributes, c.categoryId)
+                    }
+                })
+                return {
+                    _id: item.mainBodyId.toString(),
+                    name: item.mainBodyName,
+                    list
+                }
+            })
+        },
+
+        filterAttrs(data, categoryId) {
+            return data.filter(item => item.categoryId === categoryId).map(item => {
+                return {
+                    _id: item._id,
+                    label: item.attributesName,
+                    value: item._id,
+                    show: true,
+                    list: []
+                }
+            })
         },
 
 
@@ -179,12 +213,12 @@ export default {
          * }
          */
         buildEchoFields() {
-            this.checkAllFields = this.checkedMain.map(main => {
-                const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
+            this.checkAllFields = this.mainList.map(main => {
+                // const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
 
                 return {
                     _id: main.mainBodyId.toString(),
-                    checked: checked ? this.buildCheckboxList(checked.categoryList, checked.attributes) : []
+                    checked: []
                 }
             })
         },
@@ -210,40 +244,6 @@ export default {
         handleChecked(index) {
             this.mainBodyId = index;
             this.setValue();
-        },
-
-
-
-        // 数据分类多选框点击事件
-        handleDataClassCheckedChange(val) {
-        },
-
-
-        // 获取字段
-        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
-            const itemList = getChildrenById(this.renderList, categoryIds, 'list')
-
-            return getAllAttributesByIds(categoryIds, typeIds, mainBodyId, '').then(res => {
-                const attrs = res.data.data || [];
-                if (!attrs.length) {
-                    return;
-                }
-                attrs.forEach(item => {
-                    item._id = uniqueId() + uniqueId()
-                    item.label = item.attributesName
-                    item.value = item._id
-                    item.show = true
-                    item.list = []
-                })
-                itemList.list = attrs
-                checked.push(...attrs.map(item => {
-                    return {
-                        _id: item._id,
-                        checked: []
-                    }
-                }))
-
-            })
         },
 
         // 取消多选框时，删除选中的数据/删除节点list数据, 返回需要新增的id数组
@@ -272,16 +272,12 @@ export default {
 
             // 找到新增id，调用接口设置选中和节点
             if (needAddIds.length) {
-
                 for (let i = 0; i < needAddIds.length; i++) {
                     const currentValue = needAddIds[i]
                     const item = itemList.list.find(item => (item._id === currentValue) && item.show)
-                    // item 为true，可以不用调接口
-                    const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
-                    itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
-                    if (!item?.list?.length) {
-                        await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
-                    }
+                    const checked = item ? item.list.map(item => ({ _id: item._id, checked: [] })) : []
+                    console.log(checked, item, 'checkedwdwdadas')
+                    itemChecked.checked.push({ _id: currentValue, checked })
                 }
             }
 

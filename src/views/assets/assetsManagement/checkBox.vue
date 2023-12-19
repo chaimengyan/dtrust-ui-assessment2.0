@@ -77,9 +77,9 @@ export default {
             const itemList = getChildrenById(this.renderList, this.checkId, 'list')
             const itemChecked = getChildrenById(this.checkAllFields, this.checkId, 'checked')
             this.list = [...(itemList.list || [])]
+            console.log(itemList, this.renderList, this.checkId, '=====')
             this.checkedList = [...(itemChecked?.checked || [])]
             this.setCheckIds()
-
             setTimeout(() => {
                 this.$refs.child?.forEach(item => {
                     const id = item.$el.getAttribute('data-checkid')

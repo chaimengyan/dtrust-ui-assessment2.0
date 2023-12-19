@@ -101,6 +101,7 @@ export default {
         mounted() {
             this.buildRenderList()
             this.buildEchoFields()
+            this.getDefaultAttrs()
         },
         setValue() {
             this.$nextTick(() => {
@@ -158,6 +159,16 @@ export default {
             })
         },
 
+        getDefaultAttrs() {
+            this.checkAllFields.forEach(async main => {
+                for (let i = 0; i < main.checked.length; i++) {
+                    const categoryChecked = main.checked[i].checked
+                    await this.getAllAttributesByIds(main.checked[i]._id, this.activeDataClass, main._id, categoryChecked)
+                    this.setValue()
+                }
+            })
+        },
+
         // 构建多选框显示结构数据
         buildRenderList() {
             this.renderList = this.checkedMain.map((item) => ({
@@ -190,14 +201,15 @@ export default {
         buildEchoFields() {
             this.checkAllFields = this.checkedMain.map(main => {
                 const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
-
+                const _id = main.mainBodyId.toString()
+                const list = checked ? this.buildCheckboxList(checked.categoryList, checked.attributes, _id) : []
                 return {
-                    _id: main.mainBodyId.toString(),
-                    checked: checked ? this.buildCheckboxList(checked.categoryList, checked.attributes) : []
+                    _id,
+                    checked: list
                 }
             })
         },
-        buildCheckboxList(categoryList, attributes){
+        buildCheckboxList(categoryList, attributes, mainId){
             return categoryList.map((item) => {
                 const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
                 const attrIds = attrs.map((item) => {
@@ -219,12 +231,6 @@ export default {
         handleChecked(index) {
             this.mainBodyId = index;
             this.setValue();
-        },
-
-
-
-        // 数据分类多选框点击事件
-        handleDataClassCheckedChange(val) {
         },
 
 
@@ -271,14 +277,19 @@ export default {
                 }
             })
             const needAddIds = checkedList.filter(_id => !itemChecked?.checked.find(item => item._id === _id))
-
             return [needAddIds, itemChecked, itemList]
         },
 
         // 点击字段多选框事件
         async handleCheckedChange(checkedList, checkId) {
-            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
+            await this.getClassAttrs(checkedList, checkId)
+            // this.checkAllFields = [...this.checkAllFields]
+            // this.renderList = [...this.renderList]
+            this.setValue()
+        },
 
+        async getClassAttrs(checkedList, checkId) {
+            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
             // 找到新增id，调用接口设置选中和节点
             if (needAddIds.length) {
 
@@ -293,12 +304,7 @@ export default {
                     }
                 }
             }
-
-
-            this.checkAllFields = [...this.checkAllFields]
-            this.renderList = [...this.renderList]
-            this.setValue()
-        },
+        }
 
     }
 }
