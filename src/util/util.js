@@ -269,28 +269,29 @@ export function searchTree(nodesArr, searchKey) {
  */
 export function handleDataPermissions(btnType, row) {
   // 定义变量内容
-  const { dataPermissionDepts, deletePermissionDepts, updatePermissionDepts, sysUser } = store.state.user.infoRest;
+  const {userInfo, infoRest} = store.state.user
+  const { dataPermissionDepts, deletePermissionDepts, updatePermissionDepts } = infoRest;
   if(btnType === 'inquire') {
       if(dataPermissionDepts.length !== 0) {
          return searchTree(dataPermissionDepts, row.belongTo)
       }else {
-          return sysUser.username === row.createBy 
+          return userInfo.username === row.createBy 
       }
   }else if(btnType === 'delete') {
       if(deletePermissionDepts.length !== 0) {
           return searchTree(deletePermissionDepts, row.belongTo)
        }else {
-           return sysUser.username === row.createBy 
+           return userInfo.username === row.createBy 
        }
   }else {
       if(updatePermissionDepts.length !== 0) {
           return searchTree(updatePermissionDepts, row.belongTo)
        }else {
-           return sysUser.username === row.createBy 
+           return userInfo.username === row.createBy 
        }
   }
  
-};
+}
 
 /**
  * 动态插入css
