@@ -38,7 +38,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
 
   });
 
-   
+
   _this.option = option
 const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
 return option
@@ -59,7 +59,7 @@ return option
   //   addBtn: false,
   //   viewBtn: false,
   //   menuWidth:150,
-  //   height: 500,  
+  //   height: 500,
   //   // submitBtn: false,
   //   column: [{
   //     fixed: true,
@@ -327,7 +327,7 @@ return option
   //     dicData: city,
   //     filterable: true,
   //     overHidden: isOverHidden,
-  //   }, 
+  //   },
   //   // {
   //   //   label: _this.$t('businessScenarioManagement.是否出售居民的个人信息'),
   //   //   prop: 'saleOfPersonalInformationOfCaliforniaResidents',
@@ -454,7 +454,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
     selectable:(row,index)=>{
       return !('children' in row);
     },
-    rowKey: 'id',
+    rowKey: '_id',
     rowParentKey: 'attributesId',
     reserveSelection:true,
     menu: !isView,
@@ -508,7 +508,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
       //   sortable:true,
       //   overHidden: isOverHidden,
 
-      // }, 
+      // },
       {
         width: 120,
         searchSpan: 6,
@@ -525,7 +525,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         prop:'volumeOfDataSubjects',
         sortable:true,
       },
-      { 
+      {
         label:'收集',
         prop:'gatherActivitiesList',
         overHidden: isOverHidden,
@@ -534,7 +534,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
             return cur.map(item => `${item.activitiesQnLabel}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
-      },{ 
+      },{
         label:'存储',
         prop:'storageActivitiesList',
         overHidden: isOverHidden,
@@ -543,7 +543,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
             return cur.map(item => `${item.activitiesQnLabel}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
-      },{ 
+      },{
         label:'使用',
         prop:'useActivitiesList',
         overHidden: isOverHidden,
@@ -552,7 +552,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
             return cur.map(item => `${item.activitiesQnLabel}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
-      },{ 
+      },{
         label:'传输',
         prop:'transmitActivitiesList',
         overHidden: isOverHidden,
@@ -561,7 +561,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
             return cur.map(item => `${item.activitiesQnLabel}:${item.activitiesAnswerLabel}`).join(';')
           }
         }
-      },{ 
+      },{
         label:'存档/删除',
         prop:'delActivitiesList',
         overHidden: isOverHidden,
@@ -571,7 +571,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
           }
         }
       },
-      // { 
+      // {
       //   label:_this.$t('businessScenarioManagement.数据处理活动'),
       //   prop:'activitiesName',
       //   overHidden: isOverHidden,
@@ -583,7 +583,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         prop:'keyword',
         search: true,
         hide: true
-      }, 
+      },
     ]
   }
 }

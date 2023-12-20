@@ -148,19 +148,20 @@
             v-show="active === 1"
             ref="selectField"
             />
+          <ActRelation
+            v-show="active === 2"
+            ref="actRelation"
+            :fieldList="fieldList"
+            :sceneId="sceneId"
+            :saveBtnText="saveBtnText"
+            @saveSuccess="saveSuccess"
+             />
         </template>
 
 
 
 
-<!--      <ActRelation-->
-<!--        v-show="active === 2"-->
-<!--        ref="actRelation" -->
-<!--        :fieldList="fieldList"-->
-<!--        :sceneId="sceneId"-->
-<!--        :saveBtnText="saveBtnText"-->
-<!--        @saveSuccess="saveSuccess"-->
-<!--         />-->
+
       <div class="demo-drawer__footer">
           <el-button
             type="primary"
@@ -440,7 +441,10 @@ export default {
         if (this.active === 1) {
             this.$refs.selectField.mounted()
             this.$refs.selectField.setValue()
-            console.log(this.checkedProjectBody, 'ok')
+        }
+        if (this.active === 2) {
+            const attrs = this.$refs.selectField.getAttrs()
+            this.$refs.actRelation.init(attrs)
         }
     },
     // 上一步

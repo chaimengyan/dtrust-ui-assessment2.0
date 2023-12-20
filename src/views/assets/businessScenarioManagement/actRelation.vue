@@ -32,7 +32,7 @@
               >{{$t('assetsManagement.配置')}}</el-button>
           </template>
         </avue-crud> -->
-        <avue-crud 
+        <avue-crud
            v-model="treeForm"
            :option="option"
            :data="temporaryTreeFieldList"
@@ -60,13 +60,13 @@
           </template>
         </avue-crud>
       </div>
-    
-      <el-dialog 
-        :title="$t('assetsManagement.配置')" 
-        v-if="sourceDialog" 
-        :visible.sync="sourceDialog"  
+
+      <el-dialog
+        :title="$t('assetsManagement.配置')"
+        v-if="sourceDialog"
+        :visible.sync="sourceDialog"
         append-to-body
-        :close-on-click-modal="false" 
+        :close-on-click-modal="false"
         :fullscreen="isFullscreen">
         <div class="dialog-header" slot="title">
           <span class="dialog-header-title">{{$t('assetsManagement.配置')}}</span>
@@ -78,7 +78,7 @@
           <el-form-item :label="$t('assetsManagement.数据主体数量')" >
             <el-input-number v-model="sourceForm.volumeOfDataSubjects" :min="0" />
           </el-form-item>
-          
+
           <el-form-item :label="$t('businessScenarioManagement.数据处理活动')" >
             <el-cascader
               v-model="sourceForm.activitiesIdList"
@@ -99,16 +99,16 @@
         </el-form>
 
         <div slot="footer" class="dialog-footer">
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
               @click="saveSource">{{saveBtnText}}</el-button>
-            <el-button 
+            <el-button
               icon="el-icon-circle-close"
               @click="sourceDialog = false">{{$t('assetsManagement.取消')}}</el-button>
         </div>
       </el-dialog>
-      
+
   </basic-container>
 </template>
 <script>
@@ -131,10 +131,6 @@ export default {
     ActAnswers,
   },
   props: {
-    fieldList: {
-      type: Array,
-      default: () => []
-    },
     sceneId: {
       type: Number,
       default: 0
@@ -174,23 +170,9 @@ export default {
       isOverHidden: true,
       treeOption: [],
       currentRow: null,
+        attrs: [],
       keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList']
     };
-  },
-  watch: {
-    fieldList: {
-      handler(newVal, oldVal) {
-        if(JSON.stringify(this.searchParam) !== '{}') {
-          this.handleFilter(this.searchParam)
-        } else {
-          console.log(this.fieldList, 'this.fieldList///');
-          this.pageList = deepClone(this.fieldList)
-          this.onLoad(this.page, this.fieldList)
-        }
-          
-      }
-      
-    },
   },
   computed: {
     option() {
@@ -201,6 +183,10 @@ export default {
     this.getAllAssetsActivities()
   },
   methods: {
+      init(attrs) {
+          this.attrs = attrs
+          this.onLoad(this.page, this.attrs)
+      },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
       actRelationOption(this, this.isView, this.isOverHidden)
@@ -211,20 +197,18 @@ export default {
       this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
     },
     tranListToTreeData(list) {
-      console.log(list, 'list=======')
       const data = list.reduce((pre, cur) => {
-        const len = list.filter(item => item.attributesId === cur.attributesId)
-        
+        const len = list.filter(item => item._id === cur._id)
+
         // debugger
         // cur.id = cur.identification
         if (len.length === 1) {
-          pre[cur.attributesId] = cur;
+          pre[cur._id] = cur;
           return pre;
         }
-        if (!pre[cur.attributesId]) {
-          console.log(cur, 'cur');
-          pre[cur.attributesId] = {
-            id: cur.attributesId,
+        if (!pre[cur._id]) {
+          pre[cur._id] = {
+            id: cur._id,
             attributesName: cur.attributesName,
             children: [cur],
           }
@@ -233,10 +217,9 @@ export default {
         }
 
         Reflect.deleteProperty(cur, 'attributesName')
-        pre[cur.attributesId].children.push(cur)
+        pre[cur._id].children.push(cur)
         return pre;
       }, {})
-      console.log(data, '????data');
 
       return Object.values(data);
     },
@@ -260,7 +243,7 @@ export default {
     // 搜索
     handleFilter(param) {
       this.page.currentPage = 1;
-      this.pageList = deepClone(this.fieldList)
+      this.pageList = deepClone(this.attrs)
       for(let p in param) {
         if(p === 'keyword') {
           this.pageList = this.pageList.filter(x => {
@@ -278,13 +261,13 @@ export default {
     // 清空搜索
     searchReset() {
       this.searchParam = {}
-      this.pageList = deepClone(this.fieldList)
-      this.onLoad(this.page, this.fieldList)
+      this.pageList = deepClone(this.attrs)
+      this.onLoad(this.page, this.attrs)
     },
 
     // 多选选中
     selectionChange(list) {
-      this.identificationList = list.map(item => (item.identification))
+      this.identificationList = list.map(item => (item._id))
     },
 
     // 批量关联弹窗
@@ -340,7 +323,7 @@ export default {
               ...item[key],
               activitiesValue: item[key].value,
               activitiesLabel: item[key].label,
-              "activitiesCategory": "0" 
+              "activitiesCategory": "0"
             }
           }
         })
@@ -350,24 +333,28 @@ export default {
           result.push(item)
         }
       })
-console.log(result, 'result');
       return result
     },
-      
+
     // 保存表格数据
     saveCurd() {
       // 树结构扁平化
       const data = this.transferData(this.temporaryTreeFieldList)
-      console.log(data, 'data')
-      this.fieldList.forEach((item, index) => {
-        this.fieldList[index].projectAttributesId = item.id || item.projectAttributesId
+      this.attrs.forEach((item, index) => {
+        this.attrs[index].projectAttributesId = item.id || item.projectAttributesId
         item.assetsSceneId = this.sceneId
         item.tenantId = undefined
       })
-      if(!this.fieldList[0]) {
+      if(!this.attrs[0]) {
         this.$message.error(this.$t('assetsManagement.请选择需要关联的字段'))
       } else {
-        addOrUpdateRelatedAssets(this.fieldList).then(res => {
+        const data = this.attrs.map(item => {
+            return {
+                ...item,
+                mainBodyId: item.mainBodyId.split('.')[0]
+            }
+        })
+        addOrUpdateRelatedAssets(data).then(res => {
           if(res.data.status === 200) {
             this.$emit('saveSuccess', res.data.data)
             this.$message.success(res.data.message)
@@ -390,13 +377,13 @@ console.log(result, 'result');
           for(let c of this.activitiesOptions) {
             if(a.activitiesCategory == c.value) {
               c.children.push({
-                value: a.activitiesId, 
-                activitiesAnswerLabel: this.getShowValue(activitiesItem), 
-                activitiesAnswerValue: activitiesItem?.echoActivitiesValue, 
+                value: a.activitiesId,
+                activitiesAnswerLabel: this.getShowValue(activitiesItem),
+                activitiesAnswerValue: activitiesItem?.echoActivitiesValue,
                 activitiesQnLabel: a.activitiesName,
-                label: a.activitiesName, 
+                label: a.activitiesName,
                 activitiesCategory: a.activitiesCategory,
-                activitiesId: a.activitiesId, 
+                activitiesId: a.activitiesId,
                 parent: this.keys[c.value]})
               break
             }
@@ -413,7 +400,7 @@ console.log(result, 'result');
       }
       console.log(echoActivitiesValue, 'echoActivitiesValue')
       const value = isArray(echoActivitiesValue) ? echoActivitiesValue : [echoActivitiesValue]
-      
+
       const showValues = value.map(pValue => {
         const item = activitiesItem.answers?.find(item => item.value === pValue)
         if (item) {
@@ -445,13 +432,12 @@ console.log(result, 'result');
         this.$set(item, 'echoActivitiesValue', isString ? JSON.parse(item.echoActivitiesValue) : item.echoActivitiesValue)
         this.sourceForm.activitiesIdList[index] = item.activitiesId
       })
-      this.rowIndex = row.identification
+      this.rowIndex = row._id
       this.sourceDialog = true
       this.getAllAssetsActivities()
-      this.currentRow = this.fieldList.find(item => item.identification === row.identification);
-      console.log(this.currentRow,this.fieldList,row, 'currentRowcurrentRow');
+      this.currentRow = this.attrs.find(item => item._id === row._id);
     },
-    
+
     // 保存关联信息
     saveSource() {
       const noAnswer = this.sourceForm.assetsSceneProjectAttributesActivitiesList
@@ -462,7 +448,6 @@ console.log(result, 'result');
       this.keys.forEach(key => {
         this.$set(this.currentRow, key, [])
       })
-console.log(this.currentRow, 'this.keys');
       this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
         const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
         data.activitiesAnswerLabel = this.getShowValue(item);
@@ -472,21 +457,21 @@ console.log(this.currentRow, 'this.keys');
         this.$set(this.currentRow, data.parent, [...(this.currentRow[data.parent] || []), data])
       })
       // this.sourceForm.activitiesName = activitiesName.join('；')
-      console.log(this.sourceForm.assetsSceneProjectAttributesActivitiesList, 'this.sourceForm.assetsSceneProjectAttributesActivitiesList');
 
       if(this.isBatch) {
-        this.fieldList.forEach((item,index) => {
-          if(this.identificationList.includes(item.identification)) {
-            this.$set(this.fieldList, index, {...item, ...this.sourceForm})
+        this.attrs.forEach((item,index) => {
+          if(this.identificationList.includes(item._id)) {
+              this.attrs[index] = { ...item, ...this.sourceForm }
           }
         })
       }else {
-        this.fieldList.forEach((item,index) => {
-          if(item.identification === this.rowIndex) {
-            this.$set(this.fieldList, index, {...item, ...this.sourceForm})
+        this.attrs.forEach((item,index) => {
+          if(item._id === this.rowIndex) {
+              this.attrs[index] = { ...item, ...this.sourceForm }
           }
         })
       }
+      this.init(this.attrs);
       this.sourceDialog = false
       this.$message.success(this.$t('assetsManagement.保存成功'))
     },
