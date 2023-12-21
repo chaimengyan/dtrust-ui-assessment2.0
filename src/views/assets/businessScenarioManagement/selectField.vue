@@ -10,7 +10,7 @@
                     background-color="#dadde2"
                     text-color="#303133"
                 >
-                    <el-submenu v-for="item in menuList" :index="item.projectId.toString()" :key="item.projectId">
+                    <el-submenu v-for="item in checkedBody" :index="item.projectId.toString()" :key="item.projectId">
                         <template slot="title">
                             <div style="display: flex;justify-content: space-around;">
                                 <div>
@@ -51,13 +51,9 @@
 </template>
 <script>
 import {
-    getAllAttributesByIds
-} from "@/api/fieldManagement/fieldMasterData";
-import {
     getTypeList
 } from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
-import { uniqueId } from 'lodash'
 import {getChildrenById} from "@/util/util";
 export default {
     name: "SelectField",
@@ -73,7 +69,7 @@ export default {
             return this.checkedProjectBody()
         },
         defaultActive() {
-            const [first = {}] = this.echo || []
+            const [first = {}] = this.checkedBody || []
             const [main] = first.dataSubjectList || []
             return main ? main.mainBodyId.toString() : ''
         },
@@ -96,7 +92,6 @@ export default {
             renderList: [],
             // 选中的主体
             mainBodyId: 0,
-            menuList: [],
             mainList: []
         };
     },
@@ -148,27 +143,32 @@ export default {
                 this.dataClassList = res.data.data
             })
         },
+        // 在回显选中未构建完成时，判断分类下是否有选中的字段
+        isCategoryHasChecked(categoryId) {
+
+            for (let i = 0; i < this.echo.length; i++) {
+                const data = this.echo[i].dataSubjectList
+
+                for (let j = 0; j < data.length; j++) {
+                    const is = data[j].attributes.find(item => item.categoryId === categoryId)
+                    if (is) return true
+                }
+            }
+        },
 
         // 构建多选框显示结构数据
         buildRenderList() {
-            this.menuList = []
             this.mainList = []
             this.checkedBody.forEach(item => {
-                const project = this.echo.find(echo => echo.projectId === item.projectId)
-                this.menuList.push(project ? project : item)
-                if (project) {
-                    return this.mainList.push(...(project.dataSubjectList || []))
-                }
+                 this.mainList.push(...(item.dataSubjectList || []))
             })
-
             this.renderList = this.mainList.map((item) => {
                 const list = item.categoryList.map(c => {
-
                     return {
                         _id: c.categoryId,
                         label: c.categoryName,
                         value: c.categoryId,
-                        show: false,
+                        show: this.isCategoryHasChecked(c.categoryId),
                         list: this.filterAttrs(item.attributes, c.categoryId)
                     }
                 })
@@ -183,11 +183,12 @@ export default {
         filterAttrs(data, categoryId) {
             return data.filter(item => item.categoryId === categoryId).map(item => {
                 return {
+                    ...item,
                     _id: item._id,
                     label: item.attributesName,
                     value: item._id,
                     show: true,
-                    list: []
+                    list: [],
                 }
             })
         },
@@ -213,20 +214,26 @@ export default {
          * }
          */
         buildEchoFields() {
+            const echoList = []
+            this.echo.forEach(item => {
+                echoList.push(...(item.dataSubjectList || []))
+            })
             this.checkAllFields = this.mainList.map(main => {
-                // const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
-
+                const checked = echoList.find(item => item.mainBodyId === main.mainBodyId)
+                const _id = main.mainBodyId
+                const list = checked ? this.buildCheckboxList(checked.categoryList, checked.attributes, _id) : []
                 return {
-                    _id: main.mainBodyId.toString(),
-                    checked: []
+                    _id,
+                    checked: list
                 }
             })
         },
-        buildCheckboxList(categoryList, attributes){
+        // 这里的mainBodyId 已经是 projectId + mainBodyId 了
+        buildCheckboxList(categoryList, attributes, mainBodyId){
             return categoryList.map((item) => {
                 const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
                 const attrIds = attrs.map((item) => {
-                    return { _id: item.attributesId, checked: [] };
+                    return { _id: `${mainBodyId}.${item.attributesId}`, checked: [] };
                 })
                 return { _id: item.categoryId, checked: attrIds }
             })

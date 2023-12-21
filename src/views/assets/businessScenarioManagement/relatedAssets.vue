@@ -15,8 +15,11 @@
 </template>
 <script>
 import {
-    getAllAssetsProject
+    getAllAssetsProject,
+    getAssetsProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
+import {uniqueId} from "lodash";
+
 export default {
     name: "DataSubject",
     inject: ['echoCheckedDataSubjectList'],
@@ -37,14 +40,16 @@ export default {
             dataSubjectList: [],
             // 已选数据主体类型id
             checkedDataSubjectList: [],
-            checkedDataSubjectOptions: []
+            checkedDataSubjectOptions: [],
+
+            allData: {}
         };
     },
     created() {
         this.getMainBodList()
     },
     methods: {
-        setDefaultValue() {
+        async setDefaultValue() {
             if (this.echo.length) {
                 this.checkedDataSubjectList = this.echo.map(item => item.projectId) || []
                 this.handleCheckedChange(this.checkedDataSubjectList)
@@ -59,7 +64,32 @@ export default {
         // 选择数据主体事件
         handleCheckedChange(val) {
             this.checkedDataSubjectOptions = this.dataSubjectList.filter(item => val.includes(item.projectId))
-            this.$emit('change', this.checkedDataSubjectOptions)
+            // 拉取渲染列表
+            const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
+            const all = filters.map(item => {
+
+                return getAssetsProjectAttributesListByProjectId(item.projectId).then(res => {
+                    const dataSubjectList = res.data.data.map(main => {
+                        // 初始化id
+                        main.attributes.forEach(a => {
+                            a._id = `${item.projectId}.${main.mainBodyId}.${a.attributesId}`
+                        })
+                        return {
+                            ...main,
+                            mainBodyId: `${item.projectId}.${main.mainBodyId}`
+                        }
+                    })
+                    this.allData[item.projectId] = {
+                        projectId: item.projectId,
+                        projectName: item.projectName,
+                        dataSubjectList
+                    }
+                })
+            })
+            Promise.all(all).then(() => {
+                const data = Object.keys(this.allData).filter(k => val.includes(Number(k))).map(k => this.allData[k])
+                this.$emit('change', data)
+            })
         },
     }
 }
