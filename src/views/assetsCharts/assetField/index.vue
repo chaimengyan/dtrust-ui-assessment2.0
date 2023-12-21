@@ -1,28 +1,28 @@
 <template>
   <div class="container">
-
-    <!-- 过滤字段 -->
-    <FilterFields
-      @filterFields="filterFields"
-      @svgAutoAdjustment="svgAutoAdjustment"
-    />
-    <!-- 字段方块 -->
-    <div class="icon-container">
-      <template v-for="item in fieldsList">
-        <el-tooltip :content="item.attributesName" placement="bottom" effect="light" :key="item.attributesId">
-          <div 
-            :style="{'background-color': item.attributesColor}"
-            class="icon-block"
-            @click="handleClick($event, item)"
-          >
-            <i style="pointer-events: none;" :class="item.attributesIcon"></i>
-          </div>
-        </el-tooltip>
-      </template>
+    <div class="topBox">
+      <!-- 过滤字段 -->
+      <FilterFields
+        @filterFields="filterFields"
+        @svgAutoAdjustment="svgAutoAdjustment"
+      />
+      <!-- 字段方块 -->
+      <div class="icon-container">
+        <template v-for="item in fieldsList">
+          <el-tooltip :content="item.attributesName" placement="bottom" effect="light" :key="item.attributesId">
+            <div 
+              :style="{'background-color': item.attributesColor}"
+              class="icon-block"
+              @click="handleClick($event, item)"
+            >
+              <i style="pointer-events: none;" :class="item.attributesIcon"></i>
+            </div>
+          </el-tooltip>
+        </template>
+      </div>
     </div>
-
     <!-- 连线 -->
-    <div v-for="(item, i) in iconData" :key="i">
+    <!-- <div v-for="(item, i) in iconData" :key="i">
         <div v-for="(_item, _i) in item" :key="_i">
           <SvgBlock
             v-if="item[_i + 1]"
@@ -31,7 +31,7 @@
             :nextIconProps="item[_i + 1]"
           />
         </div>
-    </div>
+    </div> -->
 
     <!-- 资产 -->
     <div v-for="(asset, i) in assetsList" :key="i" class="assetsList">
@@ -241,15 +241,27 @@ export default {
   height: 100%;
   background-color: #f0f2f5;
 }
+.topBox {
+  background-color: #e6e7e8;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding-top: 10px;
+
+}
   .assetsList {
     margin-bottom: 40px;
     display: flex;
-    height: 30px;
+    height: 40px;
     border-radius: 5px;
+    background-color: #e6e7e8;
+
   }
   
   .assetsList > div {
-    height: 100%;
+    height: 50%;
+    
+    border-radius: 20px;
+
   }
   .projectName {
     margin-left: 10px;
@@ -264,13 +276,12 @@ export default {
     padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
-    background-color: #e6e7e8
   }
 
   .icon-container .icon-block {
     width: 30px;
     height: 30px;
-    border-radius: 2px;
+    border-radius: 50%;
     margin-bottom: 20px;
     margin-left: 15px;
     display: flex;

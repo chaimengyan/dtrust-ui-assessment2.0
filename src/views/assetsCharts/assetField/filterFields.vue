@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form ref="filterForm" :model="filterForm"   size="">
+        <el-form style="margin-left:10px" ref="filterForm" :model="filterForm"   size="">
             <el-row :gutter="20" type="flex" justify="space-around">
                 <el-col :span="6">
                 <el-form-item label="" >

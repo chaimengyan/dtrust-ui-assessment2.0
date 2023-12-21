@@ -30,7 +30,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     if(['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
       item.props = {
         label: 'name_cn',
-        value: 'code',
+        value: 'name_cn',
         children: 'cities',
       }
       item.dicData = city

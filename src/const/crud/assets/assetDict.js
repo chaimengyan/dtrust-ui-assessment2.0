@@ -367,43 +367,46 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
-    label: '搜索项框栅列',
-    prop: 'searchSpan',
-    value: 10,
-    type: 'number',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
-    label: '搜索项为范围搜索',
-    prop: 'searchRange',
-    value: true,
-    type: 'switch',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
-    label: '是否为搜索项',
-    prop: 'search',
-    value: false,
-    type: 'switch',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
+  },
+  // {
+  //   label: '搜索项框栅列',
+  //   prop: 'searchSpan',
+  //   value: 10,
+  //   type: 'number',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },{
+  //   label: '搜索项为范围搜索',
+  //   prop: 'searchRange',
+  //   value: true,
+  //   type: 'switch',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
+  // {
+  //   label: '是否为搜索项',
+  //   prop: 'search',
+  //   value: false,
+  //   type: 'switch',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
+  {
     label: '对应列是否可以排序',
     prop: 'sortable',
     value: true,
