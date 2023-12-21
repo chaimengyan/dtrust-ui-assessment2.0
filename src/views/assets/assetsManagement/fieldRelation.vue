@@ -221,12 +221,14 @@ export default {
         if(!this.attrs[0]) {
           this.$message.error(this.$t('assetsManagement.请选择需要关联的字段'))
         } else {
-          assetsAddAttributes(this.attrs).then(res => {
-            if(res.data.status === 200) {
-              this.$emit('saveSuccess', res.data.data)
-              this.$message.success(res.data.message)
-            }
-          })
+                this.$emit('saveSuccess', 'ssss')
+                this.$message.success('res.data.message')
+          // assetsAddAttributes(this.attrs).then(res => {
+          //   if(res.data.status === 200) {
+          //     this.$emit('saveSuccess', res.data.data)
+          //     this.$message.success(res.data.message)
+          //   }
+          // })
         }
 
       },

@@ -64,7 +64,7 @@ export default {
             return this.checkedMainBody()
         },
         defaultActive() {
-            return this.checkedMain && this.checkedMain.length ? this.checkedMain[0].mainBodyId.toString() : ''
+            return this.checkedMain && this.checkedMain.length ? `${this.projectId}.${this.checkedMain[0].mainBodyId}` : ''
         },
     },
     props: {
@@ -114,6 +114,12 @@ export default {
             // 获取所有选中attr的ids
             const allCheckedIds = this.getAllCheckedIds()
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getCheckedList() {
+            return [...this.checkAllFields]
+        },
+        getRenderList() {
+            return [...this.renderList]
         },
         getAllAttrs() {
             const result = []
@@ -172,9 +178,12 @@ export default {
         // 构建多选框显示结构数据
         buildRenderList() {
             this.renderList = this.checkedMain.map((item) => ({
-                _id: item.mainBodyId.toString(),
+                _id: `${this.projectId}.${item.mainBodyId}`,
                 name: item.mainBodyName,
-                list: this.categoryList.map(item => ({...item}))
+                list: this.categoryList.map(c => {
+                    const _id = `${this.projectId}.${item.mainBodyId}.${c.categoryId}`
+                    return { ...c, _id, value: _id }
+                })
             }))
         },
 
@@ -201,7 +210,7 @@ export default {
         buildEchoFields() {
             this.checkAllFields = this.checkedMain.map(main => {
                 const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
-                const _id = main.mainBodyId.toString()
+                const _id = `${this.projectId}.${main.mainBodyId}`
                 const list = checked ? this.buildCheckboxList(checked.categoryList, checked.attributes, _id) : []
                 return {
                     _id,
@@ -213,9 +222,9 @@ export default {
             return categoryList.map((item) => {
                 const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
                 const attrIds = attrs.map((item) => {
-                    return { _id: item.attributesId, checked: [] };
+                    return { _id: `${mainId}.${item.attributesId}`, checked: [] };
                 })
-                return { _id: item.categoryId, checked: attrIds }
+                return { _id: `${mainId}.${item.categoryId}`, checked: attrIds }
             })
         },
 
@@ -237,14 +246,15 @@ export default {
         // 获取字段
         getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
             const itemList = getChildrenById(this.renderList, categoryIds, 'list')
-
-            return getAllAttributesByIds(categoryIds, typeIds, mainBodyId, '').then(res => {
+            const id = categoryIds.split('.').at(-1)
+            const mainId = mainBodyId.split('.').at(-1)
+            return getAllAttributesByIds(id, typeIds, mainId, '').then(res => {
                 const attrs = res.data.data || [];
                 if (!attrs.length) {
                     return;
                 }
                 attrs.forEach(item => {
-                    item._id = uniqueId() + uniqueId()
+                    item._id = `${mainBodyId}.${item.attributesId}`
                     item.label = item.attributesName
                     item.value = item._id
                     item.show = true
@@ -283,8 +293,6 @@ export default {
         // 点击字段多选框事件
         async handleCheckedChange(checkedList, checkId) {
             await this.getClassAttrs(checkedList, checkId)
-            // this.checkAllFields = [...this.checkAllFields]
-            // this.renderList = [...this.renderList]
             this.setValue()
         },
 
@@ -299,7 +307,8 @@ export default {
                     // item 为true，可以不用调接口
                     const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
                     itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
-                    if (!item?.list?.length) {
+                    const isAttrs = currentValue.split('.').length >= 3
+                    if (!item?.list?.length && !isAttrs) {
                         await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
                     }
                 }

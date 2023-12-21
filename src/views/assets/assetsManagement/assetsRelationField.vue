@@ -42,12 +42,12 @@
               @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
           <el-button
               type="primary"
-              v-if="active === 0 || active !== 2 && isAssets"
+              v-if="(active === 0 || active !== 2) && !(isAssets && active === 1)"
               icon="el-icon-bottom"
               @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
           <el-button
               type="primary"
-              v-if="active === 2"
+              v-if="active === 2 || (!isAssets && active === 1)"
               :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
               @click="relationFormSubmit">{{saveBtnText}}</el-button>
           <el-button
@@ -142,6 +142,7 @@ export default {
       this.fullscreenLoading = true
       this.active = 0
       this.projectId = row.projectId
+      this.relationDialogSize = row.relationDialogSize || this.relationDialogSize
       this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
       this.relationDialog = true
       const Api = this.getAssetsProjectAttributesListByProjectId(this.projectId)
@@ -153,12 +154,24 @@ export default {
 
     // 提交关联字段
     relationFormSubmit() {
+        if (!this.isAssets) {
+            const attrs = this.$refs.selectField.getAttrs()
+            this.$refs.fieldRelation.init(attrs)
+        }
       this.fullscreenLoading = true
       this.$refs.fieldRelation.saveCurd()
     },
     // 子组件数据保存成功
-    saveSuccess(isUpdate) {
-      this.$emit('saveSuccess', isUpdate)
+    saveSuccess(data) {
+        // getCheckedList() {
+        //     return this.checkAllFields
+        // },
+        // getRenderList() {
+        //     return this.renderList
+        // },
+        const checkList = this.$refs.selectField.getCheckedList()
+        const renderList = this.$refs.selectField.getRenderList()
+      this.$emit('saveSuccess', data, checkList, renderList)
       this.relationDialog = false
       this.fullscreenLoading = false
     },
