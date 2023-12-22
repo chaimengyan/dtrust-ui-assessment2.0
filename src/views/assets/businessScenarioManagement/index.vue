@@ -576,8 +576,11 @@ export default {
       data.forEach((asset,index) => {
         asset.dataSubjectList.forEach((item, itemIndex) => {
           item.mainBodyId = `${asset.projectId}.${item.mainBodyId}`
-            item.attributes.forEach(item => {
-                item._id = uniqueId()
+            item.attributes.forEach(attr => {
+                attr._id = `${item.mainBodyId}.${attr.attributesId}`
+            })
+            item.categoryList.forEach(attr => {
+                attr._id = `${item.mainBodyId}.${attr.categoryId}`
             })
         })
       })

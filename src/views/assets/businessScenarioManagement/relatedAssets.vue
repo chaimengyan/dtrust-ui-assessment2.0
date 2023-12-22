@@ -73,6 +73,9 @@ export default {
                         // 初始化id
                         main.attributes.forEach(a => {
                             a._id = `${item.projectId}.${main.mainBodyId}.${a.attributesId}`
+                        })// 初始化id
+                        main.categoryList.forEach(a => {
+                            a._id = `${item.projectId}.${main.mainBodyId}.${a.categoryId}`
                         })
                         return {
                             ...main,

@@ -17,7 +17,7 @@
                                     {{item.projectName}}
                                 </div>
                                 <div>
-                                    <i class="el-icon-circle-plus-outline" ></i>
+                                    <i class="el-icon-circle-plus-outline" @click="relationBtn(item)"></i>
                                 </div>
                             </div>
                         </template>
@@ -47,6 +47,12 @@
                 </div>
             </el-container>
         </el-container>
+
+        <AssetsRelationField
+            ref="assetsRelationFieldRef"
+            :isAssets="false"
+            @saveSuccess="onAddField"
+        />
     </basic-container>
 </template>
 <script>
@@ -54,11 +60,13 @@ import {
     getTypeList
 } from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
+import AssetsRelationField from '../assetsManagement/assetsRelationField'
 import {getChildrenById} from "@/util/util";
 export default {
     name: "SelectField",
     components: {
         CheckBox,
+        AssetsRelationField
     },
     inject: ['echoCheckedDataSubjectList', 'checkedProjectBody'],
     computed: {
@@ -128,6 +136,17 @@ export default {
             })
             return result;
         },
+
+        onAddField(data, checkList, renderList) {
+            console.log(data, checkList, renderList, 'ok')
+        },
+
+        // 打开关联字段弹窗
+        relationBtn(row) {
+            row.relationDialogSize = '60%'
+            this.$refs.assetsRelationFieldRef.relationBtn(row)
+        },
+
         getAllCheckedIds() {
             const result = []
             this.checkAllFields.forEach(item => {
@@ -144,13 +163,14 @@ export default {
             })
         },
         // 在回显选中未构建完成时，判断分类下是否有选中的字段
-        isCategoryHasChecked(categoryId) {
+        isCategoryHasChecked(_id) {
 
             for (let i = 0; i < this.echo.length; i++) {
                 const data = this.echo[i].dataSubjectList
 
                 for (let j = 0; j < data.length; j++) {
-                    const is = data[j].attributes.find(item => item.categoryId === categoryId)
+                    const categoryId = _id.split('.').at(-1)
+                    const is = data[j].attributes.find(item => item.categoryId === Number(categoryId))
                     if (is) return true
                 }
             }
@@ -165,10 +185,10 @@ export default {
             this.renderList = this.mainList.map((item) => {
                 const list = item.categoryList.map(c => {
                     return {
-                        _id: c.categoryId,
+                        _id: c._id,
                         label: c.categoryName,
-                        value: c.categoryId,
-                        show: this.isCategoryHasChecked(c.categoryId),
+                        value: c._id,
+                        show: this.isCategoryHasChecked(c._id),
                         list: this.filterAttrs(item.attributes, c.categoryId)
                     }
                 })
@@ -235,7 +255,7 @@ export default {
                 const attrIds = attrs.map((item) => {
                     return { _id: `${mainBodyId}.${item.attributesId}`, checked: [] };
                 })
-                return { _id: item.categoryId, checked: attrIds }
+                return { _id: item._id, checked: attrIds }
             })
         },
 

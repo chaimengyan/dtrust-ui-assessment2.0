@@ -84,7 +84,7 @@ export default {
             setTimeout(() => {
                 this.$refs.child?.forEach(item => {
                     const id = item.$el.getAttribute('data-checkid')
-                    item.setDefaultValue(Number(id))
+                    item.setDefaultValue(id)
                 })
             })
 
