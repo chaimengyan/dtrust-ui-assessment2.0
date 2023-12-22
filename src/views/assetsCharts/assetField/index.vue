@@ -11,8 +11,9 @@
         <template v-for="item in fieldsList">
           <el-tooltip :content="item.attributesName" placement="bottom" effect="light" :key="item.attributesId">
             <div 
-              :style="{'background-color': item.attributesColor}"
-              class="icon-block"
+              :style="{'background-color': attributesId === item.attributesId ? item.attributesColor: 'white',
+                       'color': attributesId === item.attributesId ? 'white' : item.attributesColor}"
+              class="attributes-block icon-block"
               @click="handleClick($event, item)"
             >
               <i style="pointer-events: none;" :class="item.attributesIcon"></i>
@@ -35,6 +36,16 @@
 
     <!-- 资产 -->
     <div v-for="(asset, i) in assetsList" :key="i" class="assetsList">
+      <span class="projectName">
+        <el-tooltip :content="asset.assetsProject.projectName" placement="bottom" effect="light">
+          <div 
+            :style="{'background-color': asset.assetsProject.projectColor}"
+            class="project-block icon-block"
+          >
+            <i style="pointer-events: none;" :class="asset.assetsProject.projectIcon"></i>
+          </div>
+        </el-tooltip>
+      </span>
       <!-- 资产里的字段 -->
         <template v-for="field in asset.assetsAttributes">
           <el-tooltip placement="bottom" effect="light" :key="field.attributesId">
@@ -46,15 +57,15 @@
             <div 
               :data-id="field.attributesId" 
               class="assetsList-item"
-              :style="{'background-color': field.attributesColor, width: `${field.width}%`}"
+              :style="{'background-color': field.attributesColor,
+                        'opacity': attributesId === field.attributesId ? 1 : 0.2,
+                        width: `${field.width}%`}"
               @click="clickAsset(field)">
             </div>
           </el-tooltip>
-      </template>
+        </template>
 
-      <span class="projectName">
-        {{asset.assetsProject.projectName}}
-      </span>
+      
 
     </div>
 
@@ -195,6 +206,7 @@ export default {
 
     // 点击字段方块
     handleClick(e, item) {
+      console.log(e, item, '????????');
       const loading = Loading.service();
       
       this.isShow = !this.isShow
@@ -249,44 +261,50 @@ export default {
 
 }
   .assetsList {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     display: flex;
-    height: 40px;
-    border-radius: 5px;
+    height: 50px;
+    border-radius: 15px;
     background-color: #e6e7e8;
 
   }
   
   .assetsList > div {
-    height: 50%;
-    
+    height: 30%;
+    margin-top: 18px;
     border-radius: 20px;
 
   }
   .projectName {
     margin-left: 10px;
     font-size: inherit;
-    color: #052a89;
+    color: white;
     font-family: fangsong;
     font-weight: 600;
+    margin-top: 8px
+  }
+  .project-block {
+    margin-right: 10px;
   }
 
   .icon-container {
-    margin-bottom: 200px;
+    margin-bottom: 20px;
     padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
   }
-
-  .icon-container .icon-block {
-    width: 30px;
-    height: 30px;
+  .icon-block {
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    margin-bottom: 20px;
     margin-left: 15px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+  }
+  .icon-container .attributes-block {
+    margin-bottom: 10px;
+    box-shadow: 0px 1px 4px #343434;
   }
   .fields {
     display: flex;
