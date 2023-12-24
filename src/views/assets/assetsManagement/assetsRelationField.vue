@@ -15,12 +15,15 @@
         <DataSubject
           v-show="active === 0"
           ref="dataSubject"
+          :projectId="projectId"
+          :isAssets="isAssets"
           @change="onDataSubject"
         />
         <SelectField
             v-show="active === 1"
             ref="selectField"
             :projectId="projectId"
+            :isAssets="isAssets"
         />
         <FieldRelation
             v-show="active === 2"
@@ -42,7 +45,7 @@
               @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
           <el-button
               type="primary"
-              v-if="(active === 0 || active !== 2) && !(isAssets && active === 1)"
+              v-if="isAssets ? (active === 0 || active !== 2) : (active === 0)"
               icon="el-icon-bottom"
               @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
           <el-button
@@ -133,7 +136,10 @@ export default {
     // 根据资产id查询关联字段信息
     getAssetsProjectAttributesListByProjectId(id) {
         return getAssetsProjectAttributesListByProjectId(id).then(res => {
-          this.echoCheckedDataSubjectList = res.data.data
+          this.echoCheckedDataSubjectList = res.data.data.map(item => ({
+              ...item,
+              mainBodyId: `${this.projectId}.${item.mainBodyId}`
+          }))
         })
     },
 
@@ -169,9 +175,10 @@ export default {
         // getRenderList() {
         //     return this.renderList
         // },
-        const checkList = this.$refs.selectField.getCheckedList()
-        const renderList = this.$refs.selectField.getRenderList()
-      this.$emit('saveSuccess', data, checkList, renderList)
+        if (!this.isAssets) {
+            const attrs = this.$refs.selectField.getAttrs()
+            this.$emit('saveSuccess', data, attrs)
+        }
       this.relationDialog = false
       this.fullscreenLoading = false
     },

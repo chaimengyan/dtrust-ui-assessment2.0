@@ -10,14 +10,14 @@
                     background-color="#dadde2"
                     text-color="#303133"
                 >
-                    <el-submenu v-for="item in checkedBody" :index="item.projectId.toString()" :key="item.projectId">
+                    <el-submenu v-for="item in menuList" :index="item.projectId.toString()" :key="item.projectId">
                         <template slot="title">
                             <div style="display: flex;justify-content: space-around;">
                                 <div>
                                     {{item.projectName}}
                                 </div>
                                 <div>
-                                    <i class="el-icon-circle-plus-outline" @click="relationBtn(item)"></i>
+                                    <i class="el-icon-circle-plus-outline" @click.stop="relationBtn(item)"></i>
                                 </div>
                             </div>
                         </template>
@@ -74,6 +74,7 @@ export default {
             return this.echoCheckedDataSubjectList()
         },
         checkedBody() {
+            this.menuList = [...this.checkedProjectBody()]
             return this.checkedProjectBody()
         },
         defaultActive() {
@@ -100,7 +101,9 @@ export default {
             renderList: [],
             // 选中的主体
             mainBodyId: 0,
-            mainList: []
+            mainList: [],
+            menuList: [],
+            currentRow: null,
         };
     },
     created() {
@@ -110,6 +113,7 @@ export default {
         mounted() {
             this.buildRenderList()
             this.buildEchoFields()
+            console.log(this.renderList, 'ren')
         },
         setValue() {
             this.$nextTick(() => {
@@ -127,22 +131,69 @@ export default {
             const result = []
             this.renderList.forEach(main => {
                 main.list.forEach(item => {
-                    result.push(...item.list.map(item => ({
-                        ...item,
-                        mainBodyId: main._id,
-                        mainBodyName: main.name,
-                    })))
+                    item.list.forEach(item => {
+                        item.mainBodyId = main._id
+                        item.mainBodyName = main.label
+                        result.push(item)
+                    })
                 })
             })
             return result;
         },
 
-        onAddField(data, checkList, renderList) {
-            console.log(data, checkList, renderList, 'ok')
+        onAddField(data, attrs) {
+            attrs.forEach(attr => {
+                this.addField(attr)
+            })
+            this.setValue()
+        },
+
+        // 添加字段
+        addField(attr, renderList = this.renderList, checkList = this.checkAllFields, name = 'mainBodyName', key = 'mainBodyId') {
+            let list = []
+            const cloneRenderList = [...renderList]
+            const renderItem = cloneRenderList.find(item => item._id === attr[key])
+            const checkItem = checkList.find(item => item._id === attr[key])
+            const checked = checkItem ? checkItem.checked : []
+
+
+            if (!renderItem) {
+                if (name === 'mainBodyName') {
+                    this.currentRow.dataSubjectList.push({
+                        mainBodyId: attr[key],
+                        mainBodyName: attr[name]
+                    })
+                }
+                const projectId = this.currentRow.projectId;
+                const projectName = this.currentRow.projectName;
+                const addObject = name === 'label' ? {...attr, projectId, projectName } : {}
+                const add = { ...addObject, _id: attr[key], label: attr[name], value: attr[key], show: true, list }
+                renderList.push(add)
+                if (!checkItem) {
+                    checkList.push({ _id: attr[key], checked })
+                }
+            } else {
+                list = renderItem.list;
+            }
+            if (name === 'label') return;
+
+            const { name: newName, key: newKey } = this.getNextNameKey(name);
+            this.addField(attr, list, checked, newName, newKey)
+        },
+
+
+        getNextNameKey(name) {
+            switch (name) {
+                case 'mainBodyName':
+                    return { name: 'categoryName', key: 'categoryId' }
+                case 'categoryName':
+                    return { name: 'label', key: '_id' }
+            }
         },
 
         // 打开关联字段弹窗
         relationBtn(row) {
+            this.currentRow = row;
             row.relationDialogSize = '60%'
             this.$refs.assetsRelationFieldRef.relationBtn(row)
         },
@@ -183,6 +234,8 @@ export default {
                  this.mainList.push(...(item.dataSubjectList || []))
             })
             this.renderList = this.mainList.map((item) => {
+                const is = this.renderList.find(r => r._id === item.mainBodyId)
+                if (is) return is;
                 const list = item.categoryList.map(c => {
                     return {
                         _id: c._id,
@@ -194,7 +247,7 @@ export default {
                 })
                 return {
                     _id: item.mainBodyId.toString(),
-                    name: item.mainBodyName,
+                    label: item.mainBodyName,
                     list
                 }
             })
@@ -239,6 +292,8 @@ export default {
                 echoList.push(...(item.dataSubjectList || []))
             })
             this.checkAllFields = this.mainList.map(main => {
+                const is = this.checkAllFields.find(item => item._id === main.mainBodyId)
+                if (is) return is;
                 const checked = echoList.find(item => item.mainBodyId === main.mainBodyId)
                 const _id = main.mainBodyId
                 const list = checked ? this.buildCheckboxList(checked.categoryList, checked.attributes, _id) : []
@@ -253,7 +308,7 @@ export default {
             return categoryList.map((item) => {
                 const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
                 const attrIds = attrs.map((item) => {
-                    return { _id: `${mainBodyId}.${item.attributesId}`, checked: [] };
+                    return { _id: `${mainBodyId}.${item.categoryId}.${item.attributesId}`, checked: [] };
                 })
                 return { _id: item._id, checked: attrIds }
             })
@@ -311,6 +366,7 @@ export default {
 
             this.checkAllFields = [...this.checkAllFields]
             this.renderList = [...this.renderList]
+            console.log(this.renderList, 'reennnn')
             this.setValue()
         },
 

@@ -37,6 +37,7 @@
            :option="option"
            :data="temporaryTreeFieldList"
            ref="treeCrud"
+           @selection-change="selectionChange"
            >
            <template slot="menuRight" slot-scope="{size}">
             <el-button icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
@@ -171,6 +172,7 @@ export default {
       treeOption: [],
       currentRow: null,
         attrs: [],
+        rowList: [],
       keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList']
     };
   },
@@ -198,17 +200,17 @@ export default {
     },
     tranListToTreeData(list) {
       const data = list.reduce((pre, cur) => {
-        const len = list.filter(item => item._id === cur._id)
+        const len = list.filter(item => item.attributesId === cur.attributesId)
 
         // debugger
         // cur.id = cur.identification
         if (len.length === 1) {
-          pre[cur._id] = cur;
+          pre[cur.attributesId] = cur;
           return pre;
         }
-        if (!pre[cur._id]) {
-          pre[cur._id] = {
-            id: cur._id,
+        if (!pre[cur.attributesId]) {
+          pre[cur.attributesId] = {
+            _id: cur._id + Math.random() * 10000,
             attributesName: cur.attributesName,
             children: [cur],
           }
@@ -217,10 +219,10 @@ export default {
         }
 
         Reflect.deleteProperty(cur, 'attributesName')
-        pre[cur._id].children.push(cur)
+        pre[cur.attributesId].children.push(cur)
         return pre;
       }, {})
-
+        console.log(Object.values(data), 'Object.values(data)')
       return Object.values(data);
     },
     // 初始化sourceForm
@@ -268,6 +270,7 @@ export default {
     // 多选选中
     selectionChange(list) {
       this.identificationList = list.map(item => (item._id))
+      this.rowList = list.map(row => this.attrs.find(item => item._id === row._id)).filter(v => v)
     },
 
     // 批量关联弹窗
@@ -276,7 +279,7 @@ export default {
       this.isBatch = true
       this.initSourceForm()
       this.sourceDialog = true
-
+        this.getAllAssetsActivities()
     },
 
     findChildrenOptionByValue(value, options) {
@@ -290,27 +293,29 @@ export default {
 
     // 选择数据处理活动
     changeEvent(val) {
-      this.keys.forEach(k => {
-        this.$set(this.currentRow, k, undefined)
-      })
-
-      this.sourceForm.assetsSceneProjectAttributesActivitiesList = this.currentRow.assetsSceneProjectAttributesActivitiesList = this.actList.filter(a => {
-        return this.sourceForm.activitiesIdList.includes(a.activitiesId)
-      })
-        this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item,index) => {
-          if(!('echoActivitiesValue' in item)){
-            if(item.activitiesType === 'radio') {
-              this.$set(item, 'echoActivitiesValue', 0)
-            } else if(item.activitiesType === 'checkbox') {
-              this.$set(item, 'echoActivitiesValue', [])
-            } else {
-              this.$set(item, 'echoActivitiesValue', '')
-            }
-          }
-          if(!('answers' in item)){
-            item.answers = JSON.parse(item.activitiesJson).answers
-          }
-      })
+      const data = this.isBatch ? this.rowList : [this.currentRow]
+        data.forEach(item => {
+            this.keys.forEach(k => {
+                item[k] = undefined
+            })
+            this.sourceForm.assetsSceneProjectAttributesActivitiesList = item.assetsSceneProjectAttributesActivitiesList = this.actList.filter(a => {
+                return this.sourceForm.activitiesIdList.includes(a.activitiesId)
+            })
+            this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item,index) => {
+                if(!('echoActivitiesValue' in item)){
+                    if(item.activitiesType === 'radio') {
+                        this.$set(item, 'echoActivitiesValue', 0)
+                    } else if(item.activitiesType === 'checkbox') {
+                        this.$set(item, 'echoActivitiesValue', [])
+                    } else {
+                        this.$set(item, 'echoActivitiesValue', '')
+                    }
+                }
+                if(!('answers' in item)){
+                    item.answers = JSON.parse(item.activitiesJson).answers
+                }
+            })
+        })
     },
 
     transferData(data) {
@@ -351,7 +356,8 @@ export default {
         const data = this.attrs.map(item => {
             return {
                 ...item,
-                mainBodyId: item.mainBodyId.split('.')[0]
+                categoryId: item.mainBodyId.split('.').at(-1),
+                mainBodyId: item.mainBodyId.split('.').at(-1)
             }
         })
         addOrUpdateRelatedAssets(data).then(res => {
@@ -398,7 +404,6 @@ export default {
       if (!echoActivitiesValue) {
         return echoActivitiesValue;
       }
-      console.log(echoActivitiesValue, 'echoActivitiesValue')
       const value = isArray(echoActivitiesValue) ? echoActivitiesValue : [echoActivitiesValue]
 
       const showValues = value.map(pValue => {
@@ -445,32 +450,36 @@ export default {
         .filter(y => ['0', "''", '[]'].includes(JSON.stringify(y)))
       if(noAnswer.length) return this.$message.error(this.$t('businessScenarioManagement.还有问题没有回答'))
 
-      this.keys.forEach(key => {
-        this.$set(this.currentRow, key, [])
-      })
-      this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
-        const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
-        data.activitiesAnswerLabel = this.getShowValue(item);
-        data.activitiesAnswerValue = JSON.stringify(item.echoActivitiesValue);
-        data.activitiesType = item.activitiesType;
+        const data = this.isBatch ? this.rowList : [this.currentRow]
+        data.forEach(currentRow => {
+            this.keys.forEach(key => {
+                currentRow[key] = []
+            })
+            this.sourceForm.assetsSceneProjectAttributesActivitiesList.forEach((item, index) => {
+                const data = this.findChildrenOptionByValue(item.activitiesId, this.activitiesOptions)
+                data.activitiesAnswerLabel = this.getShowValue(item);
+                data.activitiesAnswerValue = JSON.stringify(item.echoActivitiesValue);
+                data.activitiesType = item.activitiesType;
 
-        this.$set(this.currentRow, data.parent, [...(this.currentRow[data.parent] || []), data])
-      })
-      // this.sourceForm.activitiesName = activitiesName.join('；')
+                this.$set(currentRow, data.parent, [...(currentRow[data.parent] || []), data])
+            })
+        })
+
 
       if(this.isBatch) {
         this.attrs.forEach((item,index) => {
           if(this.identificationList.includes(item._id)) {
-              this.attrs[index] = { ...item, ...this.sourceForm }
+              this.attrs[index].volumeOfDataSubjects = this.sourceForm.volumeOfDataSubjects
           }
         })
       }else {
         this.attrs.forEach((item,index) => {
           if(item._id === this.rowIndex) {
-              this.attrs[index] = { ...item, ...this.sourceForm }
+              this.attrs[index].volumeOfDataSubjects = this.sourceForm.volumeOfDataSubjects
           }
         })
       }
+        console.log(this.attrs,'ll')
       this.init(this.attrs);
       this.sourceDialog = false
       this.$message.success(this.$t('assetsManagement.保存成功'))

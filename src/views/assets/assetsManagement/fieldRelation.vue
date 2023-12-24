@@ -158,6 +158,7 @@ export default {
         this.page.total = pageList.length
         this.temporaryFieldList = [...pageList]
         .splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
+          console.log(this.temporaryFieldList, 'lllll')
       },
 
       // 初始化sourceForm
@@ -221,14 +222,20 @@ export default {
         if(!this.attrs[0]) {
           this.$message.error(this.$t('assetsManagement.请选择需要关联的字段'))
         } else {
-                this.$emit('saveSuccess', 'ssss')
-                this.$message.success('res.data.message')
-          // assetsAddAttributes(this.attrs).then(res => {
-          //   if(res.data.status === 200) {
-          //     this.$emit('saveSuccess', res.data.data)
-          //     this.$message.success(res.data.message)
-          //   }
-          // })
+                // this.$emit('saveSuccess', 'ssss')
+                // this.$message.success('res.data.message')
+
+            const data = this.attrs.map(item => ({
+                ...item,
+                categoryId: item.categoryId.split('.').at(-1),
+                mainBodyId: item.mainBodyId.split('.').at(-1)
+            }))
+          assetsAddAttributes(data).then(res => {
+            if(res.data.status === 200) {
+              this.$emit('saveSuccess', res.data.data)
+              this.$message.success(res.data.message)
+            }
+          })
         }
 
       },
@@ -262,17 +269,19 @@ export default {
         if(this.isBatch) {
           this.attrs.forEach((item,index) => {
             if(this.identificationList.includes(item._id)) {
-              this.$set(this.attrs, index, {...item, ...this.sourceForm})
+                this.attrs[index].dataSubjectsVolume =  this.sourceForm.dataSubjectsVolume
+                this.attrs[index].sourceName =  this.sourceForm.sourceName
             }
           })
         } else {
           this.attrs.forEach((item,index) => {
             if(item._id === this.rowIndex) {
-              this.$set(this.attrs[index], 'dataSubjectsVolume', this.sourceForm.dataSubjectsVolume)
-              this.$set(this.attrs[index], 'sourceName', this.sourceForm.sourceName)
+                this.attrs[index].dataSubjectsVolume =  this.sourceForm.dataSubjectsVolume
+                this.attrs[index].sourceName =  this.sourceForm.sourceName
             }
           })
         }
+          this.$refs.crud.refreshTable()
         this.sourceDialog = false
         this.$message.success(this.$t('assetsManagement.保存成功'))
       },

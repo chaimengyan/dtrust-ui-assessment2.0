@@ -4,7 +4,7 @@
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.mainBodyId">
                     <div class="grid-content bg-purple">
-                        <el-checkbox :label="item.mainBodyId">
+                        <el-checkbox :label="item.mainBodyId" :disabled="disabledKeys.includes(item.mainBodyId)">
                             {{item.mainBodyName}}
                         </el-checkbox>
                     </div>
@@ -29,7 +29,11 @@ export default {
         projectId: {
             type: Number,
             default: 0
-        }
+        },
+        isAssets: {
+            type: Boolean,
+            default: true
+        },
     },
     data() {
       return {
@@ -37,7 +41,8 @@ export default {
         dataSubjectList: [],
         // 已选数据主体类型id
         checkedDataSubjectList: [],
-        checkedDataSubjectOptions: []
+        checkedDataSubjectOptions: [],
+          disabledKeys: []
       };
     },
     created() {
@@ -47,13 +52,19 @@ export default {
         setDefaultValue() {
             if (this.echo.length) {
                 this.checkedDataSubjectList = this.echo.map(item => item.mainBodyId) || []
+                if (!this.isAssets) {
+                    this.disabledKeys = [...this.checkedDataSubjectList]
+                }
                 this.handleCheckedChange(this.checkedDataSubjectList)
             }
         },
         // 查询所有数据主体
         getMainBodList() {
             getMainBodList().then(res => {
-                this.dataSubjectList = res.data.data
+                this.dataSubjectList = res.data.data.map(item => ({
+                    ...item,
+                    mainBodyId: `${this.projectId}.${item.mainBodyId}`
+                }))
                 this.setDefaultValue()
             })
         },

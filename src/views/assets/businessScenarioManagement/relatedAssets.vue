@@ -63,16 +63,20 @@ export default {
         },
         // 选择数据主体事件
         handleCheckedChange(val) {
+            // const keys = Object.keys(this.allData).filter(key => !val.includes(key))
+            // keys.forEach(k => {
+            //     this.allData[k] = undefined
+            // })
             this.checkedDataSubjectOptions = this.dataSubjectList.filter(item => val.includes(item.projectId))
             // 拉取渲染列表
-            const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
-            const all = filters.map(item => {
+            // const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
+            const all = this.checkedDataSubjectOptions.map(item => {
 
                 return getAssetsProjectAttributesListByProjectId(item.projectId).then(res => {
                     const dataSubjectList = res.data.data.map(main => {
                         // 初始化id
                         main.attributes.forEach(a => {
-                            a._id = `${item.projectId}.${main.mainBodyId}.${a.attributesId}`
+                            a._id = `${item.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
                         })// 初始化id
                         main.categoryList.forEach(a => {
                             a._id = `${item.projectId}.${main.mainBodyId}.${a.categoryId}`

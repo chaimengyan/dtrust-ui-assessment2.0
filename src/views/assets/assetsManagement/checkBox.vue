@@ -9,6 +9,7 @@
                 style="margin: 10px 0px;"
                 v-for="item in list"
                 :label="item.value"
+                :disabled="disabledKeys.includes(item._id)"
                 :key="item.value"
                 >
                 <div>
@@ -65,7 +66,8 @@ export default {
           checkedIdList: [],
         checkedList: [],
           list: [],
-          checkId: ''
+          checkId: '',
+          disabledKeys: []
       };
     },
     methods: {
@@ -91,6 +93,7 @@ export default {
         },
         setCheckIds() {
             this.checkedIdList = this.checkedList?.map(item => item._id) || [];
+            this.disabledKeys = (this.checkedList?.filter(item => item.disabled) || []).map(item => item._id);
         },
         // 点击多选框事件
         handleCheckedChange(value, checkId) {

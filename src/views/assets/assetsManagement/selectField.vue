@@ -64,13 +64,17 @@ export default {
             return this.checkedMainBody()
         },
         defaultActive() {
-            return this.checkedMain && this.checkedMain.length ? `${this.projectId}.${this.checkedMain[0].mainBodyId}` : ''
+            return this.checkedMain && this.checkedMain.length ? this.checkedMain[0].mainBodyId : ''
         },
     },
     props: {
         projectId: {
             type: Number,
             default: 0
+        },
+        isAssets: {
+            type: Boolean,
+            default: true
         },
     },
     data() {
@@ -101,7 +105,7 @@ export default {
         mounted() {
             this.buildRenderList()
             this.buildEchoFields()
-            this.getDefaultAttrs()
+            // this.getDefaultAttrs()
         },
         setValue() {
             this.$nextTick(() => {
@@ -124,14 +128,16 @@ export default {
         getAllAttrs() {
             const result = []
             this.renderList.forEach(main => {
-                main.list.forEach(item => {
-                    result.push(...item.list.map(item => ({
-                        ...item,
-                        mainBodyId: main._id,
-                        mainBodyName: main.name,
-                        sourceName: '',
-                        dataSubjectsVolume: 0,
-                    })))
+                main.list.forEach(cate => {
+                    cate.list.forEach(item => {
+                        item.categoryName = cate.label;
+                        item.categoryId = cate._id;
+                        item.mainBodyId = main._id
+                        item.mainBodyName = main.name
+                        item.sourceName = item.sourceName || ''
+                        item.dataSubjectsVolume = item.dataSubjectsVolume || 0
+                        result.push(item)
+                    })
                 })
             })
             return result;
@@ -165,26 +171,30 @@ export default {
             })
         },
 
-        getDefaultAttrs() {
-            this.checkAllFields.forEach(async main => {
+        async getDefaultAttrs(main) {
+            // this.checkAllFields.forEach(async main => {
                 for (let i = 0; i < main.checked.length; i++) {
                     const categoryChecked = main.checked[i].checked
                     await this.getAllAttributesByIds(main.checked[i]._id, this.activeDataClass, main._id, categoryChecked)
                     this.setValue()
                 }
-            })
+            // })
         },
 
         // 构建多选框显示结构数据
         buildRenderList() {
-            this.renderList = this.checkedMain.map((item) => ({
-                _id: `${this.projectId}.${item.mainBodyId}`,
-                name: item.mainBodyName,
-                list: this.categoryList.map(c => {
-                    const _id = `${this.projectId}.${item.mainBodyId}.${c.categoryId}`
-                    return { ...c, _id, value: _id }
-                })
-            }))
+            this.renderList = this.checkedMain.map((item) => {
+                const is = this.renderList.find(c => c._id === item.mainBodyId)
+                if (is) return is;
+                return {
+                    _id: item.mainBodyId,
+                    name: item.mainBodyName,
+                    list: this.categoryList.map(c => {
+                        const _id = `${item.mainBodyId}.${c.categoryId}`
+                        return {...c, _id, value: _id}
+                    })
+                }
+            })
         },
 
 
@@ -209,22 +219,30 @@ export default {
          */
         buildEchoFields() {
             this.checkAllFields = this.checkedMain.map(main => {
+                const is = this.checkAllFields.find(item => item._id === main.mainBodyId)
+                if (is) return is;
+
                 const checked = this.echo.find(item => item.mainBodyId === main.mainBodyId)
-                const _id = `${this.projectId}.${main.mainBodyId}`
+                const _id = main.mainBodyId
                 const list = checked ? this.buildCheckboxList(checked.categoryList, checked.attributes, _id) : []
-                return {
+
+                const data = {
                     _id,
+                    disabled: !this.isAssets,
                     checked: list
                 }
+
+                this.getDefaultAttrs(data)
+                return data
             })
         },
         buildCheckboxList(categoryList, attributes, mainId){
             return categoryList.map((item) => {
                 const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
-                const attrIds = attrs.map((item) => {
-                    return { _id: `${mainId}.${item.attributesId}`, checked: [] };
+                const attrIds = attrs.map((a) => {
+                    return { _id: `${mainId}.${item.categoryId}.${a.attributesId}`, disabled: !this.isAssets, checked: [] };
                 })
-                return { _id: `${mainId}.${item.categoryId}`, checked: attrIds }
+                return { _id: `${mainId}.${item.categoryId}`, disabled: !this.isAssets, checked: attrIds }
             })
         },
 
@@ -254,7 +272,7 @@ export default {
                     return;
                 }
                 attrs.forEach(item => {
-                    item._id = `${mainBodyId}.${item.attributesId}`
+                    item._id = `${categoryIds}.${item.attributesId}`
                     item.label = item.attributesName
                     item.value = item._id
                     item.show = true
@@ -307,7 +325,8 @@ export default {
                     // item 为true，可以不用调接口
                     const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
                     itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
-                    const isAttrs = currentValue.split('.').length >= 3
+                    const isAttrs = currentValue.split('.').length >= 4
+                    console.log(isAttrs, currentValue, 'ok')
                     if (!item?.list?.length && !isAttrs) {
                         await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
                     }
