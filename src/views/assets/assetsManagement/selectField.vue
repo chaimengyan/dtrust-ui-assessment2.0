@@ -48,7 +48,7 @@ import {
   getTypeList
 } from "@/api/fieldManagement/dataClassification";
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
-import { uniqueId } from 'lodash'
+import {isNumber, uniqueId} from 'lodash'
 import {getChildrenById} from "@/util/util";
 export default {
     name: "SelectField",
@@ -115,9 +115,22 @@ export default {
         getAttrs() {
             // 获取所有存在的attr
             const allAttrs = this.getAllAttrs();
+            console.log(allAttrs, this.echo, 'al')
             // 获取所有选中attr的ids
             const allCheckedIds = this.getAllCheckedIds()
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getEchoAttr(item) {
+            for (let i = 0; i < this.echo.length; i++) {
+
+                for (let j = 0; j < this.echo[i].attributes.length; j++) {
+                    const attr = this.echo[i].attributes[j]
+                    console.log(attr._id, item._id)
+                    if (attr._id === item._id) {
+                        return attr;
+                    }
+                }
+            }
         },
         getCheckedList() {
             return [...this.checkAllFields]
@@ -130,13 +143,16 @@ export default {
             this.renderList.forEach(main => {
                 main.list.forEach(cate => {
                     cate.list.forEach(item => {
-                        item.categoryName = cate.label;
-                        item.categoryId = cate._id;
-                        item.mainBodyId = main._id
-                        item.mainBodyName = main.name
-                        item.sourceName = item.sourceName || ''
-                        item.dataSubjectsVolume = item.dataSubjectsVolume || 0
-                        result.push(item)
+                        const echoItem = this.getEchoAttr(item)
+                        const newItem = echoItem ? echoItem : item
+                        newItem.categoryName = cate.label;
+                        newItem.categoryId = cate._id;
+                        newItem.mainBodyId = main._id
+                        newItem.mainBodyName = main.name
+                        newItem.sourceName = item.sourceName || newItem.sourceName || ''
+                        newItem.dataSubjectsVolume = item.dataSubjectsVolume || newItem.dataSubjectsVolume || 0
+                        newItem._id = item._id
+                        result.push(newItem)
                     })
                 })
             })
@@ -175,7 +191,7 @@ export default {
             // this.checkAllFields.forEach(async main => {
                 for (let i = 0; i < main.checked.length; i++) {
                     const categoryChecked = main.checked[i].checked
-                    await this.getAllAttributesByIds(main.checked[i]._id, this.activeDataClass, main._id, categoryChecked)
+                    await this.getAllAttributesByIds(main.checked[i]._id, this.activeDataClass, main._id, categoryChecked, false)
                     this.setValue()
                 }
             // })
@@ -262,7 +278,7 @@ export default {
 
 
         // 获取字段
-        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked) {
+        getAllAttributesByIds(categoryIds, typeIds, mainBodyId, checked, isCheck = true) {
             const itemList = getChildrenById(this.renderList, categoryIds, 'list')
             const id = categoryIds.split('.').at(-1)
             const mainId = mainBodyId.split('.').at(-1)
@@ -279,12 +295,15 @@ export default {
                     item.list = []
                 })
                 itemList.list = attrs
-                checked.push(...attrs.map(item => {
-                    return {
-                        _id: item._id,
-                        checked: []
-                    }
-                }))
+                if (isCheck) {
+                    checked.push(...attrs.map(item => {
+                        return {
+                            _id: item._id,
+                            checked: []
+                        }
+                    }))
+                }
+
 
             })
         },

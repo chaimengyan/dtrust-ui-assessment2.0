@@ -559,22 +559,9 @@ export default {
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {
           this.echoCheckedAssetObjList = this.handleEchoData(res.data.data)
-          // const data = this.echoCheckedAssetObjList.map(a => a.dataSubjectList).flat()
-          // this.fieldList = this.handleFieldList(data)
       })
     },
 
-    // 处理字段数据，用于回显字段列表
-    handleFieldList(data) {
-      return data.reduce((pre, cur, curIndex, arr) => {
-        const Arr = Object.values(cur.checkedFieldListAll).flat()
-        Arr.forEach((f,i)=> {
-          f.volumeOfDataSubjects = f.volumeOfDataSubjects || 0
-          f.identification = `${f.projectId}+${f.mainBodyId}+${f.attributesId}`
-        })
-        return pre.concat(Arr)
-      }, [])
-    },
 
     // 处理关联字段接口返回数据，用于回显关联字段组件
     handleEchoData(data) {
@@ -582,7 +569,7 @@ export default {
         asset.dataSubjectList.forEach((item, itemIndex) => {
           item.mainBodyId = `${asset.projectId}.${item.mainBodyId}`
             item.attributes.forEach(attr => {
-                attr._id = `${item.mainBodyId}.${attr.attributesId}`
+                attr._id = `${item.mainBodyId}.${attr.categoryId}.${attr.attributesId}`
             })
             item.categoryList.forEach(attr => {
                 attr._id = `${item.mainBodyId}.${attr.categoryId}`

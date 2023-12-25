@@ -62,6 +62,7 @@ import {
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import AssetsRelationField from '../assetsManagement/assetsRelationField'
 import {getChildrenById} from "@/util/util";
+import {isNumber} from "lodash";
 export default {
     name: "SelectField",
     components: {
@@ -113,7 +114,6 @@ export default {
         mounted() {
             this.buildRenderList()
             this.buildEchoFields()
-            console.log(this.renderList, 'ren')
         },
         setValue() {
             this.$nextTick(() => {
@@ -125,16 +125,35 @@ export default {
             const allAttrs = this.getAllAttrs();
             // 获取所有选中attr的ids
             const allCheckedIds = this.getAllCheckedIds()
+            console.log(allAttrs, allCheckedIds, 'allCheckedIds')
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getEchoAttr(item) {
+            for (let i = 0; i < this.echo.length; i++) {
+                for (let j = 0; j < this.echo[i].dataSubjectList.length; j++) {
+                    const mainList = this.echo[i].dataSubjectList[j]
+
+                    for (let j = 0; j < mainList.attributes.length; j++) {
+                        const attr = mainList.attributes[j]
+                        if (attr._id === item._id) {
+                            return attr;
+                        }
+                    }
+                }
+            }
         },
         getAllAttrs() {
             const result = []
             this.renderList.forEach(main => {
                 main.list.forEach(item => {
                     item.list.forEach(item => {
-                        item.mainBodyId = main._id
-                        item.mainBodyName = main.label
-                        result.push(item)
+                        const echoItem = this.getEchoAttr(item)
+                        const newItem = echoItem ? echoItem : item
+                        console.log(echoItem, 'ok')
+                        newItem.mainBodyId = main._id
+                        newItem.mainBodyName = main.label
+                        newItem._id = item._id
+                        result.push(newItem)
                     })
                 })
             })
@@ -220,8 +239,10 @@ export default {
                 const data = this.echo[i].dataSubjectList
 
                 for (let j = 0; j < data.length; j++) {
-                    const categoryId = _id.split('.').at(-1)
-                    const is = data[j].attributes.find(item => item.categoryId === Number(categoryId))
+                    const [projectId, mainBodyId, categoryId] = _id.split('.')
+                    const is = data[j].attributes.find(item => {
+                        return item.projectId === Number(projectId) && item.mainBodyId === Number(mainBodyId) && item.categoryId === Number(categoryId)
+                    })
                     if (is) return true
                 }
             }

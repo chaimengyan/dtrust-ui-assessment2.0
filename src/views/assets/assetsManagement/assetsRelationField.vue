@@ -139,6 +139,10 @@ export default {
         return getAssetsProjectAttributesListByProjectId(id).then(res => {
           this.echoCheckedDataSubjectList = res.data.data.map(item => ({
               ...item,
+              attributes: item.attributes.map(item => ({
+                  ...item,
+                  _id: `${item.projectId}.${item.mainBodyId}.${item.categoryId}.${item.attributesId}`
+              })),
               mainBodyId: `${this.projectId}.${item.mainBodyId}`
           }))
         })
@@ -149,6 +153,10 @@ export default {
       return getProjectAttributesListByProjectId(id).then(res => {
           this.echoCheckedDataSubjectList = res.data.data.map(item => ({
               ...item,
+              attributes: item.attributes.map(item => ({
+                  ...item,
+                  _id: `${item.projectId}.${item.mainBodyId}.${item.categoryId}.${item.attributesId}`
+              })),
               mainBodyId: `${this.projectId}.${item.mainBodyId}`
           }))
         })

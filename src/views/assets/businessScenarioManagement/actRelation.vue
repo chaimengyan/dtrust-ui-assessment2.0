@@ -356,6 +356,12 @@ export default {
         const data = this.attrs.map(item => {
             return {
                 ...item,
+                gatherActivitiesList: item.gatherActivitiesList || [],
+                storageActivitiesList: item.storageActivitiesList || [],
+                useActivitiesList: item.useActivitiesList || [],
+                transmitActivitiesList: item.transmitActivitiesList || [],
+                delActivitiesList: item.delActivitiesList || [],
+                volumeOfDataSubjects: item.volumeOfDataSubjects || 1,
                 categoryId: item.mainBodyId.split('.').at(-1),
                 mainBodyId: item.mainBodyId.split('.').at(-1)
             }
