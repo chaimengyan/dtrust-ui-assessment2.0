@@ -16,7 +16,7 @@
 <script>
 import {
     getAllAssetsProject,
-    getAssetsProjectAttributesListByProjectId
+    getProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
 import {uniqueId} from "lodash";
 
@@ -72,7 +72,7 @@ export default {
             // const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
             const all = this.checkedDataSubjectOptions.map(item => {
 
-                return getAssetsProjectAttributesListByProjectId(item.projectId).then(res => {
+                return getProjectAttributesListByProjectId(item.projectId).then(res => {
                     const dataSubjectList = res.data.data.map(main => {
                         // 初始化id
                         main.attributes.forEach(a => {

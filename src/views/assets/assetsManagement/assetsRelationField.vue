@@ -63,6 +63,7 @@
 <script>
 import {
   getAssetsProjectAttributesListByProjectId,
+  getProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
 import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
 import  SelectField from "@/views/assets/assetsManagement/selectField";
@@ -143,6 +144,16 @@ export default {
         })
     },
 
+    // 根据资产id查询关联字段信息(通过业务场景打开资产关联弹窗时调用)
+    getProjectAttributesListByProjectId(id) {
+      return getProjectAttributesListByProjectId(id).then(res => {
+          this.echoCheckedDataSubjectList = res.data.data.map(item => ({
+              ...item,
+              mainBodyId: `${this.projectId}.${item.mainBodyId}`
+          }))
+        })
+    },
+
     // 打开关联字段弹窗
     relationBtn(row) {
       this.fullscreenLoading = true
@@ -151,7 +162,7 @@ export default {
       this.relationDialogSize = row.relationDialogSize || this.relationDialogSize
       this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
       this.relationDialog = true
-      const Api = this.getAssetsProjectAttributesListByProjectId(this.projectId)
+      const Api = this.isAssets ? this.getAssetsProjectAttributesListByProjectId(this.projectId) : this.getProjectAttributesListByProjectId(this.projectId)
       Api.then(()  => {
         this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
         this.fullscreenLoading = false
