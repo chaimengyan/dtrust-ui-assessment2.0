@@ -115,7 +115,6 @@ export default {
         getAttrs() {
             // 获取所有存在的attr
             const allAttrs = this.getAllAttrs();
-            console.log(allAttrs, this.echo, 'al')
             // 获取所有选中attr的ids
             const allCheckedIds = this.getAllCheckedIds()
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
@@ -125,7 +124,6 @@ export default {
 
                 for (let j = 0; j < this.echo[i].attributes.length; j++) {
                     const attr = this.echo[i].attributes[j]
-                    console.log(attr._id, item._id)
                     if (attr._id === item._id) {
                         return attr;
                     }
@@ -314,12 +312,24 @@ export default {
             const itemChecked = getChildrenById(this.checkAllFields, checkId, 'checked')
 
             itemList.list.forEach(item => {
-                item.show = checkedList.includes(item._id);
+                const is = checkedList.includes(item._id)
+                if (is) {
+                    item.show = true;
+                }
 
-                if (!item.show && itemChecked) {
+                if (!is && itemChecked) {
                     const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
                     if (i !== -1) {
                         itemChecked.checked.splice(i, 1)
+                        if (!itemChecked.checked.length) {
+                            const ids = itemChecked._id.split('.')
+                            ids.splice(ids.length - 1, 1)
+                            const id = ids.join('.')
+                            const findItem = getChildrenById(this.checkAllFields, id, 'checked')
+                            if (!findItem) return;
+                            const i = findItem.checked.findIndex(item => item._id === itemChecked._id)
+                            findItem.checked.splice(i, 1)
+                        }
                     }
                 }
             })
@@ -334,7 +344,7 @@ export default {
         },
 
         async getClassAttrs(checkedList, checkId) {
-            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
+            let [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
             // 找到新增id，调用接口设置选中和节点
             if (needAddIds.length) {
 
@@ -343,9 +353,16 @@ export default {
                     const item = itemList.list.find(item => (item._id === currentValue) && item.show)
                     // item 为true，可以不用调接口
                     const defaultChecked = item?.list?.length ? item.list.map(c => ({ _id: c._id, checked: [] })) : []
+                    const splitId = currentValue.split('.')
+                    if (!itemChecked) {
+                        const [p, m, c] = splitId
+                        const parent = getChildrenById(this.checkAllFields, `${p}.${m}`, 'checked')
+                        itemChecked = { _id: `${p}.${m}.${c}`, checked:[] }
+                        parent.checked.push(itemChecked)
+                    }
+
                     itemChecked.checked.push({ _id: currentValue, checked: defaultChecked })
-                    const isAttrs = currentValue.split('.').length >= 4
-                    console.log(isAttrs, currentValue, 'ok')
+                    const isAttrs = splitId.length >= 4
                     if (!item?.list?.length && !isAttrs) {
                         await this.getAllAttributesByIds(currentValue, this.activeDataClass, checkId, defaultChecked)
                     }

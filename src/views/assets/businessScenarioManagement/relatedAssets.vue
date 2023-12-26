@@ -1,5 +1,5 @@
 <template>
-    <basic-container>
+    <basic-container class="relation-container">
         <el-row :gutter="20">
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.projectId">
@@ -102,6 +102,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.relation-container {
+    .el-checkbox {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        ::v-deep .el-checkbox__input {
+            margin-left: 12px;
+        }
+        ::v-deep .el-checkbox__label {
+            flex: 1;
+            width: 0;
+            white-space: normal;
+        }
+    }
+}
 .el-row {
     margin-bottom: 20px;
     &:last-child {

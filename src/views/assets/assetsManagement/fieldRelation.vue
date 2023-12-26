@@ -156,9 +156,7 @@ export default {
       },
       onLoad(page, pageList) {
         this.page.total = pageList.length
-        this.temporaryFieldList = [...pageList]
-        .splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
-          console.log(this.temporaryFieldList, 'lllll')
+        this.temporaryFieldList = [...pageList].splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
       },
 
       // 初始化sourceForm
@@ -285,11 +283,11 @@ export default {
       },
       sizeChange(size) {
         this.page.pageSize = size
-        this.onLoad(this.page, this.pageList)
+        this.onLoad(this.page, this.attrs)
       },
       currentChange(current) {
         this.page.currentPage = current
-        this.onLoad(this.page, this.pageList)
+        this.onLoad(this.page, this.attrs)
       },
     }
 }

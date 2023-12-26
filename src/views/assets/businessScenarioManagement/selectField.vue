@@ -185,7 +185,7 @@ export default {
                 }
                 const projectId = this.currentRow.projectId;
                 const projectName = this.currentRow.projectName;
-                const addObject = name === 'label' ? {...attr, projectId, projectName } : {}
+                const addObject = name === 'label' ? {...attr, projectId, projectName, status: 1 } : {}
                 const add = { ...addObject, _id: attr[key], label: attr[name], value: attr[key], show: true, list }
                 renderList.push(add)
                 if (!checkItem) {
@@ -355,12 +355,27 @@ export default {
             const itemChecked = getChildrenById(this.checkAllFields, checkId, 'checked')
 
             itemList.list.forEach(item => {
-                item.show = checkedList.includes(item._id);
+                const is = checkedList.includes(item._id)
+                if (is) {
+                    item.show = true;
+                }
 
-                if (!item.show && itemChecked) {
+                if (!is && itemChecked) {
                     const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
                     if (i !== -1) {
                         itemChecked.checked.splice(i, 1)
+                        if (i !== -1) {
+                            itemChecked.checked.splice(i, 1)
+                            if (!itemChecked.checked.length) {
+                                const ids = itemChecked._id.split('.')
+                                ids.splice(ids.length - 1, 1)
+                                const id = ids.join('.')
+                                const findItem = getChildrenById(this.checkAllFields, id, 'checked')
+                                if (!findItem) return;
+                                const i = findItem.checked.findIndex(item => item._id === itemChecked._id)
+                                findItem.checked.splice(i, 1)
+                            }
+                        }
                     }
                 }
             })
@@ -371,7 +386,7 @@ export default {
 
         // 点击字段多选框事件
         async handleCheckedChange(checkedList, checkId) {
-            const [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
+            let [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
 
             // 找到新增id，调用接口设置选中和节点
             if (needAddIds.length) {
@@ -379,7 +394,13 @@ export default {
                     const currentValue = needAddIds[i]
                     const item = itemList.list.find(item => (item._id === currentValue) && item.show)
                     const checked = item ? item.list.map(item => ({ _id: item._id, checked: [] })) : []
-                    console.log(checked, item, 'checkedwdwdadas')
+                    if (!itemChecked) {
+                        const [p, m, c] = currentValue.split('.')
+                        const parent = getChildrenById(this.checkAllFields, `${p}.${m}`, 'checked')
+                        itemChecked = { _id: `${p}.${m}.${c}`, checked:[] }
+                        parent.checked.push(itemChecked)
+                    }
+
                     itemChecked.checked.push({ _id: currentValue, checked })
                 }
             }
@@ -387,7 +408,6 @@ export default {
 
             this.checkAllFields = [...this.checkAllFields]
             this.renderList = [...this.renderList]
-            console.log(this.renderList, 'reennnn')
             this.setValue()
         },
 
