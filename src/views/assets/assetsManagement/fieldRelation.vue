@@ -231,10 +231,8 @@ export default {
                 mainBodyId: item.mainBodyId.split('.').at(-1)
             }))
           assetsAddAttributes(data).then(res => {
-            if(res.data.status === 200) {
               this.$emit('saveSuccess', res.data.data)
               this.$message.success(res.data.message)
-            }
           })
         }
 

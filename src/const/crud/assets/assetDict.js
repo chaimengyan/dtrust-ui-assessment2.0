@@ -225,28 +225,32 @@ export const tableOption = (_this, isOverHidden) => {
       },{
         label: 'color',
         value: 'color'
-      },{
-        label: 'cascader',
-        value: 'cascader'
-      },{
-        label: 'checkbox',
-        value: 'checkbox'
-      },{
-        label: 'radio',
-        value: 'radio'
-      },{
+      },
+      // {
+      //   label: 'cascader',
+      //   value: 'cascader'
+      // },{
+      //   label: 'checkbox',
+      //   value: 'checkbox'
+      // },{
+      //   label: 'radio',
+      //   value: 'radio'
+      // },
+      {
         label: 'date',
         value: 'date'
       },{
         label: 'time',
         value: 'time'
-      },{
-        label: 'switch',
-        value: 'switch'
-      },{
-        label: 'upload',
-        value: 'upload'
-      },{
+      },
+      // {
+      //   label: 'switch',
+      //   value: 'switch'
+      // },{
+      //   label: 'upload',
+      //   value: 'upload'
+      // },
+      {
         label: 'tree',
         value: 'tree'
       },{
@@ -295,7 +299,8 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
+  },
+  {
     label: '是否可搜索',
     prop: 'filterable',
     value: true,
@@ -308,7 +313,8 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
+  },
+  {
     label: '对应列的宽度',
     prop: 'width',
     value: null,
@@ -345,29 +351,30 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
-    label: '显示值时间格式',
-    prop: 'format',
-    value: 'yyyy-MM-dd',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
-    label: '真实值的时间格式',
-    prop: 'valueFormat',
-    value: 'yyyy/MM/dd',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
   },
+  // {
+  //   label: '显示值时间格式',
+  //   prop: 'format',
+  //   value: 'yyyy-MM-dd',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },{
+  //   label: '真实值的时间格式',
+  //   prop: 'valueFormat',
+  //   value: 'yyyy/MM/dd',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
   // {
   //   label: '搜索项框栅列',
   //   prop: 'searchSpan',

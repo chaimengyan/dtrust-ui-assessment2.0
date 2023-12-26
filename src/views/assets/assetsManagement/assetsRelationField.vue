@@ -11,7 +11,7 @@
           <el-step :title="$t('assetsManagement.选择字段')"></el-step>
           <el-step v-if="isAssets" :title="$t('assetsManagement.字段配置')"></el-step>
       </el-steps>
-      <template v-if="!fullscreenLoading">
+      <template v-if="isShow">
         <DataSubject
           v-show="active === 0"
           ref="dataSubject"
@@ -108,6 +108,7 @@ export default {
       // 完整勾选字段
       fieldList: [],
       isFullscreen: false,
+      isShow: false,
       disabledKeys: null,
       relationDialogSize: '100%'
     };
@@ -165,6 +166,7 @@ export default {
     // 打开关联字段弹窗
     relationBtn(row) {
       this.fullscreenLoading = true
+      this.isShow = false
       this.active = 0
       this.projectId = row.projectId
       this.relationDialogSize = row.relationDialogSize || this.relationDialogSize
@@ -174,6 +176,8 @@ export default {
       Api.then(()  => {
         this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
         this.fullscreenLoading = false
+        this.isShow = true
+
       })
     },
 
@@ -194,6 +198,7 @@ export default {
         // getRenderList() {
         //     return this.renderList
         // },
+        console.log(data, '??????<<<>>>>>>');
         if (!this.isAssets) {
             const attrs = this.$refs.selectField.getAttrs()
             this.$emit('saveSuccess', data, attrs)

@@ -142,7 +142,7 @@
         <el-step :title="$t('assetsManagement.字段配置')"></el-step>
       </el-steps>
 
-        <template v-if="!fullscreenLoading">
+        <template v-if="isShow">
             <RelatedAssets
                 v-show="active === 0"
                 ref="relatedAssets"
@@ -400,7 +400,7 @@ export default {
       isOverHidden: true,
       isFullscreen: false,
       option: {},
-
+      isShow: false,
         checkedProjectBody: [],
     };
   },
@@ -458,7 +458,7 @@ export default {
     },
     // 保存关联字段
     relationFormSubmit() {
-      // this.fullscreenLoading = true
+      this.fullscreenLoading = true
       this.$refs.actRelation.saveCurd()
     },
     // 子组件数据保存成功
@@ -545,6 +545,7 @@ export default {
     // 打开关联字段弹窗
     relationBtn(row) {
       this.fullscreenLoading = true
+      this.isShow = false
       this.active = 0
       this.sceneId = row.sceneId
       this.relationTitle = `<i class="${row.sceneIcon}"></i> <span style="font-weight: 700;">${row.sceneName}</span> ${this.$t('assetsManagement.关联')}`
@@ -552,6 +553,8 @@ export default {
       this.getProjectAttributesBySceneId(this.sceneId).then(()  => {
         this.saveBtnText = this.echoCheckedAssetObjList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
         this.fullscreenLoading = false
+        this.isShow = true
+
       })
     },
 
