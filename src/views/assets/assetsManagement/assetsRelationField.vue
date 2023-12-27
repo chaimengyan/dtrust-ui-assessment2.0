@@ -198,11 +198,8 @@ export default {
         // getRenderList() {
         //     return this.renderList
         // },
-        console.log(data, '??????<<<>>>>>>');
-        if (!this.isAssets) {
-            const attrs = this.$refs.selectField.getAttrs()
-            this.$emit('saveSuccess', data, attrs)
-        }
+      const attrs = this.$refs.selectField.getAttrs()
+      this.$emit('saveSuccess', data, attrs)
       this.relationDialog = false
       this.fullscreenLoading = false
     },

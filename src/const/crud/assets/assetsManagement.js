@@ -346,6 +346,8 @@ export const fieldRelationOption = (_this, isView, isOverHidden) => {
     editBtn: false,
     delBtn: false,
     searchSpan: 8,
+    refreshBtn: false,
+
     searchMenuSpan: 6,
     column:[
       {

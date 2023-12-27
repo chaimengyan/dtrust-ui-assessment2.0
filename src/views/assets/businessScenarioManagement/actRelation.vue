@@ -183,6 +183,8 @@ export default {
   },
   created() {
     this.getAllAssetsActivities()
+    this.initSourceForm()
+
   },
   methods: {
       init(attrs) {

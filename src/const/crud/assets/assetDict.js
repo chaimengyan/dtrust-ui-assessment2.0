@@ -65,7 +65,7 @@ export const tableOption = (_this, isOverHidden) => {
     value: false,
     type: 'switch',
     span: 24,
-    tip: '列是否固定在左侧或者右侧，true 表示固定在左侧',
+    tip: _this.$t('tableConfiguration.列是否固定在左侧或者右侧'),
     rules: [{
       required: false,
       // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.fixed')}`,

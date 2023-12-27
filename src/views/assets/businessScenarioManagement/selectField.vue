@@ -161,7 +161,13 @@ export default {
         },
 
         onAddField(data, attrs) {
+
             attrs.forEach(attr => {
+                data.forEach(d => {
+                    if(d.mainBodyId===attr.mainBodyId&&d.attributesId===attr.attributesId) {
+                        attr.id = d.id
+                    }
+                })
                 this.addField(attr)
             })
             this.setValue()
@@ -185,7 +191,7 @@ export default {
                 }
                 const projectId = this.currentRow.projectId;
                 const projectName = this.currentRow.projectName;
-                const addObject = name === 'label' ? {...attr, projectId, projectName, status: 1 } : {}
+                const addObject = name === 'label' ? {...attr, projectId, projectName } : {}
                 const add = { ...addObject, _id: attr[key], label: attr[name], value: attr[key], show: true, list }
                 renderList.push(add)
                 if (!checkItem) {

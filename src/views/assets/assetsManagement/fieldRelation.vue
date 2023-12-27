@@ -223,11 +223,15 @@ export default {
                 // this.$emit('saveSuccess', 'ssss')
                 // this.$message.success('res.data.message')
 
-            const data = this.attrs.map(item => ({
+            const data = this.attrs.map(item => {
+              if(!('status' in item)) {
+                item.status = 1
+              }
+              return {
                 ...item,
                 categoryId: item.categoryId.split('.').at(-1),
                 mainBodyId: item.mainBodyId.split('.').at(-1)
-            }))
+            }})
           assetsAddAttributes(data).then(res => {
               this.$emit('saveSuccess', res.data.data)
               this.$message.success(res.data.message)

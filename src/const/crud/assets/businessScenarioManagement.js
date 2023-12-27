@@ -463,6 +463,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
     addBtn: false,
     editBtn: false,
     delBtn: false,
+    refreshBtn: false,
     searchMenuSpan: 5,
     column:[
       {
