@@ -23,7 +23,7 @@
                         </template>
                         <template v-for="i in item.dataSubjectList">
                             <el-menu-item :index="`${i.mainBodyId}`" :key="i.mainBodyId" >
-                                {{i.mainBodyName}}
+                                {{i.mainBodyName}} - {{ i.mainBodyId }}
                             </el-menu-item>
                         </template>
                     </el-submenu>
@@ -164,13 +164,15 @@ export default {
 
             attrs.forEach(attr => {
                 data.forEach(d => {
-                    if(d.mainBodyId===attr.mainBodyId&&d.attributesId===attr.attributesId) {
-                        attr.id = d.id
+                    const _id = `${this.currentRow.projectId}.${d.mainBodyId}.${d.categoryId}.${d.attributesId}`
+                    if(_id === attr._id) {
+                        attr.projectAttributesId = d.id
                     }
                 })
                 this.addField(attr)
             })
             this.setValue()
+            console.log(this.renderList, this.checkAllFields, 'ok')
         },
 
         // 添加字段
@@ -180,7 +182,6 @@ export default {
             const renderItem = cloneRenderList.find(item => item._id === attr[key])
             const checkItem = checkList.find(item => item._id === attr[key])
             const checked = checkItem ? checkItem.checked : []
-
 
             if (!renderItem) {
                 if (name === 'mainBodyName') {
@@ -194,12 +195,32 @@ export default {
                 const addObject = name === 'label' ? {...attr, projectId, projectName } : {}
                 const add = { ...addObject, _id: attr[key], label: attr[name], value: attr[key], show: true, list }
                 renderList.push(add)
+                // 展开父级
+                const ids = add._id.split('.')
+                ids.splice(ids.length - 1, 1)
+                const parentId = ids.join('.')
+                const item = getChildrenById(this.renderList, parentId, 'list')
+                if (item) {
+                    item.show = true
+                }
+
                 if (!checkItem) {
                     checkList.push({ _id: attr[key], checked })
                 }
             } else {
                 list = renderItem.list;
+                // 选中父级
+                if (name === 'categoryName') {
+                    const is = list.find(item => item._id === attr._id)
+                    if (!is) {
+                        // 需要添加选中分类
+                        const main = getChildrenById(this.checkAllFields, attr.mainBodyId, 'checked')
+                        main.checked.push({ _id: attr.categoryId, checked})
+                    }
+                }
             }
+
+
             if (name === 'label') return;
 
             const { name: newName, key: newKey } = this.getNextNameKey(name);

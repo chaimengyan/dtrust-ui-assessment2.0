@@ -369,10 +369,10 @@ export default {
             }
         })
         addOrUpdateRelatedAssets(data).then(res => {
-          if(res.data.status === 200) {
-            this.$emit('saveSuccess', res.data.data)
-            this.$message.success(res.data.message)
-          }
+              if(res.data.status === 200) {
+                this.$emit('saveSuccess', res.data.data)
+                this.$message.success(res.data.message)
+              }
         })
       }
     },
