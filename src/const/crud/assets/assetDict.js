@@ -18,30 +18,30 @@ export const tableOption = (_this, isOverHidden) => {
   height: 500, 
   dialogWidth: '35%',
   column: [{
-    label: '字段label',
+    label: _this.$t('tableConfiguration.字段label'),
     prop: 'label',
-    tip: '列标题',
+    tip: _this.$t('tableConfiguration.列标题'),
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.字段label')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段label')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   }, {
-    label: '字段value',
+    label: _this.$t('tableConfiguration.字段value'),
     prop: 'prop',
-    tip: '列标题的内容属性名称',
+    tip: _this.$t('tableConfiguration.列标题的内容属性名称'),
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.字段value')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段value')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },
   {
-    label: '表格类型',
+    label: _this.$t('tableConfiguration.表格类型'),
     prop: 'parentId',
     type:'select',
     span: 24,
@@ -56,11 +56,11 @@ export const tableOption = (_this, isOverHidden) => {
     },
     rules: [{
         required: true,
-        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.类型')}`,
+        message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.表格类型')}`,
         trigger: 'change'
       }],
   },{
-    label: '列是否固定',
+    label: _this.$t('tableConfiguration.列是否固定'),
     prop: 'fixed',
     value: false,
     type: 'switch',
@@ -73,24 +73,24 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '栅格占据的列数',
+    label: _this.$t('tableConfiguration.栅格占据的列数'),
     prop: 'span',
     value: 24,
     type: 'number',
-    tip: '最大为24，撑满一行',
+    tip: _this.$t('tableConfiguration.最大为24撑满一行'),
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.栅格占据的列数')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.栅格占据的列数')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   },{
-    label: '列是否隐藏',
+    label: _this.$t('tableConfiguration.列是否隐藏'),
     prop: 'hide',
     value: false,
     type: 'switch',
-    tip: '表格中该列是否隐藏',
+    tip: _this.$t('tableConfiguration.表格中该列是否隐藏'),
     span: 24,
     rules: [{
       required: false,
@@ -99,7 +99,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '表单编辑时项是否显示',
+    label: _this.$t('tableConfiguration.表单编辑时项是否显示'),
     prop: 'editDisplay',
     value: true,
     type: 'switch',
@@ -111,7 +111,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '表单新增时项是否显示',
+    label: _this.$t('tableConfiguration.表单新增时项是否显示'),
     prop: 'addDisplay',
     value: true,
     type: 'switch',
@@ -123,7 +123,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '弹出表单是否显示',
+    label: _this.$t('tableConfiguration.弹出表单是否显示'),
     prop: 'display',
     value: true,
     type: 'switch',
@@ -135,7 +135,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '是否必填',
+    label: _this.$t('tableConfiguration.是否必填'),
     prop: 'required',
     value: true,
     type: 'switch',
@@ -147,9 +147,9 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   }, {
-    label: '检验信息',
+    label: _this.$t('tableConfiguration.检验信息'),
     prop: "message",
-    value: '此项必填',
+    value: _this.$t('tableConfiguration.此项必填'),
     span: 24,
     rules: [{
       required: false,
@@ -158,7 +158,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   }, {
-    label: '校验触发方式',
+    label: _this.$t('tableConfiguration.校验触发方式'),
     prop: "triggerValue",
     value: 'blur',
     span: 24,
@@ -179,11 +179,11 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '超出隐藏',
+    label: _this.$t('tableConfiguration.超出隐藏'),
     prop: 'overHidden',
     value: true,
     type: 'switch',
-    tip: '当内容过长被隐藏时显示 tooltip',
+    tip: _this.$t('tableConfiguration.当内容过长被隐藏时显示tooltip'),
     span: 24,
     rules: [{
       required: false,
@@ -204,7 +204,7 @@ export const tableOption = (_this, isOverHidden) => {
   //   overHidden: isOverHidden,
   // },
   {
-    label: '组件类型',
+    label: _this.$t('tableConfiguration.组件类型'),
     prop: 'type',
     type: 'select',
     value: 'input',
@@ -288,7 +288,7 @@ export const tableOption = (_this, isOverHidden) => {
   //   overHidden: isOverHidden,
   // },
   {
-    label: '该项是否使用表单插槽',
+    label: _this.$t('tableConfiguration.该项是否使用表单插槽'),
     prop: 'formslot',
     value: true,
     type: 'switch',
@@ -301,10 +301,10 @@ export const tableOption = (_this, isOverHidden) => {
     overHidden: isOverHidden,
   },
   {
-    label: '是否可搜索',
+    label: _this.$t('tableConfiguration.是否可搜索'),
     prop: 'filterable',
     value: true,
-    tip: '仅对下拉系列组件生效',
+    tip: _this.$t('tableConfiguration.仅对下拉系列组件生效'),
     type: 'switch',
     span: 24,
     rules: [{
@@ -315,7 +315,7 @@ export const tableOption = (_this, isOverHidden) => {
     overHidden: isOverHidden,
   },
   {
-    label: '对应列的宽度',
+    label: _this.$t('tableConfiguration.对应列的宽度'),
     prop: 'width',
     value: null,
     type: 'number',
@@ -327,10 +327,10 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '是否多选',
+    label: _this.$t('tableConfiguration.是否多选'),
     prop: 'multiple',
     value: true,
-    tip: '仅对下拉系列组件生效',
+    tip: _this.$t('tableConfiguration.仅对下拉系列组件生效'),
     type: 'switch',
     span: 24,
     rules: [{
@@ -340,7 +340,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '表单编辑时项是否禁止',
+    label: _this.$t('tableConfiguration.表单编辑时项是否禁止'),
     prop: 'editDisabled',
     value: false,
     type: 'switch',
@@ -414,7 +414,7 @@ export const tableOption = (_this, isOverHidden) => {
   //   overHidden: isOverHidden,
   // },
   {
-    label: '对应列是否可以排序',
+    label: _this.$t('tableConfiguration.对应列是否可以排序'),
     prop: 'sortable',
     value: true,
     type: 'switch',

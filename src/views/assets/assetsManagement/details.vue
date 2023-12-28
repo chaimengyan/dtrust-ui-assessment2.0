@@ -82,6 +82,11 @@ export default {
 
         }
     },
+    watch: {
+      fieldList() {
+        this.$refs.fieldRelation.init(this.fieldList)
+      }
+    },
     methods: {
         handelData(obj, key) {
             if(key === "managingOrganization") {

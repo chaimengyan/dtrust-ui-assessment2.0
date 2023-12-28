@@ -446,9 +446,6 @@
                     )
                 ).then(res => {
                     this.recordList = res.data.data.records
-                    // res.data.data.records.forEach((item, index) => {
-                    //     this.$set(this.recordList, index, {...item.assessInfoDTO, ...item.assessRisk, type: item.type})
-                    // })
                     this.page.total = res.data.data.total;
                     this.listLoading = false;
                 });

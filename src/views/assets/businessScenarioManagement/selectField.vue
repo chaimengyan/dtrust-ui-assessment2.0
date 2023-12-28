@@ -23,7 +23,7 @@
                         </template>
                         <template v-for="i in item.dataSubjectList">
                             <el-menu-item :index="`${i.mainBodyId}`" :key="i.mainBodyId" >
-                                {{i.mainBodyName}} - {{ i.mainBodyId }}
+                                {{i.mainBodyName}}
                             </el-menu-item>
                         </template>
                     </el-submenu>
@@ -161,7 +161,6 @@ export default {
         },
 
         onAddField(data, attrs) {
-
             attrs.forEach(attr => {
                 data.forEach(d => {
                     const _id = `${this.currentRow.projectId}.${d.mainBodyId}.${d.categoryId}.${d.attributesId}`

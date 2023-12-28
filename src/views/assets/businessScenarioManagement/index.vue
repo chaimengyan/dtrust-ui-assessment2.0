@@ -156,7 +156,6 @@
           <ActRelation
             v-show="active === 2"
             ref="actRelation"
-            :fieldList="fieldList"
             :sceneId="sceneId"
             :saveBtnText="saveBtnText"
             @saveSuccess="saveSuccess"
@@ -462,13 +461,12 @@ export default {
       this.$refs.actRelation.saveCurd()
     },
     // 子组件数据保存成功
-    saveSuccess(isUpdate) {
-      this.relationDialog = false
+    saveSuccess(status) {
       this.fullscreenLoading = false
+      if (status === 'error') return
+      this.relationDialog = false
       this.getList(this.page)
-      // if(isUpdate === true) {
-        this.reassess(this.sceneId)
-      // }
+      this.reassess(this.sceneId)
     },
     getList(page, params) {
       this.listLoading = true;
@@ -640,8 +638,19 @@ export default {
         this.viewColumn = this.$refs.crud.columnOption
         this.rowData = row
         this.detailsDialog = true
-        this.getProjectAttributesBySceneId(row.sceneId)
+        this.getProjectAttributesBySceneId(row.sceneId).then(() => {
+          this.fieldList = this.handleFieldList(this.echoCheckedAssetObjList)
+          console.log(this.fieldList,this.echoCheckedAssetObjList, 'this.echoCheckedAssetObjList');
+        })
       }
+    },
+    // 处理字段数据，用于回显字段列表
+    handleFieldList(data) {
+      const dataSubjectList = data.map(d => d.dataSubjectList).flat()
+      console.log(dataSubjectList, 'dataSubjectList');
+      const attributes = dataSubjectList.map(d => d.attributes)
+      console.log(attributes, 'attributes');
+      return attributes.flat()
     },
     selectionChange(list){
       this.ids = list.map(item => (item.sceneId))
@@ -676,15 +685,6 @@ export default {
       this.$refs.crud.rowEdit(row, index);
     },
     create(row, done, loading) {
-      // if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
-      //   this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
-      // }
-      // if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
-      //   this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
-      // }
-      // if(Array.isArray(this.form.dataSubjectsRegion)) {
-      //   this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
-      // }
       let formReduce = {}
       for(let key in this.form) {
         if(Array.isArray(this.form[key])) {
@@ -709,15 +709,6 @@ export default {
       });
     },
     update(row, index, done, loading) {
-      // if(Array.isArray(this.form.purposeOfProcessing) || typeof this.form.purposeOfProcessing === 'object') {
-      //   this.form.purposeOfProcessing = this.form.purposeOfProcessing.join()
-      // }
-      // if(Array.isArray(this.form.locationsOfPartiesAccessUse)) {
-      //   this.form.locationsOfPartiesAccessUse = this.form.locationsOfPartiesAccessUse.join()
-      // }
-      // if(Array.isArray(this.form.dataSubjectsRegion)) {
-      //   this.form.dataSubjectsRegion = this.form.dataSubjectsRegion.join()
-      // }
       let formReduce = {}
       for(let key in this.form) {
         if(Array.isArray(this.form[key])) {

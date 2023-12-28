@@ -453,6 +453,12 @@ export default {
     组件类型: 'Component type',
     该项是否使用表单插槽: 'Does this item use a form slot',
     是否可搜索: 'Is it searchable',
+    仅对下拉系列组件生效: 'Only effective for dropdown series components',
+    对应列的宽度: 'The width of the corresponding column',
+    是否多选: 'Do you want to select multiple options',
+    表单编辑时项是否禁止: 'Is the item prohibited during form editing',
+    对应列是否可以排序: 'Can the corresponding columns be sorted',
+
   },
   enum: {
     收集: 'collect',

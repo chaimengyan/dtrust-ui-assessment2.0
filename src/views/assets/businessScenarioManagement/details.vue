@@ -34,7 +34,6 @@
             <el-tab-pane :label="$t('assetsManagement.关联字段')">
                 <ActRelation
                     ref="actRelation" 
-                    :fieldList="fieldList"
                     :sceneId="sceneId"
                     :isView="true"
                     />
@@ -80,6 +79,11 @@ export default {
     data() {
         return {
 
+        }
+    },
+    watch: {
+        fieldList() {
+            this.$refs.actRelation.init(this.fieldList)
         }
     },
     methods: {

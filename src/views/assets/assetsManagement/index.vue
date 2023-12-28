@@ -434,6 +434,7 @@ export default {
       isOverHidden: true,
       isFullscreen: false,
       option: {},
+      option2: {},
       // 当前版本号
       curVersion: 0,
     };
@@ -451,11 +452,11 @@ export default {
       this.fullscreenLoading = true
       getTableByName('asset').then(tableRes => {
         getAssetsFieldByTableName('asset').then(res => {
-          const option = {
+          this.option2 = {
             ...tableRes.data.data,
             column: res.data.data
           };
-          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
+          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, this.option2)
           this.$refs.crud.refreshTable()
           this.fullscreenLoading = false;
         })
@@ -463,7 +464,9 @@ export default {
     },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
-      tableOption(this.userInfo.tenantId, this.isOverHidden, false)
+      tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, this.option2)
+      this.$refs.crud.refreshTable()
+
     },
     openMap() {
       this.showMap = true
@@ -530,7 +533,7 @@ export default {
             const Arr = Object.values(cur.checkedFieldListAll).flat()
             Arr.forEach((f,i)=> {
               f.dataSubjectsVolume = f.dataSubjectsVolume || 0
-              f.identification = `${this.projectId}+${f.mainBodyId}+${f.attributesId}`
+              f._id = `${this.projectId}.${f.mainBodyId}.${f.categoryId}.${f.attributesId}`
             })
             return pre.concat(Arr)
           }, [])

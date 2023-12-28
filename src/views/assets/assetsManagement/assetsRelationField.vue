@@ -192,16 +192,11 @@ export default {
     },
     // 子组件数据保存成功
     saveSuccess(data) {
-        // getCheckedList() {
-        //     return this.checkAllFields
-        // },
-        // getRenderList() {
-        //     return this.renderList
-        // },
+      this.fullscreenLoading = false
+      if(data === 'error') return
       const attrs = this.$refs.selectField.getAttrs()
       this.$emit('saveSuccess', data, attrs)
       this.relationDialog = false
-      this.fullscreenLoading = false
     },
 
   },

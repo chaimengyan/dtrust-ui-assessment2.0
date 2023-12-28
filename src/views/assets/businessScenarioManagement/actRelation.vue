@@ -77,7 +77,7 @@
         </div>
         <el-form ref="sourceForm" :model="sourceForm" label-width="140px" style="width:80%">
           <el-form-item :label="$t('assetsManagement.数据主体数量')" >
-            <el-input-number v-model="sourceForm.volumeOfDataSubjects" :min="0" />
+            <el-input-number v-model="sourceForm.volumeOfDataSubjects" :min="1" />
           </el-form-item>
 
           <el-form-item :label="$t('businessScenarioManagement.数据处理活动')" >
@@ -188,6 +188,7 @@ export default {
   },
   methods: {
       init(attrs) {
+        console.log(attrs, '??>>>>???');
           this.attrs = attrs
           this.onLoad(this.page, this.attrs)
       },
@@ -231,7 +232,7 @@ export default {
     initSourceForm() {
       this.sourceForm = {
         activitiesIdList: [],
-        volumeOfDataSubjects: 0,
+        volumeOfDataSubjects: 1,
         activitiesCategoryIdList: [],
         assetsSceneProjectAttributesActivitiesList: [],
       }
@@ -372,7 +373,11 @@ export default {
               if(res.data.status === 200) {
                 this.$emit('saveSuccess', res.data.data)
                 this.$message.success(res.data.message)
+              }else {
+                this.$emit('saveSuccess', 'error')
               }
+        }).catch(() => {
+          this.$emit('saveSuccess', 'error')
         })
       }
     },
