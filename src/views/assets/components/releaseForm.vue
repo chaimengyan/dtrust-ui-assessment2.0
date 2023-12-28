@@ -29,12 +29,12 @@
         />
       </el-form-item>
       <el-form-item v-if="releaseForm.mode === 2" label="被评估人" prop="evaluators">
-        <el-cascader 
+        <el-cascader
           placeholder="请选择被评估人"
           v-model="releaseForm.evaluators"
-          @visible-change="getChapterByQnId" 
-          :options="options" 
-          :props="{ multiple: true }" 
+          @visible-change="getChapterByQnId"
+          :options="options"
+          :props="{ multiple: true }"
           clearable />
       </el-form-item>
       <el-form-item v-else label="被评估人" prop="userIds">
@@ -65,7 +65,6 @@
               v-model="releaseForm.time"
               type="datetimerange"
               range-separator="至"
-              value-format="yyyy-MM-DD HH:mm:ss"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
           />
@@ -213,7 +212,7 @@ export default {
                         evaluators: evaluators.map((item) => {
                             const [chapterId, userId] = item;
                             return { userId, chapterId  };
-                        }) 
+                        })
                     }: {
                         endTime,
                         startTime,
@@ -221,7 +220,7 @@ export default {
                         ...other,
                         ...this.evaluationItem,
                     }
-                    
+
                      startEvaluationApi(data).then(res => {
                         if(res.data.status == 200) {
                             this.initReleaseForm()

@@ -424,11 +424,11 @@ export default {
       this.fullscreenLoading = true
       getTableByName('scene').then(tableRes => {
         getAssetsFieldByTableName('scene').then(res => {
-          const option = {
+          this.option = {
             ...tableRes.data.data,
             column: res.data.data
           };
-          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, option)
+          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
           this.$refs.crud.refreshTable()
           this.fullscreenLoading = false
 
@@ -438,6 +438,7 @@ export default {
     changeArray() {
       this.isOverHidden = !this.isOverHidden
       tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
+        this.$refs.crud.refreshTable()
     },
     // 下一步
     nextStep() {

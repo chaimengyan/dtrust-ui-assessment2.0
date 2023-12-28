@@ -8,6 +8,7 @@
                 :indeterminate="isViceIndeterminate"
                 style="margin: 10px 0px;"
                 v-for="item in list"
+                v-show="!item.hide"
                 :label="item.value"
                 :disabled="disabledKeys.includes(item._id)"
                 :key="item.value"

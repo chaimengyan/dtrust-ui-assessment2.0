@@ -13,7 +13,7 @@
             append-to-body
             >
             <div>{{$t('assetsManagement.当前位置')}} {{ findAssetForm.hostingLocation }} <br/>
-                {{$t('assetsManagement.当前经纬度')}} {{ findAssetForm.lng }}, {{ findAssetForm.lat }} 
+                {{$t('assetsManagement.当前经纬度')}} {{ findAssetForm.lng }}, {{ findAssetForm.lat }}
             </div>
             <div id="baiduMap" />
             <div slot="footer" class="dialog-footer">
@@ -66,11 +66,11 @@ export default {
         getTable() {
             getTableByName('asset').then(tableRes => {
                 getAssetsFieldByTableName('asset').then(res => {
-                    const findAssetFormOption = {
+                    this.findAssetFormOption = {
                         ...tableRes.data.data,
                         column: res.data.data
                     };
-                    tableOption(this, this.$route.query.tenantId, false, true, findAssetFormOption)
+                    tableOption(this, this.$route.query.tenantId, false, true, this.findAssetFormOption)
                     // this.$refs.crud.refreshTable()
                 })
             })
@@ -90,7 +90,7 @@ export default {
                 this.map.enableScrollWheelZoom(true) // 滚轮放大缩小地图
 
                 const point = new BMapGL.Point(116.404, 39.915);
-                this.map.centerAndZoom(point, 15); 
+                this.map.centerAndZoom(point, 15);
                 const geoc = new BMapGL.Geocoder();
                 this.map.addEventListener('click', (e) => {
                 this.findAssetForm.lng = e.latlng.lng

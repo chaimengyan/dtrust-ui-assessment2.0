@@ -63,6 +63,7 @@ import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import AssetsRelationField from '../assetsManagement/assetsRelationField'
 import {getChildrenById} from "@/util/util";
 import {isNumber} from "lodash";
+import {nextTick} from "vue";
 export default {
     name: "SelectField",
     components: {
@@ -112,8 +113,10 @@ export default {
     },
     methods: {
         mounted() {
-            this.buildRenderList()
-            this.buildEchoFields()
+            nextTick(() => {
+                this.buildRenderList()
+                this.buildEchoFields()
+            })
         },
         setValue() {
             this.$nextTick(() => {
@@ -364,9 +367,31 @@ export default {
         handleClickDataClass(typeId) {
             const index = this.activeDataClass.findIndex(v => v === typeId)
             if (index !== -1) {
-                return this.activeDataClass.splice(index, 1)
+                this.activeDataClass.splice(index, 1)
+            } else {
+                this.activeDataClass.push(typeId)
             }
-            this.activeDataClass.push(typeId)
+            this.filterFieldList()
+            this.setValue()
+        },
+
+        filterFieldList() {
+            this.renderList.forEach(item => {
+                item.list.forEach(parent => {
+                    if (!this.activeDataClass.length && !parent.list.length) {
+                        return parent.hide = false
+                    }
+                    parent.hide = true;
+                    parent.list.forEach(item => {
+                        item.hide = this.activeDataClass.length ? !this.activeDataClass.includes(item.typeId) : false
+                        if (!item.hide) {
+                            parent.hide = false
+                        }
+                    })
+
+                })
+
+            })
         },
 
         // 选择数据主体类型
@@ -390,17 +415,14 @@ export default {
                     const i = itemChecked.checked.findIndex(cur => cur._id === item._id)
                     if (i !== -1) {
                         itemChecked.checked.splice(i, 1)
-                        if (i !== -1) {
-                            itemChecked.checked.splice(i, 1)
-                            if (!itemChecked.checked.length) {
-                                const ids = itemChecked._id.split('.')
-                                ids.splice(ids.length - 1, 1)
-                                const id = ids.join('.')
-                                const findItem = getChildrenById(this.checkAllFields, id, 'checked')
-                                if (!findItem) return;
-                                const i = findItem.checked.findIndex(item => item._id === itemChecked._id)
-                                findItem.checked.splice(i, 1)
-                            }
+                        if (!itemChecked.checked.length) {
+                            const ids = itemChecked._id.split('.')
+                            ids.splice(ids.length - 1, 1)
+                            const id = ids.join('.')
+                            const findItem = getChildrenById(this.checkAllFields, id, 'checked')
+                            if (!findItem) return;
+                            const i = findItem.checked.findIndex(item => item._id === itemChecked._id)
+                            findItem.checked.splice(i, 1)
                         }
                     }
                 }

@@ -15,7 +15,7 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
 
 
   option.column.forEach((item, index) => {
-    item.isOverHidden = isOverHidden
+    item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
 
     if (item.dicUrl) {

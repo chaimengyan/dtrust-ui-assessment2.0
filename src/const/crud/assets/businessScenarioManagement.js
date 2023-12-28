@@ -10,9 +10,9 @@ function getSelectOption(item, tenantId) {
     item.dicData = res.data.data || []
   })
 }
-export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
-  option.column.forEach((item, index) => {
-    item.isOverHidden = isOverHidden
+export const tableOption = (_this, tenantId, isOverHidden, isLinkPage) => {
+  _this.option.column.forEach((item, index) => {
+    item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
 
     if(item.prop === 'managingOrganization') {
@@ -39,9 +39,9 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
   });
 
 
-  _this.option = option
+  // _this.option = option
 const APIurl = isLinkPage ? `/assets/assetsDict/selectByDictType?tenantId=${tenantId}&dictType=` : '/assets/assetsDict/findByDictType?dictType='
-return option
+// return option
   // return {
   //   labelWidth:200,
   //   selection: true,

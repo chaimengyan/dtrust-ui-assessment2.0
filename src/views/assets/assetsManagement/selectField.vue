@@ -50,6 +50,7 @@ import {
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import {isNumber, uniqueId} from 'lodash'
 import {getChildrenById} from "@/util/util";
+import {nextTick} from "vue";
 export default {
     name: "SelectField",
     components: {
@@ -103,8 +104,10 @@ export default {
     },
     methods: {
         mounted() {
-            this.buildRenderList()
-            this.buildEchoFields()
+            nextTick(() => {
+                this.buildRenderList()
+                this.buildEchoFields()
+            })
             // this.getDefaultAttrs()
         },
         setValue() {
@@ -263,9 +266,31 @@ export default {
         handleClickDataClass(typeId) {
             const index = this.activeDataClass.findIndex(v => v === typeId)
             if (index !== -1) {
-                return this.activeDataClass.splice(index, 1)
+                this.activeDataClass.splice(index, 1)
+            } else {
+                this.activeDataClass.push(typeId)
             }
-            this.activeDataClass.push(typeId)
+            this.filterFieldList()
+            this.setValue()
+        },
+
+        filterFieldList() {
+            this.renderList.forEach(item => {
+                item.list.forEach(parent => {
+                    if (!this.activeDataClass.length && !parent.list.length) {
+                        return parent.hide = false
+                    }
+                    parent.hide = true;
+                    parent.list.forEach(item => {
+                        item.hide = this.activeDataClass.length ? !this.activeDataClass.includes(item.typeId) : false
+                        if (!item.hide) {
+                            parent.hide = false
+                        }
+                    })
+
+                })
+
+            })
         },
 
         // 选择数据主体类型

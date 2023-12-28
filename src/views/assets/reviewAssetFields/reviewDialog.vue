@@ -6,38 +6,36 @@
             <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>
         </div>
-      
-     
+
+
         <SelectField
             v-if="fieldStatus === 1"
-            ref="selectField" 
-            :defaultActive="defaultActive"
-            :checkedAssetObjList="checkedDataSubjectObjList"
-            :isView="false"
+            ref="selectField"
+            :checkedBody="checkedDataSubjectObjList"
             />
         <FieldRelation
           v-else
-          ref="fieldRelation" 
+          ref="fieldRelation"
           :projectId="projectId"
           :isView="true"
           :fieldList="fieldList"
           />
         <div class="demo-drawer__footer" v-if="fieldStatus === 1">
-              <el-button 
+              <el-button
                 type="primary"
                 icon="el-icon-circle-check"
                 @click="relationFormSubmit(0)">{{$t('evaluationRecord.通过')}}</el-button>
-              <el-button 
+              <el-button
                 type="danger"
                 icon="el-icon-circle-close"
                 @click="relationFormSubmit(2)">{{$t('evaluationRecord.拒绝')}}</el-button>
-            <el-button 
+            <el-button
                 icon="el-icon-circle-close"
                 @click="relationDialog = false">{{$t('assetsManagement.取消')}}</el-button>
         </div>
     </el-drawer>
   </template>
-  
+
   <script>
   import {
     assetsAddAttributes,
@@ -47,7 +45,7 @@
   import  SelectField from "@/views/assets/reviewAssetFields/selectField";
   import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
   import { mapGetters } from "vuex";
-  
+
   export default {
     name: "reviewDialog",
     components: { FieldRelation,SelectField},
@@ -83,17 +81,26 @@
     computed: {
     },
     created() {
-     
+
     },
     methods: {
-      
-     
+
+
       // 根据资产id查询字段(业务场景用)
       getAttributesListByProjectId(query) {
         return getAttributesListByProjectId(query).then(res => {
-              this.checkedDataSubjectObjList = this.handleEchoData(res.data.data)
-              this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
-              this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
+              res.data.data.forEach(item => {
+                  item.categoryList.forEach(cate => {
+                      cate._id = `${item.mainBodyId}.${cate.categoryId}`
+                  })
+                  item.attributes.forEach(attr => {
+                      attr._id = `${item.mainBodyId}.${attr.categoryId}.${attr.attributesId}`
+                  })
+              })
+                this.checkedDataSubjectObjList = res.data.data
+            this.$refs.selectField.mounted()
+              // this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
+              // this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
           })
       },
       // 获取勾选的数据主体类型
@@ -132,7 +139,7 @@
           })
           return data
       },
-    
+
       // 打开关联字段弹窗
       relationBtn(row, status, relationDialogSize) {
         this.fullscreenLoading = true
@@ -148,7 +155,7 @@
             this.$message.error('暂无数据')
             this.relationDialog = false
             this.fullscreenLoading = false
-            return 
+            return
           }
           if([0,2].includes(status)){
             this.fieldList = this.checkedDataSubjectObjList.map(x=>x.attributes).flat()
@@ -157,29 +164,33 @@
           this.fullscreenLoading = false
         })
       },
-  
+
       // 提交关联字段
       relationFormSubmit(status) {
-        const dataList = this.$refs.selectField.getCheckedAssetObjList()
-        const isCheckField = dataList.every(item => {
-          return 'checkedFieldListAll' in item && item.checkedFieldListAll.length !== 0
-          })
-        if(isCheckField) {
-          this.fieldList = this.handleFieldList(dataList, status)
-            if(this.fieldList.length === 0) {
-              this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-            } else {
-              this.fullscreenLoading = true
-              auditAssetsField(this.fieldList).then(res => {
-                this.$message.success(res.data.message)
-                this.relationDialog = false
-                this.fullscreenLoading = false
-              })
-              console.log(this.fieldList,status, 'this.fieldListthis.fieldList');
-            }
-        } else {
-          this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-        }
+        const dataList = this.$refs.selectField.getAttrs()
+
+
+          console.log(dataList, 'dddd')
+
+        // const isCheckField = dataList.every(item => {
+        //   return 'checkedFieldListAll' in item && item.checkedFieldListAll.length !== 0
+        //   })
+        // if(isCheckField) {
+        //   this.fieldList = this.handleFieldList(dataList, status)
+        //     if(this.fieldList.length === 0) {
+        //       this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
+        //     } else {
+        //       this.fullscreenLoading = true
+        //       auditAssetsField(this.fieldList).then(res => {
+        //         this.$message.success(res.data.message)
+        //         this.relationDialog = false
+        //         this.fullscreenLoading = false
+        //       })
+        //       console.log(this.fieldList,status, 'this.fieldListthis.fieldList');
+        //     }
+        // } else {
+        //   this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
+        // }
       },
       // 子组件数据保存成功
       saveSuccess(isUpdate) {
@@ -187,13 +198,13 @@
         this.relationDialog = false
         this.fullscreenLoading = false
       },
-     
+
     },
   };
   </script>
-  
+
   <style lang="scss" scoped>
-  ::v-deep  .avue-icon i { 
+  ::v-deep  .avue-icon i {
     font-size: 16px !important;
   }
   </style>
