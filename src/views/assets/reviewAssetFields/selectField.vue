@@ -45,7 +45,6 @@ import {
 import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import AssetsRelationField from '../assetsManagement/assetsRelationField'
 import {getChildrenById} from "@/util/util";
-import {nextTick} from 'vue'
 
 export default {
     name: "SelectField",
@@ -64,7 +63,7 @@ export default {
             const [first] = this.checkedBody || []
             const id = first ? first.mainBodyId.toString() : ''
             if (id) {
-                nextTick(this.setValue)
+                this.$nextTick(this.setValue)
             }
             return id
         },
@@ -94,7 +93,7 @@ export default {
     },
     methods: {
         mounted() {
-            nextTick(() => {
+            this.$nextTick(() => {
                 this.buildRenderList()
                 this.buildEchoFields()
             })

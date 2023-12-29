@@ -89,55 +89,31 @@
       // 根据资产id查询字段(业务场景用)
       getAttributesListByProjectId(query) {
         return getAttributesListByProjectId(query).then(res => {
-              res.data.data.forEach(item => {
-                  item.categoryList.forEach(cate => {
-                      cate._id = `${item.mainBodyId}.${cate.categoryId}`
-                  })
-                  item.attributes.forEach(attr => {
-                      attr._id = `${item.mainBodyId}.${attr.categoryId}.${attr.attributesId}`
-                  })
-              })
-                this.checkedDataSubjectObjList = res.data.data
-            this.$refs.selectField.mounted()
-              // this.echoCheckedDataSubjectList = this.handleEchoData(res.data.data)
-              // this.disabledKeys = this.echoCheckedDataSubjectList.map(item => item.mainBodyId)
+          res.data.data.forEach(item => {
+            item.categoryList.forEach(cate => {
+                cate._id = `${item.mainBodyId}.${cate.categoryId}`
+            })
+            item.attributes.forEach(attr => {
+                attr._id = `${item.mainBodyId}.${attr.categoryId}.${attr.attributesId}`
+            })
           })
+          this.checkedDataSubjectObjList = res.data.data
+          if([0,2].includes(this.fieldStatus)){
+            this.fieldList = this.handleFieldList(res.data.data)
+            this.$refs.fieldRelation.init(this.fieldList)
+          }else {
+            this.$refs.selectField.mounted()
+          }
+        })
       },
       // 获取勾选的数据主体类型
       getCheckedDataSubject(checkedDataSubjectList, checkedDataSubjectObjList) {
         this.checkedDataSubjectObjList = checkedDataSubjectObjList
       },
       // 处理字段数据，用于回显字段列表
-      handleFieldList(data, status) {
-        return data.reduce((pre, cur, curIndex, arr) => {
-            const Arr = Object.values(cur.checkedFieldListAll).flat()
-            Arr.forEach((f,i)=> {
-                f.status = status
-            })
-            return pre.concat(Arr)
-        }, [])
-      },
-      // 处理关联字段接口返回数据，用于回显关联字段组件
-      handleEchoData(data) {
-         data.forEach((item,index) => {
-            item.checkedCategoryList = item.categoryList.map(x => x.categoryId) || []
-            item.checkedDataClass = item.typeList.map(x => x.typeId) || []
-            if(!('checkedFieldList' in item)) {
-                item.checkedFieldList = {}
-            }
-            if(!('checkedFieldListAll' in item)) {
-                item.checkedFieldListAll = {}
-            }
-            if(!('fieldListAll' in item)) {
-                item.fieldListAll = {}
-            }
-            item.checkedCategoryList.forEach((x, j) => {
-              // item.checkedFieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
-              item.fieldListAll[x] = item.attributes.filter(a => x === a.categoryId)
-              // item.checkedFieldList[x] = item.checkedFieldListAll[x].map(a => a.attributesId)
-            })
-          })
-          return data
+      handleFieldList(data) {
+        const attributes = data.map(d => d.attributes)
+        return attributes.flat()
       },
 
       // 打开关联字段弹窗
@@ -157,10 +133,6 @@
             this.fullscreenLoading = false
             return
           }
-          if([0,2].includes(status)){
-            this.fieldList = this.checkedDataSubjectObjList.map(x=>x.attributes).flat()
-          }
-          // this.$refs.dataSubject.echoChecked()
           this.fullscreenLoading = false
         })
       },
@@ -168,29 +140,19 @@
       // 提交关联字段
       relationFormSubmit(status) {
         const dataList = this.$refs.selectField.getAttrs()
-
-
-          console.log(dataList, 'dddd')
-
-        // const isCheckField = dataList.every(item => {
-        //   return 'checkedFieldListAll' in item && item.checkedFieldListAll.length !== 0
-        //   })
-        // if(isCheckField) {
-        //   this.fieldList = this.handleFieldList(dataList, status)
-        //     if(this.fieldList.length === 0) {
-        //       this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-        //     } else {
-        //       this.fullscreenLoading = true
-        //       auditAssetsField(this.fieldList).then(res => {
-        //         this.$message.success(res.data.message)
-        //         this.relationDialog = false
-        //         this.fullscreenLoading = false
-        //       })
-        //       console.log(this.fieldList,status, 'this.fieldListthis.fieldList');
-        //     }
-        // } else {
-        //   this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
-        // }
+        if(dataList.length !== 0) {
+          dataList.forEach((item,index) => {
+            item.status = status
+          })
+          this.fullscreenLoading = true
+          auditAssetsField(dataList).then(res => {
+            this.$message.success(res.data.message)
+            this.relationDialog = false
+            this.fullscreenLoading = false
+          })
+        } else {
+          this.$message.error(this.$t('assetsManagement.请选择主体类型下面的字段'))
+        }
       },
       // 子组件数据保存成功
       saveSuccess(isUpdate) {

@@ -96,6 +96,7 @@ export default {
     数据处理活动流图: 'Data processing activity flow diagram',
     自定义配置: 'Custom configuration',
     表格配置: 'Table Configuration',
+    资产字段审核: 'Asset field review',
 
     告知同意及主体权利: 'Inform consent and subject power',
     主体权利仪表盘: 'Main right dashboard',
@@ -311,6 +312,7 @@ export default {
     业务场景变化: 'Business scenario changes',
     编辑字段: 'Edit field',
     业务场景评估记录: 'Business scenario evaluation record',
+    处理活动变更: 'Process activity changes',
   },
   evaluationRecord: {
     查看详情: 'View details',

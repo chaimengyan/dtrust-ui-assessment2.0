@@ -510,10 +510,6 @@ export default {
     saveLatlng() {
       this.showMap = false
     },
-    // 上一步
-    previousStep() {
-      this.active--
-    },
     // 根据资产id查询关联字段信息
     getAssetsProjectAttributesListByProjectId(id) {
         return getAssetsProjectAttributesListByProjectId(id).then(res => {
@@ -745,17 +741,14 @@ export default {
     },
     // 提交评估表单
     assessmentFormSubmit() {
-      this.fullscreenLoading = false
+      this.fullscreenLoading = true
       this.$refs.releaseForm.releaseSave()
-      // this.assessmentDialog = false
     },
-
     // 关闭评估弹窗
-    closeAssessmentDialog() {
+    closeAssessmentDialog(status) {
       this.fullscreenLoading = false
-      this.assessmentDialog = false
+      if(status !== 'error') return this.assessmentDialog = false
     },
-
     // 打开关联字段弹窗
     relationBtn(row) {
       this.$refs.assetsRelationFieldRef.relationBtn(row)
@@ -771,10 +764,10 @@ export default {
       this.ids = list.map(item => (item.projectId))
     },
     // 提交关联字段
-    relationFormSubmit() {
-      this.fullscreenLoading = true
-      this.$refs.fieldRelation.saveCurd()
-    },
+    // relationFormSubmit() {
+    //   this.fullscreenLoading = true
+    //   this.$refs.fieldRelation.saveCurd(true)
+    // },
     // 子组件数据保存成功
     FieldRelationSaveSuccess(isUpdate) {
       // if(isUpdate === true) {

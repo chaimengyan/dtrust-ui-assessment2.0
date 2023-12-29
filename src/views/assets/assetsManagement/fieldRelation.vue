@@ -213,7 +213,7 @@ export default {
       },
 
       // 保存表格数据
-      saveCurd() {
+      saveCurd(isAssets) {
         this.attrs.forEach((item, index) => {
           this.attrs[index].projectId = this.projectId
         })
@@ -224,7 +224,7 @@ export default {
                 // this.$message.success('res.data.message')
 
             const data = this.attrs.map(item => {
-              if(!('status' in item)) {
+              if(!('status' in item)&&!isAssets) {
                 item.status = 1
               }
               return {

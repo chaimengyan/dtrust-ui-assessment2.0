@@ -105,8 +105,6 @@ export default {
 
       // 完整勾选数据主体类型
       checkedDataSubjectObjList: [],
-      // 完整勾选字段
-      fieldList: [],
       isFullscreen: false,
       isShow: false,
       disabledKeys: null,
@@ -116,14 +114,28 @@ export default {
   methods: {
     // 下一步
     nextStep() {
-        this.active++
-        if (this.active === 1) {
-            this.$refs.selectField.mounted()
-            this.$refs.selectField.setValue()
+      if(this.active === 0 ) {
+        if(this.checkedMainBody.length === 0) {
+          return this.$message.error('请至少选择一个数据主体！')
         }
-        if (this.active === 2) {
-            const attrs = this.$refs.selectField.getAttrs()
+          this.active = 1
+          this.$refs.selectField.mounted()
+          this.$refs.selectField.setValue()
+       }else if (this.active === 1) {
+          const attrs = this.$refs.selectField.getAttrs()
+          const mainBodyField = Array.from(new Set(attrs.map(a => a.mainBodyId)))
+          let noFieldMainBodyName = []
+          this.checkedMainBody.forEach((c,index) => {
+            if(!mainBodyField.includes(c.mainBodyId)) {
+              noFieldMainBodyName.push(c.mainBodyName)
+            }
+          })
+          if(noFieldMainBodyName.length === 0) {
             this.$refs.fieldRelation.init(attrs)
+            this.active = 2
+          }else {
+            this.$message.error(`以下主体还未选择字段：${noFieldMainBodyName.join('，')}`)
+          }
         }
     },
     // 上一步
@@ -188,7 +200,7 @@ export default {
             this.$refs.fieldRelation.init(attrs)
         }
       this.fullscreenLoading = true
-      this.$refs.fieldRelation.saveCurd()
+      this.$refs.fieldRelation.saveCurd(this.isAssets)
     },
     // 子组件数据保存成功
     saveSuccess(data) {

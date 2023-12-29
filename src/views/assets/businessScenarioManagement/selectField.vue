@@ -63,7 +63,6 @@ import CheckBox from "@/views/assets/assetsManagement/checkBox";
 import AssetsRelationField from '../assetsManagement/assetsRelationField'
 import {getChildrenById} from "@/util/util";
 import {isNumber} from "lodash";
-import {nextTick} from "vue";
 export default {
     name: "SelectField",
     components: {
@@ -113,7 +112,7 @@ export default {
     },
     methods: {
         mounted() {
-            nextTick(() => {
+            this.$nextTick(() => {
                 this.buildRenderList()
                 this.buildEchoFields()
             })

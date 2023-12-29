@@ -442,14 +442,29 @@ export default {
     },
     // 下一步
     nextStep() {
-        this.active++
-        if (this.active === 1) {
-            this.$refs.selectField.mounted()
-            this.$refs.selectField.setValue()
-        }
-        if (this.active === 2) {
-            const attrs = this.$refs.selectField.getAttrs()
+          console.log(this.checkedProjectBody, 'this.checkedProjectBody');
+        if(this.active === 0 ) {
+          if(this.checkedProjectBody.length === 0) {
+            return this.$message.error('请至少选择一个资产！')
+          }
+          this.active = 1
+          this.$refs.selectField.mounted()
+          this.$refs.selectField.setValue()
+       }else if (this.active === 1) {
+          const attrs = this.$refs.selectField.getAttrs()
+          const projectField = Array.from(new Set(attrs.map(a => a.projectId)))
+          let noFieldProjectName = []
+          this.checkedProjectBody.forEach((c,index) => {
+            if(!projectField.includes(c.projectId)) {
+              noFieldProjectName.push(c.projectName)
+            }
+          })
+          if(noFieldProjectName.length === 0) {
             this.$refs.actRelation.init(attrs)
+            this.active = 2
+          }else {
+            this.$message.error(`以下资产还未选择字段：${noFieldProjectName.join('，')}`)
+          }
         }
     },
     // 上一步
@@ -536,10 +551,9 @@ export default {
       this.$refs.releaseForm.releaseSave()
     },
     // 关闭评估弹窗
-    closeAssessmentDialog() {
+    closeAssessmentDialog(status) {
       this.fullscreenLoading = false
-
-      this.assessmentDialog = false
+      if(status !== 'error') return this.assessmentDialog = false
     },
     // 打开关联字段弹窗
     relationBtn(row) {
@@ -648,9 +662,7 @@ export default {
     // 处理字段数据，用于回显字段列表
     handleFieldList(data) {
       const dataSubjectList = data.map(d => d.dataSubjectList).flat()
-      console.log(dataSubjectList, 'dataSubjectList');
       const attributes = dataSubjectList.map(d => d.attributes)
-      console.log(attributes, 'attributes');
       return attributes.flat()
     },
     selectionChange(list){
@@ -762,6 +774,7 @@ export default {
     },
     examineBtn(row) {
       this.$confirm(this.$t('crudCommon.是否通过审核'), this.$t('crudCommon.提示'), {
+        distinguishCancelAndClose: true,
         confirmButtonText: this.$t('crudCommon.通过'),
         cancelButtonText: this.$t('crudCommon.不通过'),
         type: "warning",
@@ -769,8 +782,8 @@ export default {
         .then(() => {
           this.auditScene({sceneId: row.sceneId, status: 2})
         })
-        .catch(() => {
-          this.auditScene({sceneId: row.sceneId, status: 3})
+        .catch(action => {
+          if ( action === 'cancel') return this.auditScene({sceneId: row.sceneId, status: 3})
         });
     },
     auditScene(obj) {

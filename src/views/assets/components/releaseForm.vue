@@ -67,6 +67,8 @@
               range-separator="至"
               start-placeholder="开始时间"
               end-placeholder="结束时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+
           />
       </el-form-item>
 
@@ -225,13 +227,19 @@ export default {
                         if(res.data.status == 200) {
                             this.initReleaseForm()
                             this.$message.success(res.data.message)
-                            this.$emit('closeAssessmentDialog')
+                            this.$emit('closeAssessmentDialog', 'success')
                         }else {
                             this.$message.error(res.data.message)
                         }
+                    }).catch(() => {
+                        this.$emit('closeAssessmentDialog', 'error')
+
                     })
                     done()
+
                 }else {
+                    this.$emit('closeAssessmentDialog', 'error')
+
                     return false
                 }
             })

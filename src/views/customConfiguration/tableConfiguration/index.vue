@@ -21,7 +21,7 @@
             <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
           </template>
   
-          <template slot="menuLeft">
+          <!-- <template slot="menuLeft">
             <el-button
               v-if="permissions.field_dataClassification_add"
               class="filter-item"
@@ -30,7 +30,7 @@
               icon="el-icon-plus"
               >{{$t('crudCommon.添加')}}
             </el-button>
-          </template>
+          </template> -->
           <template slot="menu" slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
               <el-button
