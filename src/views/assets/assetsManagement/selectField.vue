@@ -103,14 +103,14 @@ export default {
     },
     methods: {
         mounted() {
-            this.$nextTick(() => {
+            setTimeout(() => {
                 this.buildRenderList()
                 this.buildEchoFields()
             })
             // this.getDefaultAttrs()
         },
         setValue() {
-            this.$nextTick(() => {
+            setTimeout(() => {
                 this.$refs.checkbox.setDefaultValue(this.mainBodyId || this.defaultActive);
             })
         },

@@ -45,7 +45,7 @@
               @click="previousStep">{{$t('assetsManagement.上一步')}}</el-button>
           <el-button
               type="primary"
-              v-if="isAssets ? (active === 0 || active !== 2) : (active === 0)"
+              v-if="(active === 0 || active !== 2)"
               icon="el-icon-bottom"
               @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
           <el-button

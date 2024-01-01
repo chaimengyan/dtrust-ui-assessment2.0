@@ -81,7 +81,7 @@ export default {
             const itemChecked = getChildrenById(this.checkAllFields, this.checkId, 'checked')
             console.log(itemList, this.renderList, this.checkId, '=====')
 
-            this.list = [...(itemList.list || [])]
+            this.list = [...(itemList?.list || [])]
             this.checkedList = [...(itemChecked?.checked || [])]
             this.setCheckIds()
             setTimeout(() => {
@@ -112,6 +112,8 @@ export default {
 
     ::v-deep .el-checkbox__label {
         line-height: 15px;
+        width: 100%;
+        white-space: normal;
     }
 
     .checkbox-item {

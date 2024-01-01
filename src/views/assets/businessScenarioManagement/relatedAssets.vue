@@ -1,5 +1,5 @@
 <template>
-    <basic-container class="relation-container">
+    <basic-container v-loading="loading" class="relation-container">
         <el-row :gutter="20">
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.projectId">
@@ -18,7 +18,6 @@ import {
     getAllAssetsProject,
     getProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
-import {uniqueId} from "lodash";
 
 export default {
     name: "DataSubject",
@@ -42,7 +41,8 @@ export default {
             checkedDataSubjectList: [],
             checkedDataSubjectOptions: [],
 
-            allData: {}
+            allData: {},
+            loading: false
         };
     },
     created() {
@@ -67,6 +67,7 @@ export default {
             // keys.forEach(k => {
             //     this.allData[k] = undefined
             // })
+            this.loading = true
             this.checkedDataSubjectOptions = this.dataSubjectList.filter(item => val.includes(item.projectId))
             // 拉取渲染列表
             // const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
@@ -96,6 +97,8 @@ export default {
             Promise.all(all).then(() => {
                 const data = Object.keys(this.allData).filter(k => val.includes(Number(k))).map(k => this.allData[k])
                 this.$emit('change', data)
+            }).finally(() => {
+                this.loading = false
             })
         },
     }
