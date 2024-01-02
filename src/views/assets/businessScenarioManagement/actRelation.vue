@@ -37,6 +37,8 @@
            :option="option"
            :data="temporaryTreeFieldList"
            ref="treeCrud"
+           @search-change="searchChange"
+           @search-reset="searchReset"
            @selection-change="selectionChange"
            >
            <template slot="menuRight" slot-scope="{size}">
@@ -173,6 +175,7 @@ export default {
       currentRow: null,
         attrs: [],
         rowList: [],
+        cloneTreeList: [],
       keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList']
     };
   },
@@ -188,7 +191,6 @@ export default {
   },
   methods: {
       init(attrs) {
-        console.log(attrs, '??>>>>???');
           this.attrs = attrs
           this.onLoad(this.page, this.attrs)
       },
@@ -199,6 +201,7 @@ export default {
     onLoad(page, pageList) {
       this.page.total = pageList.length
       this.temporaryTreeFieldList = this.tranListToTreeData(deepClone(pageList), '')
+        this.cloneTreeList = deepClone(this.temporaryTreeFieldList)
       this.temporaryFieldList = deepClone(pageList).splice((this.page.currentPage - 1)*page.pageSize, this.page.pageSize)
     },
     tranListToTreeData(list) {
@@ -217,15 +220,14 @@ export default {
             attributesName: cur.attributesName,
             children: [cur],
           }
-          Reflect.deleteProperty(cur, 'attributesName')
+          // Reflect.deleteProperty(cur, 'attributesName')
           return pre;
         }
 
-        Reflect.deleteProperty(cur, 'attributesName')
+        // Reflect.deleteProperty(cur, 'attributesName')
         pre[cur.attributesId].children.push(cur)
         return pre;
       }, {})
-        console.log(Object.values(data), 'Object.values(data)')
       return Object.values(data);
     },
     // 初始化sourceForm
@@ -248,19 +250,29 @@ export default {
     // 搜索
     handleFilter(param) {
       this.page.currentPage = 1;
-      this.pageList = deepClone(this.attrs)
-      for(let p in param) {
-        if(p === 'keyword') {
-          this.pageList = this.pageList.filter(x => {
-            return x.attributesName.indexOf(param[p]) !== -1 || x.mainBodyName.indexOf(param[p]) !== -1 || x.projectName.indexOf(param[p]) !== -1 || (x.activitiesName && x.activitiesName.indexOf(param[p]) !== -1)
-          })
-        }else {
-          this.pageList = this.pageList.filter(x => {
-            return x[p].indexOf(param[p]) !== -1
-          })
-        }
-      }
-      this.onLoad(this.page, this.pageList)
+        const data = this.filterData(param, this.attrs)
+        this.onLoad(this.page.currentPage, data)
+    },
+    filterData(fields, data) {
+        return data.filter(item => {
+            return Object.keys(fields).every(k => {
+                if (k === 'keyword') {
+                    return this.filterKeyword(fields[k], item);
+                }
+                return item[k].includes(fields[k])
+            })
+        })
+    },
+    filterKeyword(keyword, item) {
+       const values = [item.attributesName, item.projectName, item.mainBodyName]
+        const objectValues = [item.gatherActivitiesList, item.storageActivitiesList, item.useActivitiesList, item.transmitActivitiesList, item.delActivitiesList]
+       const is1 = values.some(item => item.includes(keyword))
+       const is2 = objectValues.some(item => {
+           const v = item ? item.map(item => `${item.activitiesQnLabel}:${item.activitiesAnswerLabel}`).join(';') : ''
+           return v.includes(keyword)
+       })
+
+        return is1 || is2
     },
 
     // 清空搜索
