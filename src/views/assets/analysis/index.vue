@@ -1008,32 +1008,32 @@ export default {
                         {
                             data: Object.values(data.assets),
                             type: 'bar',
-                            itemStyle: {
-                                normal: {
-                                    color: function(params) {
-                                        var colorList = [
-                                        '#6383b2', '#6a63b2', '#8b63b2', '#b263ad'
-                                        ];
-                                        return colorList[params.dataIndex]
-                                    },
-                                }
-                            }
+                            // itemStyle: {
+                            //     normal: {
+                            //         color: function(params) {
+                            //             var colorList = [
+                            //             '#6383b2', '#6a63b2', '#8b63b2', '#b263ad'
+                            //             ];
+                            //             return colorList[params.dataIndex]
+                            //         },
+                            //     }
+                            // }
                         },
                         {
                             xAxisIndex: 1,
                             yAxisIndex: 1,
                             data: Object.values(data.scene),
                             type: 'bar',
-                            itemStyle: {
-                                normal: {
-                                    color: function(params) {
-                                        var colorList = [
-                                        '#6383b2', '#6a63b2', '#8b63b2', '#b263ad'
-                                        ];
-                                        return colorList[params.dataIndex]
-                                    },
-                                }
-                            }
+                            // itemStyle: {
+                            //     normal: {
+                            //         color: function(params) {
+                            //             var colorList = [
+                            //             '#6383b2', '#6a63b2', '#8b63b2', '#b263ad'
+                            //             ];
+                            //             return colorList[params.dataIndex]
+                            //         },
+                            //     }
+                            // }
                         }
                     ]
                 };

@@ -39,14 +39,14 @@
               icon="el-icon-plus"
               >{{$t('crudCommon.添加')}}
             </el-button> -->
-            <el-button
+            <!-- <el-button
               v-if="permissions.assets_assetsManagement_batchDel"
               type="primary"
               plain
               icon="el-icon-delete"
               @click="deleteBtn(false)"
               >{{$t('crudCommon.批量删除')}} 
-            </el-button>
+            </el-button> -->
             <el-button
               v-if="permissions.assets_assetsManagement_batchDel"
               type="primary"

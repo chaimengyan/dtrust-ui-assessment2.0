@@ -202,8 +202,8 @@
       </div>
       <ReleaseForm
         ref="releaseForm"
-        :typeIds="1"
-        :evaluationItem="{businessScenarioId: sceneId}"
+        :typeIds="2"
+        :evaluationItem="{sceneId: sceneId}"
         @closeAssessmentDialog="closeAssessmentDialog"
       />
       <div slot="footer" class="dialog-footer">

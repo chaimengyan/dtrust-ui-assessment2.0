@@ -207,7 +207,7 @@
       </div>
       <ReleaseForm
         ref="releaseForm"
-          :typeIds="2"
+          :typeIds="1"
           :evaluationItem="{assetsId: projectId}"
           @closeAssessmentDialog="closeAssessmentDialog"
         />

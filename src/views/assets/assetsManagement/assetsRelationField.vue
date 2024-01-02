@@ -50,7 +50,7 @@
               @click="nextStep">{{$t('assetsManagement.下一步')}}</el-button>
           <el-button
               type="primary"
-              v-if="active === 2 || (!isAssets && active === 1)"
+              v-if="active === 2"
               :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
               @click="relationFormSubmit">{{saveBtnText}}</el-button>
           <el-button

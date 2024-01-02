@@ -268,6 +268,7 @@ export function searchTree(nodesArr, searchKey) {
  * @createBy {string} 创建人
  */
 export function handleDataPermissions(btnType, row) {
+  if(row.belongTo === 0) return true
   // 定义变量内容
   const {userInfo, infoRest} = store.state.user
   const { dataPermissionDepts, deletePermissionDepts, updatePermissionDepts } = infoRest;

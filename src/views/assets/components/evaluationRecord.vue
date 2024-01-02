@@ -448,7 +448,9 @@
                     this.recordList = res.data.data.records
                     this.page.total = res.data.data.total;
                     this.listLoading = false;
-                });
+                }).catch(() => {
+                    this.listLoading = false;
+                })
             },
             sizeChange(pageSize) {
                 this.page.pageSize = pageSize;
