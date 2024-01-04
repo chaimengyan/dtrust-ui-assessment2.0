@@ -399,6 +399,7 @@ export default {
       isOverHidden: true,
       isFullscreen: false,
       option: {},
+      option2: {},
       isShow: false,
         checkedProjectBody: [],
     };
@@ -416,7 +417,8 @@ export default {
   methods: {
       // 选中project保存option到父组件
       onDataSubject(checkedDataSubjectOptions) {
-          this.checkedProjectBody = [...checkedDataSubjectOptions]
+        this.fullscreenLoading = false
+        this.checkedProjectBody = [...checkedDataSubjectOptions]
       },
 
     //查询table/业务场景表格/表单配置
@@ -424,11 +426,11 @@ export default {
       this.fullscreenLoading = true
       getTableByName('scene').then(tableRes => {
         getAssetsFieldByTableName('scene').then(res => {
-          this.option = {
+          this.option2 = {
             ...tableRes.data.data,
             column: res.data.data
           };
-          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
+          tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, this.option2)
           this.$refs.crud.refreshTable()
           this.fullscreenLoading = false
 
@@ -437,8 +439,8 @@ export default {
     },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
-      tableOption(this, this.userInfo.tenantId, this.isOverHidden, false)
-        this.$refs.crud.refreshTable()
+      tableOption(this, this.userInfo.tenantId, this.isOverHidden, false, this.option2)
+      this.$refs.crud.refreshTable()
     },
     // 下一步
     nextStep() {
@@ -565,7 +567,6 @@ export default {
       this.relationDialog = true
       this.getProjectAttributesBySceneId(this.sceneId).then(()  => {
         this.saveBtnText = this.echoCheckedAssetObjList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
-        this.fullscreenLoading = false
         this.isShow = true
 
       })
@@ -575,6 +576,7 @@ export default {
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {
           this.echoCheckedAssetObjList = this.handleEchoData(res.data.data)
+          if(this.echoCheckedAssetObjList.length === 0) return this.fullscreenLoading = false
       })
     },
 

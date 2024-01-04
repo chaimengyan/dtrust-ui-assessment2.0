@@ -156,7 +156,7 @@
                 <template slot="title">
                   {{ deptName }}
                 </template>
-                <DeptsSelect  @selectDepts="selectDepts" :depts="depts"/>
+                <DeptsSelect  @selectDepts="selectDepts" :depts="infoRest.dataPermissionDepts"/>
             </el-submenu>
         </el-menu>
       </template>
@@ -191,6 +191,7 @@
         adminUrl: `http://116.205.172.167:38081/`,
         moduleList: [],
         isShowAdimn: false,
+        deptName: '',
         quickList: [
           {
             label: 'DPIA',
@@ -247,7 +248,7 @@
       this.getAllMenu()
     },
     mounted() {
-      this.isDeptsEmpty()&&(this.deptName = this.recursionDeptName(this.depts, this.userInfo.currentDept).name)
+      this.isDeptsEmpty()&&(this.deptName = this.recursionDeptName(this.infoRest.dataPermissionDepts, this.userInfo.currentDept).name)
       listenfullscreen(this.setScreen);
     },
     computed: {
@@ -260,7 +261,7 @@
       ...mapGetters([
         "userInfo",
         "roles",
-        "depts",
+        "infoRest",
         "isFullScreen",
         "tagWel",
         "tagList",
@@ -272,6 +273,7 @@
     },
     methods: {
       recursionDeptName(depts, currentDept) {
+        console.log(depts,"depteeee");
         for(let dept of depts || []) {
           if(dept.id === currentDept) return dept
           const dept_ = this.recursionDeptName(dept.children, currentDept)
@@ -279,7 +281,7 @@
         }
       },
       isDeptsEmpty() {
-        return !isEmpty(this.depts)
+        return !isEmpty(this.infoRest.dataPermissionDepts)
       },
       selectDepts(item) {
         checkAuthority({userId: this.userInfo.userId, deptId: item.id}).then(res => {

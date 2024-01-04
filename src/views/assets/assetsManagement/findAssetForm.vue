@@ -47,7 +47,11 @@ export default {
                 value: 'id'
             },
             // 发现资产表单
-            findAssetForm: {},
+            findAssetForm: {
+                lng: '',
+                lat: '',
+                hostingLocation: '',
+            },
             showMap:false,
             map: null,
             findAssetFormOption: {},
@@ -88,23 +92,26 @@ export default {
                 const cityCtrl = new BMapGL.CityListControl();  // 添加城市列表控件
                 this.map.addControl(cityCtrl);
                 this.map.enableScrollWheelZoom(true) // 滚轮放大缩小地图
+                this.findAssetForm.lng = this.findAssetForm.lng ? this.findAssetForm.lng : '116.404'
+                this.findAssetForm.lat = this.findAssetForm.lat ? this.findAssetForm.lat : '39.915'
+                this.findAssetForm.hostingLocation = this.findAssetForm.hostingLocation ? this.form.hostingLocation : '北京市'
+                const point = new BMapGL.Point(this.findAssetForm.lng, this.findAssetForm.lat);
 
-                const point = new BMapGL.Point(116.404, 39.915);
                 this.map.centerAndZoom(point, 15);
                 const geoc = new BMapGL.Geocoder();
                 this.map.addEventListener('click', (e) => {
-                this.findAssetForm.lng = e.latlng.lng
-                this.findAssetForm.lat = e.latlng.lat
-                //创建标注位置
-                const pt = new BMapGL.Point(e.latlng.lng, e.latlng.lat);
-                const marker = new BMapGL.Marker(pt);  // 创建标注
-                this.map.clearOverlays()
-                this.map.addOverlay(marker); // 将标注添加到地图中
-                geoc.getLocation(e.latlng, (rs) => {
-                    const addComp = rs.addressComponents;
-                    this.findAssetForm.hostingLocation = `${addComp.province},${addComp.city}`
-                    // alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
-                })
+                    this.findAssetForm.lng = e.latlng.lng.toString()
+                    this.findAssetForm.lat = e.latlng.lat.toString()
+                    //创建标注位置
+                    const pt = new BMapGL.Point(e.latlng.lng, e.latlng.lat);
+                    const marker = new BMapGL.Marker(pt);  // 创建标注
+                    this.map.clearOverlays()
+                    this.map.addOverlay(marker); // 将标注添加到地图中
+                    geoc.getLocation(e.latlng, (rs) => {
+                        const addComp = rs.addressComponents;
+                        this.findAssetForm.hostingLocation = `${addComp.province},${addComp.city}`
+                        // alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+                    })
                 })
             })
             },

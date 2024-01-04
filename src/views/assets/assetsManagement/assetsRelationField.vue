@@ -145,6 +145,7 @@ export default {
       // 选中主体保存option到父组件
       onDataSubject(checkedDataSubjectOptions) {
         this.checkedMainBody = [...checkedDataSubjectOptions]
+        this.fullscreenLoading = false
       },
 
     // 根据资产id查询关联字段信息
@@ -158,6 +159,7 @@ export default {
               })),
               mainBodyId: `${this.projectId}.${item.mainBodyId}`
           }))
+          if(this.echoCheckedDataSubjectList.length === 0) return this.fullscreenLoading = false
         })
     },
 
@@ -172,6 +174,8 @@ export default {
               })),
               mainBodyId: `${this.projectId}.${item.mainBodyId}`
           }))
+          if(this.echoCheckedDataSubjectList.length === 0) return this.fullscreenLoading = false
+
         })
     },
 
@@ -187,7 +191,6 @@ export default {
       const Api = this.isAssets ? this.getAssetsProjectAttributesListByProjectId(this.projectId) : this.getProjectAttributesListByProjectId(this.projectId)
       Api.then(()  => {
         this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
-        this.fullscreenLoading = false
         this.isShow = true
 
       })

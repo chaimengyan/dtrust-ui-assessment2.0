@@ -72,9 +72,9 @@
           />
       </el-form-item>
 
-     <el-button v-if="evaluationList.length !== 0" @click="logicBtn">
+     <!-- <el-button v-if="evaluationList.length !== 0" @click="logicBtn">
       配置下一级评估
-     </el-button>
+     </el-button> -->
     </el-form>
     <LogicEvaluation ref="logicEvaluationRef" :qnList="qnOptions" :qn-id="releaseForm.qnId" :evaluation-list="evaluationList" @success="onSuccess" />
    </div>

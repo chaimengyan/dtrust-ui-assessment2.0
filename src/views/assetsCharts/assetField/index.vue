@@ -249,12 +249,12 @@ export default {
 
 <style scoped>
 .container {
-  padding: 0 20px;
+  padding: 2px 20px;
   height: 100%;
-  background-color: #f0f2f5;
+  background-color: #ffffff;
 }
 .topBox {
-  background-color: #e6e7e8;
+  background-color: #f8f8f8;
   border-radius: 5px;
   margin-top: 10px;
   padding-top: 10px;
@@ -265,7 +265,7 @@ export default {
     display: flex;
     height: 50px;
     border-radius: 15px;
-    background-color: #e6e7e8;
+    background-color: #f8f8f8;
 
   }
   

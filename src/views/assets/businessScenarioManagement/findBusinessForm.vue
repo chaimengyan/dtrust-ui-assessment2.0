@@ -7,6 +7,10 @@
 
 <script>
 import { tableOption } from "@/const/crud/assets/businessScenarioManagement";
+import {
+  getTableByName,
+  getAssetsFieldByTableName
+} from "@/api/customConfiguration/tableConfiguration";
 export default {
     name: "FindBusinessForm",
     components: {
@@ -26,16 +30,31 @@ export default {
             },
             // 发现业务场景的表单
             findBusinessForm: {},
+            findBusinessFormOption: {},
         }
     },
-    computed: {
-        findBusinessFormOption() {
-            return tableOption(this, this.$route.query.tenantId, false, true)
-        },
-    },
+    // computed: {
+    //     findBusinessFormOption() {
+    //         return tableOption(this, this.$route.query.tenantId, false, true)
+    //     },
+    // },
     created() {
+        this.getTable()
     },
     methods: {
+        //查询table/资产表格/表单配置
+        getTable() {
+            getTableByName('scene').then(tableRes => {
+                getAssetsFieldByTableName('scene').then(res => {
+                    this.findBusinessFormOption = {
+                        ...tableRes.data.data,
+                        column: res.data.data
+                    };
+                    tableOption(this, this.$route.query.tenantId, false, true, this.findBusinessFormOption)
+                    // this.$refs.crud.refreshTable()
+                })
+            })
+        },
         submitBtn(form,done) {
             if(Array.isArray(form.purposeOfProcessing) || typeof form.purposeOfProcessing === 'object') {
                 form.purposeOfProcessing = form.purposeOfProcessing.join()
