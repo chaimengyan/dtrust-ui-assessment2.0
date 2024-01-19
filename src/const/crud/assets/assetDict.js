@@ -375,19 +375,33 @@ export const tableOption = (_this, isOverHidden) => {
   //   }],
   //   overHidden: isOverHidden,
   // },
+  {
+    label: '搜索项框栅列',
+    prop: 'searchSpan',
+    value: 10,
+    type: 'number',
+    span: 24,
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  },
+  {
+    label: '搜索项标题宽度',
+    prop: 'searchLabelWidth',
+    value: 70,
+    type: 'number',
+    span: 24,
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  },
   // {
-  //   label: '搜索项框栅列',
-  //   prop: 'searchSpan',
-  //   value: 10,
-  //   type: 'number',
-  //   span: 24,
-  //   rules: [{
-  //     required: false,
-  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-  //     trigger: 'blur'
-  //   }],
-  //   overHidden: isOverHidden,
-  // },{
   //   label: '搜索项为范围搜索',
   //   prop: 'searchRange',
   //   value: true,
@@ -400,19 +414,32 @@ export const tableOption = (_this, isOverHidden) => {
   //   }],
   //   overHidden: isOverHidden,
   // },
-  // {
-  //   label: '是否为搜索项',
-  //   prop: 'search',
-  //   value: false,
-  //   type: 'switch',
-  //   span: 24,
-  //   rules: [{
-  //     required: false,
-  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-  //     trigger: 'blur'
-  //   }],
-  //   overHidden: isOverHidden,
-  // },
+  {
+    label: '是否为搜索项',
+    prop: 'search',
+    value: false,
+    type: 'switch',
+    span: 24,
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  },
+  {
+    label: '是否在评估使用',
+    prop: 'estimate',
+    value: true,
+    type: 'switch',
+    span: 24,
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  },
   {
     label: _this.$t('tableConfiguration.对应列是否可以排序'),
     prop: 'sortable',

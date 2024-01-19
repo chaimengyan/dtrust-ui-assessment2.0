@@ -6,7 +6,7 @@ import { Message, MessageBox } from "element-ui";
 import "nprogress/nprogress.css";
 import qs from "qs";
 import store from "@/store"; // progress bar style
-axios.defaults.timeout = 300000;
+axios.defaults.timeout = 30000000;
 
 const successStatus = [200, 201]
 

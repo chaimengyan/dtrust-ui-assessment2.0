@@ -491,7 +491,36 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         search: true,
         overHidden: isOverHidden,
 
-      }, {
+      }, 
+      {
+        width: 100,
+        searchLabelWidth:70,
+        searchSpan: 4,
+        label:_this.$t('assetsManagement.类型'),
+        prop:'type',
+        sortable:true,
+        search: false,
+        display: true,
+        type: 'select',
+        dicData: [{
+          label: '来自资产',
+          value: -1
+        }, {
+          label: '通过',
+          value: 0
+        }, {
+          label: '待审核',
+          value: 1
+        }, {
+          label: '拒绝',
+          value: 2
+        }, {
+          label: '来自评估',
+          value: 3
+        }, ],
+        overHidden: isOverHidden,
+
+      },{
         width: 100,
         searchLabelWidth:60,
         searchSpan: 4,
