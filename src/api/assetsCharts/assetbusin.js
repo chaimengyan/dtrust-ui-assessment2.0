@@ -31,3 +31,12 @@ export function getMainBodySceneData(mainBodyId) {
         method: 'get',
     })
 }
+
+// myData数据
+export function getMainBodySceneDataByCondition(query) {
+    return request({
+        url: `/assets/assetsProjectAttributes/getMainBodySceneDataByCondition`,
+        method: 'get',
+        params: query
+    })
+}

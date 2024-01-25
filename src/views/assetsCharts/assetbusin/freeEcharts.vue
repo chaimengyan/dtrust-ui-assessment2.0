@@ -32,7 +32,8 @@
 
 
 import {
-  getMainBodySceneData
+  getMainBodySceneData,
+  getMainBodySceneDataByCondition
 } from "@/api/assetsCharts/assetbusin";
 import {
     getMainBodList
@@ -49,6 +50,12 @@ import _ from 'lodash'
             data: [],
             dataSubject: '',
             typeList: [],
+            queryMap: {
+                '0': 'sceneName',
+                '1': 'categoryName',
+                '2': 'attributeName',
+            },
+            query: {}
         }
     },
     computed: {
@@ -63,6 +70,7 @@ import _ from 'lodash'
     },
     methods: {
         handleChange(val) {
+            this.query.id = val
             this.getMainBodySceneData(val)
         },
 
@@ -124,6 +132,9 @@ import _ from 'lodash'
                     }
                 })
                 myChart.on('click',(e) => {
+                    console.log(e, 'eeeee');
+                    this.query[this.queryMap[e.data.depth]] = e.name
+                    this.getMainBodySceneDataByCondition(this.query)
                     if(e.data.source) return;
                     let {name} = e;
                     let {links,myData} = _.cloneDeep(data);
@@ -301,7 +312,11 @@ import _ from 'lodash'
                 this.initEcharts(this.data)
             })
         },
-
+        getMainBodySceneDataByCondition(query) {
+            getMainBodySceneDataByCondition(query).then(res => {
+                console.log(res.data.data, "??????");
+            })
+        }
     }
   }
 </script>
