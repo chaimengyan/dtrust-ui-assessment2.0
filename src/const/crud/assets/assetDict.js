@@ -317,7 +317,7 @@ export const tableOption = (_this, isOverHidden) => {
   {
     label: _this.$t('tableConfiguration.对应列的宽度'),
     prop: 'width',
-    value: null,
+    value: 100,
     type: 'number',
     span: 24,
     rules: [{
@@ -443,7 +443,7 @@ export const tableOption = (_this, isOverHidden) => {
   {
     label: _this.$t('tableConfiguration.对应列是否可以排序'),
     prop: 'sortable',
-    value: true,
+    value: false,
     type: 'switch',
     span: 24,
     rules: [{

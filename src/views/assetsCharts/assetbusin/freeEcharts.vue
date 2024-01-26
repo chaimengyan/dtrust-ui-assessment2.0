@@ -55,7 +55,12 @@ import _ from 'lodash'
                 '1': 'categoryName',
                 '2': 'attributeName',
             },
-            query: {}
+            query: {
+                id: '',
+                sceneName: '',
+                categoryName: '',
+                attributeName: ''
+            }
         }
     },
     computed: {
@@ -73,7 +78,6 @@ import _ from 'lodash'
             this.query.id = val
             this.getMainBodySceneData(val)
         },
-
         initEcharts(data) {
             var chartDom = document.getElementById('container');
             var myChart = echarts.init(chartDom);
@@ -134,7 +138,9 @@ import _ from 'lodash'
                 myChart.on('click',(e) => {
                     console.log(e, 'eeeee');
                     this.query[this.queryMap[e.data.depth]] = e.name
-                    this.getMainBodySceneDataByCondition(this.query)
+                    if(!Object.values(this.query).includes('')) {
+                        this.getMainBodySceneDataByCondition(this.query)
+                    }
                     if(e.data.source) return;
                     let {name} = e;
                     let {links,myData} = _.cloneDeep(data);
