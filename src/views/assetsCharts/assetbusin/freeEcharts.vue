@@ -60,7 +60,9 @@ import _ from 'lodash'
                 sceneName: '',
                 categoryName: '',
                 attributeName: ''
-            }
+            },
+            allLinks: [],
+            selectMyData: [],
         }
     },
     computed: {
@@ -135,12 +137,15 @@ import _ from 'lodash'
                         e.event.target.cursor = 'move'
                     }
                 })
-                myChart.on('click',(e) => {
+                myChart.on('click',async (e) => {
                     console.log(e, 'eeeee');
+
+                    if(!(['0','1','2'].includes(e.data.depth))) return
                     this.query[this.queryMap[e.data.depth]] = e.name
                     if(!Object.values(this.query).includes('')) {
-                        this.getMainBodySceneDataByCondition(this.query)
-                    }
+                        await this.getMainBodySceneDataByCondition(this.query)
+                    console.log(this.selectMyData, 'selectMyData');
+                    const selectMyData = this.selectMyData
                     if(e.data.source) return;
                     let {name} = e;
                     let {links,myData} = _.cloneDeep(data);
@@ -152,7 +157,7 @@ import _ from 'lodash'
                     if(!isSelected){
                         let allSelectedLinks = [];
                         let selectedNodesParent = [];
-                        let allSelectedNodes = myData;
+                        let allSelectedNodes = selectMyData;
                         let selectedNodesChildren = [];
                         let allSelectedNames = []
                         let allParentsNames = [name]
@@ -164,9 +169,12 @@ import _ from 'lodash'
                             }).map(item => {
                                 allParentsNames.push(item.target)
                                 allSelectedNames.push(item.source)
+                                console.log(selectMyData,item,selectMyData.filter((data) => {
+                                        return data.name === item.source;
+                                    })[0].depth,nm,"this.selectMyDatathis.selectMyDatathis.selectMyData");
                                 return {
                                     name: item.source,
-                                    depth: myData.filter((data) => {
+                                    depth: selectMyData.filter((data) => {
                                         return data.name === item.source;
                                     })[0].depth,
                                     itemStyle: {
@@ -200,7 +208,7 @@ import _ from 'lodash'
                                 allSelectedNames.push(item.target)
                                 return {
                                     name: item.target,
-                                    depth: myData.filter((data) => {
+                                    depth: selectMyData.filter((data) => {
                                         return data.name === item.target;
                                     })[0].depth,
                                     itemStyle: {
@@ -296,6 +304,8 @@ import _ from 'lodash'
                         isSelected = false;
                     }
                     myChart.setOption(options);
+                }
+
                 })
                 
             option && myChart.setOption(option);
@@ -313,14 +323,20 @@ import _ from 'lodash'
         getMainBodySceneData(mainBodyId) {
             getMainBodySceneData(mainBodyId).then(res => {
                 this.data = res.data.data
+                this.allLinks = res.data.data.links
                 const depthList = res.data.data.myData.map(i => (i.depth))
                 this.typeList = [...new Set(depthList)]
                 this.initEcharts(this.data)
             })
         },
         getMainBodySceneDataByCondition(query) {
-            getMainBodySceneDataByCondition(query).then(res => {
-                console.log(res.data.data, "??????");
+            return getMainBodySceneDataByCondition(query).then(res => {
+                const nameList = res.data.data.myData.map(x => x.name)
+                const links = this.allLinks.filter(x => {
+                    return nameList.includes(x.source)||nameList.includes(x.target)
+                })
+                this.selectMyData = res.data.data.myData
+                // this.initEcharts({myData: res.data.data.myData, links})
             })
         }
     }
