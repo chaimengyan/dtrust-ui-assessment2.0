@@ -116,7 +116,7 @@
               @click="relationBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.历史记录')" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.资产评估记录')" placement="top">
             <el-button
               v-if="permissions.assets_assetsManagement_history"
               type="text"
@@ -270,20 +270,22 @@
     </el-dialog>
     <el-dialog
       v-if="historyDialog"
-      :title="$t('assetsManagement.历史记录')"
+      :title="$t('assetsManagement.资产评估记录')"
       width="70%"
       :visible.sync="historyDialog"
       append-to-body
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetsManagement.历史记录')}}</span>
+        <span class="dialog-header-title">{{$t('assetsManagement.资产评估记录')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-        <History
-          :projectId="projectId"
+      <EvaluationRecord 
+        ref="evaluationRecord"
+        :queryId="{assetsId: projectId}"
         />
+
     </el-dialog>
     <el-dialog
       v-if="historyVersionDialog"
@@ -343,29 +345,29 @@ import {
   getTableByName,
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
-import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
 import  AssetsRelationField from "@/views/assets/assetsManagement/assetsRelationField";
 import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
 import  SelectField from "@/views/assets/assetsManagement/selectField";
 import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
 import  Details from "@/views/assets/assetsManagement/details";
 import  FindStart from "@/views/assets/components/findStart";
+import  EvaluationRecord from "@/views/assets/components/evaluationRecord";
 import ReleaseForm from "@/views/assets/components/releaseForm";
-import History from "@/views/assets/assetsManagement/history";
 import { tableOption } from "@/const/crud/assets/assetsManagement";
 import { mapGetters } from "vuex";
 
 export default {
   name: "assetsManagement",
-  components: {HistoryVersion,
+  components: {
                 AssetsRelationField,
                 DataSubject,
                 SelectField,
                 FieldRelation,
                 Details,
+                EvaluationRecord,
                 ReleaseForm,
                 FindStart,
-                History},
+                },
   data() {
     return {
       active: 0,

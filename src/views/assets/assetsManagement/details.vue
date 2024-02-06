@@ -39,11 +39,15 @@
                     :fieldList="fieldList"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('assetsManagement.资产评估记录')">
-                <EvaluationRecord 
-                    ref="evaluationRecord"
-                    :queryId="{assetsId: projectId}"
-                />
+            <el-tab-pane :label="$t('assetsManagement.历史记录')">
+                <History
+                    :projectId="projectId"
+                    />
+            </el-tab-pane>
+            <el-tab-pane :label="$t('assetsManagement.历史版本号记录')">
+                <HistoryVersion
+                    :projectId="projectId"
+                    />
             </el-tab-pane>
         </el-tabs>
     </basic-container>
@@ -51,13 +55,15 @@
 
 <script>
 import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
-import  EvaluationRecord from "@/views/assets/components/evaluationRecord";
+import History from "@/views/assets/assetsManagement/history";
 import {dateFormat} from "@/util/date"
+import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
 export default {
     name: "Details",
     components: {
         FieldRelation,
-        EvaluationRecord
+        History,
+        HistoryVersion,
     },
     props: {
         fieldList: {

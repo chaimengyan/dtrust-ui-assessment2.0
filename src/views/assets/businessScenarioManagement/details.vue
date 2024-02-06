@@ -38,10 +38,9 @@
                     :isView="true"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('businessScenarioManagement.业务场景评估记录')">
-                <EvaluationRecord 
-                    ref="evaluationRecord"
-                    :queryId="{sceneId: sceneId}"
+            <el-tab-pane :label="$t('assetsManagement.历史记录')">
+                <BusHistory
+                    :sceneId="sceneId"
                 />
             </el-tab-pane>
         </el-tabs>
@@ -50,13 +49,13 @@
 
 <script>
 import  ActRelation from "@/views/assets/businessScenarioManagement/actRelation";
-import  EvaluationRecord from "@/views/assets/components/evaluationRecord";
+import BusHistory from "@/views/assets/businessScenarioManagement/busHistory";
 import {dateFormat} from "@/util/date"
 export default {
     name: "Details",
     components: {
         ActRelation,
-        EvaluationRecord
+        BusHistory
     },
     props: {
         fieldList: {

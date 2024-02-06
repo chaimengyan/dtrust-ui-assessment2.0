@@ -89,7 +89,7 @@
               @click="relationBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.历史记录')" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('businessScenarioManagement.业务场景评估记录')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_history"
               type="text"
@@ -284,20 +284,21 @@
     </el-dialog>
     <el-dialog
       v-if="historyDialog"
-      :title="$t('assetsManagement.历史记录')"
+      :title="$t('businessScenarioManagement.业务场景评估记录')"
        width="70%"
        :visible.sync="historyDialog"
        append-to-body
        :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetsManagement.历史记录')}}</span>
+        <span class="dialog-header-title">{{$t('businessScenarioManagement.业务场景评估记录')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-      <BusHistory
-        :sceneId="sceneId"
-      />
+      <EvaluationRecord 
+        ref="evaluationRecord"
+        :queryId="{sceneId: sceneId}"
+        />
     </el-dialog>
   </div>
 </template>
@@ -316,6 +317,7 @@ import {
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
 import { tableOption } from "@/const/crud/assets/businessScenarioManagement";
+import  EvaluationRecord from "@/views/assets/components/evaluationRecord";
 import { mapGetters } from "vuex";
 import  RelatedAssets from "@/views/assets/businessScenarioManagement/relatedAssets";
 import  SelectField from "@/views/assets/businessScenarioManagement/selectField";
@@ -323,7 +325,6 @@ import  ActRelation from "@/views/assets/businessScenarioManagement/actRelation"
 import ReleaseForm from "@/views/assets/components/releaseForm";
 import  Details from "@/views/assets/businessScenarioManagement/details";
 import  FindStart from "@/views/assets/components/findStart";
-import BusHistory from "@/views/assets/businessScenarioManagement/busHistory";
 import {uniqueId} from "lodash";
 
 export default {
@@ -335,7 +336,7 @@ export default {
     ReleaseForm,
     Details,
     FindStart,
-    BusHistory
+    EvaluationRecord
     },
     provide() {
         return {
