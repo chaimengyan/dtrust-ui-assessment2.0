@@ -156,6 +156,7 @@ export default {
     颜色: 'color',
     暂无: 'None',
     日期: 'date',
+    批量确认: 'Batch confirmation',
 
   },
   userinfo: {
@@ -225,8 +226,8 @@ export default {
     发现资产: 'Discover assets',
     关联: 'relevance',
     历史记录: 'History',
-    历史版本号记录: 'Historical version number record',
-    评估: 'estimate',
+    版本记录: 'Version record',
+    评估: 'Estimate',
     选择数据主体: 'Select data subject',
     选择字段: 'Select field',
     字段配置: 'Field configuration',

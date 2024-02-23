@@ -110,7 +110,7 @@ export default {
 .findAsset {
     overflow-x: hidden;
     height: calc(100vh - 30px);
-    width: 700px;
+    width: 80%;
     margin: 0 auto;
     .findHeader {
         text-align: center;

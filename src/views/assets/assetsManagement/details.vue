@@ -44,7 +44,7 @@
                     :projectId="projectId"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('assetsManagement.历史版本号记录')">
+            <el-tab-pane :label="$t('assetsManagement.版本记录')">
                 <HistoryVersion
                     :projectId="projectId"
                     />
