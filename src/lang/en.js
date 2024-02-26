@@ -79,6 +79,13 @@ export default {
     审核风险: 'Audit risk',
     事项管理: 'Event management',
     风险评分: 'Risk score',
+    个人任务: 'Personal tasks',
+    仪表盘: 'Dashboard',
+    评估任务: 'Assessment tasks',
+    治理任务: 'Governance tasks',
+    导出模板: 'Export Template',
+    题库类型: 'Question bank type',
+
     数据仪表盘: 'Data Dashboard',
     字段管理: 'Field management',
     字段类别: 'Field category',
@@ -157,7 +164,7 @@ export default {
     暂无: 'None',
     日期: 'date',
     批量确认: 'Batch confirmation',
-
+    是否通过审核: 'Passed or not'
   },
   userinfo: {
     信息管理: 'information management',

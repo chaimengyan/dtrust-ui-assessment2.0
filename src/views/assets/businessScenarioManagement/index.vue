@@ -778,8 +778,8 @@ export default {
     examineBtn(row) {
       this.$confirm(this.$t('crudCommon.是否通过审核'), this.$t('crudCommon.提示'), {
         distinguishCancelAndClose: true,
-        confirmButtonText: this.$t('crudCommon.通过'),
-        cancelButtonText: this.$t('crudCommon.不通过'),
+        confirmButtonText: this.$t('enum.通过'),
+        cancelButtonText: this.$t('enum.拒绝'),
         type: "warning",
       })
         .then(() => {
