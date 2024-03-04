@@ -17,20 +17,19 @@
         @selection-change="selectionChange"
         :before-open="handleOpenBefore"
         :data="list"
-        @cell-click="cellClick"
       >
       <template slot="menuRight" slot-scope="{size}">
         <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
       </template>
         <!-- 资产名称 -->
         <template slot="projectName" slot-scope="scope">
-            <span class="projectName">
+            <span >
                 {{scope.row.projectName}}
             </span>
         </template>
         <!-- 资产版本号 -->
         <template slot="version" slot-scope="scope">
-            <span class="projectName">
+            <span>
                 {{scope.row.version}}
             </span>
         </template>

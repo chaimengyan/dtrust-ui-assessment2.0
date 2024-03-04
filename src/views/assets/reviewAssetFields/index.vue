@@ -204,8 +204,8 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
           return
         }
         this.$confirm(this.$t('crudCommon.是否确认本条数据'), this.$t('crudCommon.提示'), {
-          confirmButtonText: this.$t('crudCommon.通过'),
-          cancelButtonText: this.$t('crudCommon.不通过'),
+          confirmButtonText: this.$t('crudCommon.是'),
+          cancelButtonText: this.$t('crudCommon.否'),
           type: "warning",
         })
           .then(() => {

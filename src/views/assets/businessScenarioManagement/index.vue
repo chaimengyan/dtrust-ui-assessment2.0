@@ -497,9 +497,12 @@ export default {
           },
           params
         )
-      ).then((response) => {
-        this.list = response.data.data.records
-        this.page.total = response.data.data.total;
+      ).then((res) => {
+        this.list = res.data.data.records
+        this.list.forEach((item, index) => {
+          item.dataSubjectsRegion = item.dataSubjectsRegion.replace(/\[|\]/g, "")
+        })
+        this.page.total = res.data.data.total;
         this.listLoading = false;
       });
     },

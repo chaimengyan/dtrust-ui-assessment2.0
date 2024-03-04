@@ -138,6 +138,8 @@ export default {
     请选择要复制的数据: 'Please select the data to copy!',
     是否删除本条数据: 'Delete this data?',
     请选择要删除的数据: 'Please select the data to delete!',
+    请选择要确认的数据: 'Please select the data to confirm',
+    是否确认本条数据: 'Are you sure about this data?',
     是: 'yes',
     否: 'no',
     描述: 'describe',
