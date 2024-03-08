@@ -486,6 +486,7 @@ export default {
     例如存档目的存档期限物理删除销毁: 'For example: archive purpose, archive duration, physical deletion, destruction...',
     填写中: 'Filling in',
     审核中: 'Under review',
+    审核: 'Review',
     通过: 'pass through',
     拒绝: 'refuse',
     已驳回: 'Rejected',

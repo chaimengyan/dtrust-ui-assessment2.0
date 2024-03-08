@@ -65,6 +65,9 @@ export default {
             if(Array.isArray(form.dataSubjectsRegion)) {
                 form.dataSubjectsRegion = form.dataSubjectsRegion.join()
             }
+            if(Array.isArray(form.scheduleConditionForProcessing)) {
+                form.scheduleConditionForProcessing = form.scheduleConditionForProcessing.join()
+            }
             this.$emit('commitJob', form,done)
         },
     }

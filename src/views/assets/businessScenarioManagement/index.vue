@@ -117,7 +117,7 @@
               @click="deleteBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('crudCommon.审核')" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('enum.审核')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_del&&scope.row.status === 1"
               :disabled="!handleDataPermissions('update', scope.row)"
@@ -500,7 +500,10 @@ export default {
       ).then((res) => {
         this.list = res.data.data.records
         this.list.forEach((item, index) => {
-          item.dataSubjectsRegion = item.dataSubjectsRegion.replace(/\[|\]/g, "")
+          for (let key in item) {
+            // item.dataSubjectsRegion = item.dataSubjectsRegion ? item.dataSubjectsRegion.replace(/\[|\]/g, "") : item.dataSubjectsRegion
+            item[key] = typeof item[key] === 'string' &&item[key].includes('[') ? JSON.parse(item[key]) : item[key]
+          }
         })
         this.page.total = res.data.data.total;
         this.listLoading = false;
