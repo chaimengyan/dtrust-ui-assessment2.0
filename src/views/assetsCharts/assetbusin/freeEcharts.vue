@@ -138,174 +138,59 @@ import _ from 'lodash'
                     }
                 })
                 myChart.on('click',async (e) => {
-                    console.log(e, 'eeeee');
-
+                    const options = myChart.getOption()
+                    const dataList = options.series[0].data
+                    const links = [...this.allLinks]
+                    // myChart.setOption(options);
                     if(!(['0','1','2'].includes(e.data.depth))) return
+
                     this.query[this.queryMap[e.data.depth]] = e.name
-                    if(!Object.values(this.query).includes('')) {
-                        await this.getMainBodySceneDataByCondition(this.query)
-                    console.log(this.selectMyData, 'selectMyData');
-                    const selectMyData = this.selectMyData
-                    if(e.data.source) return;
-                    let {name} = e;
-                    let {links,myData} = _.cloneDeep(data);
-                    let options = myChart.getOption();
-                    if(cacheName !== name){
-                        isSelected = false;
+                    if (Object.values(this.query).includes('')) {
+                        return
                     }
-                    cacheName = name;
-                    if(!isSelected){
-                        let allSelectedLinks = [];
-                        let selectedNodesParent = [];
-                        let allSelectedNodes = selectMyData;
-                        let selectedNodesChildren = [];
-                        let allSelectedNames = []
-                        let allParentsNames = [name]
-                        let allChildrenNames = []
 
-                        function findParentNodes(nm) {
-                            let tempAry = links.filter(item => {
-                                return item.target === nm;
-                            }).map(item => {
-                                allParentsNames.push(item.target)
-                                allSelectedNames.push(item.source)
-                                console.log(selectMyData,item,selectMyData.filter((data) => {
-                                        return data.name === item.source;
-                                    })[0].depth,nm,"this.selectMyDatathis.selectMyDatathis.selectMyData");
-                                return {
-                                    name: item.source,
-                                    depth: selectMyData.filter((data) => {
-                                        return data.name === item.source;
-                                    })[0].depth,
-                                    itemStyle: {
-                                        color: '#00aea8',
-                                        opacity: 1
-                                    },
-                                    label: {
-                                        fontSize: 13,
-                                        overflow:"break",
-                                        position:"bottom",
-                                        verticalAlign:"top",
-                                        formatter: (e) => {
-                                            return e.name.toString().split("").join("\n");
-                                        }
-                                    }
+                    const data = await this.getMainBodySceneDataByCondition(this.query)
+                    setNodeStyle.call(this, data)
+
+                  
+                    // setNodeStyle.call(this, data[0])
+
+                    // function findNextNode(name) {
+                    //     links.find(item => item.source === name)
+                    // }
+
+                    function setNodeStyle(nameList) {
+
+                        dataList.forEach(item => {
+                            // const isSelectNode = nameList.includes(item.name)
+                            // item.itemStyle = {
+                            //     color: isSelectNode ? '#00aea8' : item.itemStyle.originColor,
+                            //     opacity: 1
+                            // }
+                            // if (isSelectNode) return;
+
+                            const listList = findLinks(nameList, links)
+                            links.forEach((link) => {
+                                const is = listList.find(l => l.source === link.source && l.target.includes(link.target))
+                                link.lineStyle = is ? {} : {
+                                    color: 'transparent',
                                 }
                             })
-                            if (tempAry.length) {
-                                tempAry.forEach(item => {
-                                    findParentNodes(item.name)
-                                })
-                            }
-                            selectedNodesParent = selectedNodesParent.concat(tempAry)
-                        }
-
-                        function findChildrenNodes(nm){
-                            let tempAry = links.filter(item => {
-                                return item.source === nm;
-                            }).map(item=>{
-                                allChildrenNames.push(item.source)
-                                allSelectedNames.push(item.target)
-                                return {
-                                    name: item.target,
-                                    depth: selectMyData.filter((data) => {
-                                        return data.name === item.target;
-                                    })[0].depth,
-                                    itemStyle: {
-                                        color: '#00aea8',
-                                        opacity: 1
-                                    },
-                                    label: {
-                                        fontSize: 13,
-                                        overflow:"break",
-                                        position:"bottom",
-                                        verticalAlign:"top",
-                                        formatter: (e) => {
-                                            return e.name.toString().split("").join("\n");
-                                        }
-                                    }
-                                }
-                            })
-                            if (tempAry.length) {
-                                tempAry.forEach(item=>{
-                                    findChildrenNodes(item.name)
-                                })
-                            }
-                            selectedNodesChildren = selectedNodesChildren.concat(tempAry)
-                        }
-
-                        findParentNodes(name)
-                        findChildrenNodes(name)
-                        allSelectedLinks = links.map(item => {
-                            if (allChildrenNames.includes(item.source) || allParentsNames.includes(item.target)) {
-                                return {
-                                    ...item,
-                                    lineStyle: {
-                                        color: '#00aea8',
-                                        opacity: 0.8
-                                    }
-                                }
-                            } else {
-                                return {
-                                    ...item,
-                                    lineStyle: {
-                                        color: 'transparent',
-                                        opacity: 0.3
-                                    }
-                                }
-                            }
-                        });
-                        allSelectedNodes.forEach((item, index) => {
-                            if (allSelectedNames.includes(item.name)) {
-                                /*如果所选子节点包含*/
-                                item.itemStyle = {
-                                    color: '#00aea8',
-                                    opacity: 1
-                                }
-                                item.label = {
-                                    fontSize: 13,
-                                    overflow: "break",
-                                    position: "bottom",
-                                    verticalAlign: "top",
-                                    formatter: (e) => {
-                                        return e.name.toString().split("").join("\n");
-                                    }
-                                };
-                            } else if (item.name === name) {
-                                item.itemStyle = {
-                                    color: '#f36107',
-                                    opacity: 1
-                                }
-                                item.label = {
-                                    fontSize: 13,
-                                    overflow: "break",
-                                    position: "bottom",
-                                    verticalAlign: "top",
-                                    formatter: (e) => {
-                                        return e.name.toString().split("").join("\n");
-                                    }
-                                };
-                            } else {
-                                item.itemStyle = {
-                                    color: item.itemStyle.color,
-                                    opacity: 0.3
-                                };
-                                item.label = {
-                                    show: false
-                                };
-                            }
-                        });
-                        options.series[0].data = allSelectedNodes;
-                        options.series[0].links = allSelectedLinks;
-                        isSelected = true;
-                    } else {
-                        options.series[0].data = myData;
-                        options.series[0].links = links;
-                        isSelected = false;
+                        })
+                        options.series[0].links = links
+                        myChart.setOption(options);
                     }
-                    myChart.setOption(options);
-                }
 
+                    // 找出nameList的关联关系
+                    function findLinks(nameList, links) {
+                        return nameList.map(name => {
+                            const res = links.filter(l => l.source === name)
+                            return {
+                                source: name,
+                                target: res.filter(item => nameList.includes(item.target)).map(item => item.target)
+                            }
+                        })
+                    }
                 })
                 
             option && myChart.setOption(option);
@@ -331,12 +216,13 @@ import _ from 'lodash'
         },
         getMainBodySceneDataByCondition(query) {
             return getMainBodySceneDataByCondition(query).then(res => {
-                const nameList = res.data.data.myData.map(x => x.name)
-                const links = this.allLinks.filter(x => {
-                    return nameList.includes(x.source)||nameList.includes(x.target)
-                })
-                this.selectMyData = res.data.data.myData
-                // this.initEcharts({myData: res.data.data.myData, links})
+                return res.data.data.myData.map(x => x.name)
+                // const nameList = res.data.data.myData.map(x => x.name)
+                // const links = this.allLinks.filter(x => {
+                //     return nameList.includes(x.source)||nameList.includes(x.target)
+                // })
+                // this.selectMyData = res.data.data.myData
+                // // this.initEcharts({myData: res.data.data.myData, links})
             })
         }
     }
