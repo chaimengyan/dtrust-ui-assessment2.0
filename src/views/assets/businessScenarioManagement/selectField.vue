@@ -2,7 +2,7 @@
     <basic-container>
         <el-container class="fieldContainer">
             <!-- 数据主体类型 -->
-            <el-aside class="dataSubject"  width="200px">
+            <el-aside class="dataSubject"  width="220px">
                 <el-menu
                     class="el-menu-vertical-demo"
                     @select="handleChecked"
@@ -12,8 +12,8 @@
                 >
                     <el-submenu v-for="item in menuList" :index="item.projectId.toString()" :key="item.projectId">
                         <template slot="title">
-                            <div style="display: flex;justify-content: space-around;">
-                                <div>
+                            <div style="display: flex;justify-content: flex-start;">
+                                <div :title="item.projectName" style="width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{item.projectName}}
                                 </div>
                                 <div>
@@ -216,7 +216,10 @@ export default {
                     if (!is) {
                         // 需要添加选中分类
                         const main = getChildrenById(this.checkAllFields, attr.mainBodyId, 'checked')
-                        main.checked.push({ _id: attr.categoryId, checked})
+                        const isAdd = main.checked.find(item => item._id === attr.categoryId)
+                        if (!isAdd) {
+                            main.checked.push({ _id: attr.categoryId, checked})
+                        }
                     }
                 }
             }

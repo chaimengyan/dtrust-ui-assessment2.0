@@ -29,11 +29,11 @@
             </span>
         </template>
         <!-- 资产版本号 -->
-        <template slot="version" slot-scope="scope">
+        <!-- <template slot="version" slot-scope="scope">
             <span class="projectName">
                 {{scope.row.version}}
             </span>
-        </template>
+        </template> -->
         <template slot="sceneIds" slot-scope="scope">
            {{ scope.row.sceneNames ? scope.row.sceneNames.toString() : $t('crudCommon.暂无') }}
         </template>
@@ -591,10 +591,10 @@ export default {
         this.getAssetsProjectAttributesListByProjectId(row.projectId)
 
       }
-      if(column.label === '版本号') {
-        this.projectId = row.projectId
-        this.historyVersionDialog = true
-      }
+      // if(column.label === '版本号') {
+      //   this.projectId = row.projectId
+      //   this.historyVersionDialog = true
+      // }
     },
 
     create(row, done, loading) {

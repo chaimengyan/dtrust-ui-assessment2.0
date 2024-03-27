@@ -193,6 +193,7 @@ export default {
       init(attrs) {
           this.attrs = attrs
           this.onLoad(this.page, this.attrs)
+          this.$refs.treeCrud.toggleSelection()
       },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
@@ -361,7 +362,7 @@ export default {
       // 树结构扁平化
       const data = this.transferData(this.temporaryTreeFieldList)
       this.attrs.forEach((item, index) => {
-        this.attrs[index].projectAttributesId = item.id || item.projectAttributesId
+        this.attrs[index].projectAttributesId = item.projectAttributesId || item.id
         item.assetsSceneId = this.sceneId
         item.tenantId = undefined
       })

@@ -149,6 +149,8 @@ export default {
         init(data) {
             this.attrs = data;
             this.onLoad(this.page, this.attrs)
+            this.$refs.crud.toggleSelection()
+
         },
       changeArray() {
         this.isOverHidden = !this.isOverHidden

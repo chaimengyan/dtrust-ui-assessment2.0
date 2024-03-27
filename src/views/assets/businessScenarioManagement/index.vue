@@ -585,6 +585,10 @@ export default {
           this.echoCheckedAssetObjList = this.handleEchoData(res.data.data)
           if(this.echoCheckedAssetObjList.length === 0) return this.fullscreenLoading = false
       })
+      .catch(() => {
+        this.fullscreenLoading = false
+        this.relationDialog = false
+      })
     },
 
 

@@ -27,3 +27,26 @@ export function checkAuthority(params) {
     method: 'get',
   })
 }
+
+// 分页查询通知
+export function getNoticePage(params) {
+  return request({
+    url: `/admin/notice/page`,
+    method: 'get',
+    params
+  })
+}
+// 批量已读
+export function readNotice(ids) {
+  return request({
+    url: `/admin/notice/read?ids=${ids}`,
+    method: 'put',
+  })
+}
+// 根据id删除通知
+export function delNotice(id) {
+  return request({
+    url: `/admin/notice/${id}`,
+    method: 'delete',
+  })
+}

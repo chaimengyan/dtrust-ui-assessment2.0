@@ -139,6 +139,7 @@ export default {
     background: #e5e9f2;
 }
 .grid-content {
+    word-wrap: break-word;
     border-radius: 4px;
     min-height: 60px;
     display: flex;

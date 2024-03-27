@@ -84,6 +84,12 @@
 
       <el-divider direction="vertical"></el-divider>
 
+      <el-tooltip effect="dark" :content="$t('exportTemplate.导出pdf模板')">
+        <el-button icon="el-icon-download" size="small" circle @click="openExportPDF" />
+      </el-tooltip>
+
+      <el-divider direction="vertical"></el-divider>
+
       <el-menu class="el-menu-demo" menu-trigger="hover" mode="horizontal">
         <el-submenu index="-1">
           <template slot="title">
@@ -115,6 +121,10 @@
         placement="bottom">
         <top-lang></top-lang>
       </el-tooltip>
+
+      <el-divider direction="vertical"></el-divider>
+
+      <MessageReminder />
 
       <el-divider direction="vertical"></el-divider>
 
@@ -160,6 +170,16 @@
             </el-submenu>
         </el-menu>
       </template>
+      <el-drawer
+        size="80%"
+        v-if="exportTemplateDialog"
+        :visible.sync="exportTemplateDialog"
+        :title="$t('exportTemplate.导出pdf模板')"
+        append-to-body
+        :close-on-click-modal="true" 
+        >
+			  <ExportTemplate />
+      </el-drawer>
     </div>
   </div>
 </template>
@@ -172,6 +192,8 @@
   import {getAllMenu, checkAuthority} from '@/api/admin/menu'
   import topLang from "./top-lang.vue";
   import {isEmpty} from 'lodash'
+  import ExportTemplate from '@/views/assets/exportTemplate/index'
+  import MessageReminder from './message-reminder.vue'
 
   let locationUrl
 
@@ -180,7 +202,10 @@
       topMenu,
       MenuSelect,
       DeptsSelect,
-      topLang
+      topLang,
+      ExportTemplate,
+      MessageReminder,
+
     },
     name: "top",
     data() {
@@ -241,6 +266,8 @@
             href: `http://116.205.172.167:38082/#/assetsCharts/assetbusin/index`,
           },
         ],
+        exportTemplateDialog: false,
+
       };
     },
     filters: {},
@@ -262,7 +289,6 @@
         "userInfo",
         "roles",
         "infoRest",
-        "isFullScreen",
         "tagWel",
         "tagList",
         "isCollapse",
@@ -272,6 +298,10 @@
       ])
     },
     methods: {
+      // 打开导出pdf弹窗
+      openExportPDF() {
+        this.exportTemplateDialog = true
+      },
       recursionDeptName(depts, currentDept) {
         console.log(depts,"depteeee");
         for(let dept of depts || []) {

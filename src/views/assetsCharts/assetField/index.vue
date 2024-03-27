@@ -16,7 +16,7 @@
               class="attributes-block icon-block"
               @click="handleClick($event, item)"
             >
-              <i style="pointer-events: none;" :class="item.attributesIcon"></i>
+              <i style="pointer-events: none;font-size: 18px;" :class="item.attributesIcon"></i>
             </div>
           </el-tooltip>
         </template>
@@ -39,10 +39,11 @@
       <span class="projectName">
         <el-tooltip :content="asset.assetsProject.projectName" placement="bottom" effect="light">
           <div 
-            :style="{'background-color': asset.assetsProject.projectColor}"
+            :style="{'background-color': asset.assetsProject.projectColor,
+                      'box-shadow': `0px 0px 8px ${asset.assetsProject.projectColor}`}"
             class="project-block icon-block"
           >
-            <i style="pointer-events: none;" :class="asset.assetsProject.projectIcon"></i>
+            <i style="pointer-events: none;font-size: 18px;" :class="asset.assetsProject.projectIcon"></i>
           </div>
         </el-tooltip>
       </span>
@@ -58,7 +59,7 @@
               :data-id="field.attributesId" 
               class="assetsList-item"
               :style="{'background-color': field.attributesColor,
-                        'opacity': attributesId === field.attributesId ? 1 : 0.2,
+                        'opacity': attributesId === field.attributesId ? 1 : 0.1,
                         width: `${field.width}%`}"
               @click="clickAsset(field)">
             </div>
@@ -280,31 +281,34 @@ export default {
     font-size: inherit;
     color: white;
     font-family: fangsong;
-    font-weight: 600;
-    margin-top: 8px
+    /* font-weight: 600; */
+    margin-top: 5px;
+
   }
   .project-block {
     margin-right: 10px;
+    box-shadow: 0px 0px 8px #4352b1;
+
   }
 
   .icon-container {
     margin-bottom: 20px;
-    padding-top: 20px;
+    /* padding-top: 20px; */
     display: flex;
     flex-wrap: wrap;
   }
   .icon-block {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-left: 15px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+
   }
   .icon-container .attributes-block {
     margin-bottom: 10px;
-    box-shadow: 0px 1px 4px #343434;
   }
   .fields {
     display: flex;
