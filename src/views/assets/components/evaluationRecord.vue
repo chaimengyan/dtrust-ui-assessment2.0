@@ -115,14 +115,14 @@
                                 :disabled="scope.row.assessStatus == 1"
                         />
                     </el-tooltip>
-                    <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.查看报告')" placement="top">
+                    <!-- <el-tooltip class="item" effect="dark" :content="$t('evaluationRecord.查看报告')" placement="top">
                         <el-button
                                 type="text"
                                 icon="el-icon-document"
                                 @click="exportViewBtn(scope.row, scope.index)"
                                 :disabled="!([3, 4].includes(scope.row.assessStatus))"
                         />
-                    </el-tooltip>
+                    </el-tooltip> -->
                 </template>
             </avue-crud>
             <div id="levelCharts" style="width: 380px;height: 300px;visibility:hidden;"></div>

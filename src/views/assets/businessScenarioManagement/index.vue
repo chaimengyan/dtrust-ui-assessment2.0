@@ -583,6 +583,8 @@ export default {
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {
           this.echoCheckedAssetObjList = this.handleEchoData(res.data.data)
+          console.log(this.echoCheckedAssetObjList, 'this.echoCheckedAssetObjList');
+
           if(this.echoCheckedAssetObjList.length === 0) return this.fullscreenLoading = false
       })
       .catch(() => {
