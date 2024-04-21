@@ -41,6 +41,13 @@ import {
 import * as echarts from 'echarts';
 import _ from 'lodash'
 
+const defaultQuery = () => ({
+    id: '',
+    sceneName: '',
+    categoryName: '',
+    attributeName: ''
+})
+
   export default {
     name: 'FreeEcharts',
     components: {},
@@ -55,12 +62,7 @@ import _ from 'lodash'
                 '1': 'categoryName',
                 '2': 'attributeName',
             },
-            query: {
-                id: '',
-                sceneName: '',
-                categoryName: '',
-                attributeName: ''
-            },
+            query: defaultQuery(),
             allLinks: [],
             selectMyData: [],
         }
@@ -143,7 +145,7 @@ import _ from 'lodash'
                     const links = [...this.allLinks]
                     // myChart.setOption(options);
                     if(!(['0','1','2'].includes(e.data.depth))) return
-
+                    
                     this.query[this.queryMap[e.data.depth]] = e.name
                     if (Object.values(this.query).includes('')) {
                         return
@@ -160,20 +162,23 @@ import _ from 'lodash'
                     // }
 
                     function setNodeStyle(nameList) {
-
                         dataList.forEach(item => {
-                            // const isSelectNode = nameList.includes(item.name)
-                            // item.itemStyle = {
-                            //     color: isSelectNode ? '#00aea8' : item.itemStyle.originColor,
-                            //     opacity: 1
-                            // }
+                            const isSelectNode = nameList.includes(item.name)
+                            item.itemStyle = item.itemStyle.originStyle ? item.itemStyle.originStyle : item.itemStyle
+                            if (isSelectNode) {
+                                item.itemStyle = {
+                                    color: '#00aea8',
+                                    originStyle: item.itemStyle
+                                }
+                            }
+                           
                             // if (isSelectNode) return;
 
                             const listList = findLinks(nameList, links)
                             links.forEach((link) => {
                                 const is = listList.find(l => l.source === link.source && l.target.includes(link.target))
                                 link.lineStyle = is ? {} : {
-                                    color: 'transparent',
+                                    color: 'rgba(0, 0, 0, .05)',
                                 }
                             })
                         })
