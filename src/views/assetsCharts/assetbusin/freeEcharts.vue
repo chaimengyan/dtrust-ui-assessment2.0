@@ -144,10 +144,23 @@ const defaultQuery = () => ({
                     const dataList = options.series[0].data
                     const links = [...this.allLinks]
                     // myChart.setOption(options);
-                    if(!(['0','1','2'].includes(e.data.depth))) return
+                    dataList.forEach(item => {
+                        if (item.name === e.name) {
+                            item.itemStyle = item.itemStyle.originStyle ? item.itemStyle.originStyle : {
+                                color: '#00aea8',
+                                originStyle: item.itemStyle
+                            }
+                        }
+                    })
+
+
+                    if(!(['0','1','2'].includes(e.data.depth))) {
+                        return
+                    }
                     
                     this.query[this.queryMap[e.data.depth]] = e.name
                     if (Object.values(this.query).includes('')) {
+                        myChart.setOption(options);
                         return
                     }
 
@@ -163,14 +176,14 @@ const defaultQuery = () => ({
 
                     function setNodeStyle(nameList) {
                         dataList.forEach(item => {
-                            const isSelectNode = nameList.includes(item.name)
-                            item.itemStyle = item.itemStyle.originStyle ? item.itemStyle.originStyle : item.itemStyle
-                            if (isSelectNode) {
-                                item.itemStyle = {
-                                    color: '#00aea8',
-                                    originStyle: item.itemStyle
-                                }
-                            }
+                            // const isSelectNode = nameList.includes(item.name)
+                            // item.itemStyle = item.itemStyle.originStyle ? item.itemStyle.originStyle : item.itemStyle
+                            // if (isSelectNode) {
+                            //     item.itemStyle = {
+                            //         color: '#00aea8',
+                            //         originStyle: item.itemStyle
+                            //     }
+                            // }
                            
                             // if (isSelectNode) return;
 
