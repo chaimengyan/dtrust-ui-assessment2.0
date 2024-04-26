@@ -10,6 +10,7 @@
                     >
                 </el-option>
             </el-select>
+            <el-button @click="recoveryAllLinks">全部关系</el-button>
         </div>
         <div class="downContent">
             <div class="leftType">
@@ -47,6 +48,7 @@ const defaultQuery = () => ({
     categoryName: '',
     attributeName: ''
 })
+var myChart
 
   export default {
     name: 'FreeEcharts',
@@ -79,14 +81,25 @@ const defaultQuery = () => ({
     },
     methods: {
         handleChange(val) {
+            this.query = defaultQuery()
             this.query.id = val
             this.getMainBodySceneData(val)
         },
+        recoveryAllLinks() {
+            this.query = defaultQuery()
+            this.query.id = this.dataSubject
+            this.getMainBodySceneData(this.dataSubject)
+        },
         initEcharts(data) {
             var chartDom = document.getElementById('container');
-            var myChart = echarts.init(chartDom);
             var option;
-
+            if (myChart) {
+                // 取消点击事件
+                myChart.off("click")
+                myChart.clear()
+            } else {
+                myChart = echarts.init(chartDom)
+            }
             option = {
                 title: {
                     text: ''
