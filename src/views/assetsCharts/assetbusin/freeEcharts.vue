@@ -97,9 +97,9 @@ var myChart
                 // 取消点击事件
                 myChart.off("click")
                 myChart.clear()
-            } else {
-                myChart = echarts.init(chartDom)
+                myChart.dispose()
             }
+            myChart = echarts.init(chartDom)
             option = {
                 title: {
                     text: ''
@@ -201,6 +201,7 @@ var myChart
                             // if (isSelectNode) return;
 
                             const listList = findLinks(nameList, links)
+                            console.log(nameList, 'listListlistListlistList');
                             links.forEach((link) => {
                                 const is = listList.find(l => l.source === link.source && l.target.includes(link.target))
                                 link.lineStyle = is ? {} : {
