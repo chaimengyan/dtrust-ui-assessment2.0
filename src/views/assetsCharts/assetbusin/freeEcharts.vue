@@ -145,14 +145,17 @@ var myChart
 
                 let isSelected = false, cacheName = '';
                 myChart.on('mousemove',(e) => {
-                    if(e.dataType === 'node') {
+                    if(e.dataType === 'node' && (['0','1','2'].includes(e.data.depth))) {
                         e.event.target.cursor = 'pointer'
                         e.event.topTarget.cursor = 'pointer'
                     }else if(e.dataType === 'edge') {
                         e.event.target.cursor = 'move'
+                    }else {
+                        e.event.target.cursor = 'no-drop'
                     }
                 })
                 myChart.on('click',async (e) => {
+                    console.log(e, 'eee', this.allLinks, 'this.allLinks');
                     const options = myChart.getOption()
                     const dataList = options.series[0].data
                     const links = [...this.allLinks]
@@ -201,7 +204,7 @@ var myChart
                             // if (isSelectNode) return;
 
                             const listList = findLinks(nameList, links)
-                            console.log(nameList, 'listListlistListlistList');
+                            // console.log(nameList, 'listListlistListlistList');
                             links.forEach((link) => {
                                 const is = listList.find(l => l.source === link.source && l.target.includes(link.target))
                                 link.lineStyle = is ? {} : {
