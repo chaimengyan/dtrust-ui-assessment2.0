@@ -64,6 +64,7 @@ var myChart
                 '1': 'categoryName',
                 '2': 'attributeName',
             },
+            historyMap: {},
             query: defaultQuery(),
             allLinks: [],
             selectMyData: [],
@@ -159,6 +160,17 @@ var myChart
                     const options = myChart.getOption()
                     const dataList = options.series[0].data
                     const links = [...this.allLinks]
+
+                    // 获取上一个
+                    const pre = parseInt(e.data.depth) - 1
+                    const preName = this.historyMap[pre]
+                    if (pre >= 0) {
+                        const cur = links.find(item => item.source === preName && item.target === e.name)
+                        if (!cur) {
+                            return;
+                        }
+                    }
+
                     // myChart.setOption(options);
                     dataList.forEach(item => {
                         if (item.name === e.name) {
@@ -168,7 +180,10 @@ var myChart
                             }
                         }
                     })
+                    
+                   
 
+                    this.historyMap[e.data.depth] = e.name;
 
                     if(!(['0','1','2'].includes(e.data.depth))) {
                         return
