@@ -132,6 +132,11 @@ export default {
       font-size: 14px;
       color:rgb(93, 93, 93);
       margin: 5px;
+      a {
+            font-weight: 500;
+            color: #646cff !important;
+            text-decoration: inherit;
+        }
     }
     .mes-body-row-footer {
       font-size: 14px;

@@ -219,7 +219,7 @@ var myChart
                             // if (isSelectNode) return;
 
                             const listList = findLinks(nameList, links)
-                            // console.log(nameList, 'listListlistListlistList');
+                            console.log(listList, links,nameList,'listListlistListlistList');
                             links.forEach((link) => {
                                 const is = listList.find(l => l.source === link.source && l.target.includes(link.target))
                                 link.lineStyle = is ? {} : {

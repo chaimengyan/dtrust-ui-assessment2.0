@@ -106,6 +106,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button 
               type="primary" 
+              :loading="btnLoading"
               :disabled="viewStatus === 'view'" 
               :icon="saveBtnText ===$t('assetsManagement.保存')?'el-icon-circle-plus-outline':'el-icon-circle-check'"
               @click="submitBtn"
@@ -175,6 +176,7 @@ export default {
       isFullscreen: false,
       isOverHidden: true,
       saveBtnText: this.$t('assetsManagement.保存'),
+      btnLoading: false,
     };
   },
   filters: {
@@ -241,12 +243,14 @@ export default {
     },
     // 提交新增数据
     submitBtn() {
+      this.btnLoading = true
       const activitiesForm = this.$refs.addActivities.getActivitiesForm()
-      if(!activitiesForm) return
+      if(!activitiesForm) return this.btnLoading = false
       const submitApi = 'activitiesId' in activitiesForm ? putObj : addObj
       submitApi(activitiesForm).then(res => {
         this.getList(this.page);
         this.addActivitiesDialog = false
+        this.btnLoading = false
         this.$message.success(res.data.message)
       })
     },

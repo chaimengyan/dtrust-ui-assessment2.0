@@ -39,8 +39,7 @@
       <span class="projectName">
         <el-tooltip :content="asset.assetsProject.projectName" placement="bottom" effect="light">
           <div 
-            :style="{'background-color': asset.assetsProject.projectColor,
-                      'box-shadow': `0px 0px 8px ${asset.assetsProject.projectColor}`}"
+            :style="{'background-color': asset.assetsProject.projectColor}"
             class="project-block icon-block"
           >
             <i style="pointer-events: none;font-size: 18px;" :class="asset.assetsProject.projectIcon"></i>
@@ -287,7 +286,6 @@ export default {
   }
   .project-block {
     margin-right: 10px;
-    box-shadow: 0px 0px 8px #4352b1;
 
   }
 

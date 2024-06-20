@@ -97,10 +97,9 @@
                 <template slot="level" slot-scope="scope">
                     <span>
                         <el-tag
-                            :color="assessLevelColor[grade(scope.row.grade, scope.row.type).level]">
-                            {{  grade(scope.row.grade, scope.row.type).level
-                                && $t(`crudCommon.${grade(scope.row.grade, scope.row.type).level}`) 
-                                || $t('crudCommon.暂无') }}
+                            :color="scope.row.scores.length !== 0 ? assessLevelColor[scope.row.scores[0].level] : ''">
+                            {{  scope.row.scores.length !== 0 ? $t(`crudCommon.${scope.row.scores[0].level}`) 
+                                : $t('crudCommon.暂无') }}
                         </el-tag>
                     </span>
                 </template>
@@ -484,7 +483,7 @@
             },
             //查看问卷记录按钮
             viewBtn(row) {
-                const assUrl = `http://116.205.172.167:38080/#/assessment/questionnaireStart/index?infoId=${row.infoId}`
+                const assUrl = `http://assess.idatatrust.com/#/assessment/questionnaireStart/index?infoId=${row.infoId}`
                 window.open(assUrl,'_blank')
             },
 

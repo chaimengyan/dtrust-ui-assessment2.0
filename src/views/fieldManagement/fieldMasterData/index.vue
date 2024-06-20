@@ -126,7 +126,7 @@
         :close-on-click-modal="false" 
         :fullscreen="isFullscreen">
         <div class="dialog-header" slot="title">
-          <span class="dialog-header-title">$t('crudCommon.导入')</span>
+          <span class="dialog-header-title">{{$t('crudCommon.导入')}}</span>
           <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
             <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
           </div>

@@ -224,7 +224,10 @@
   display: flex;
 }
 
-
+// 图标，颜色查看表单样式与普通表单对齐
+.cells {
+  justify-content: space-between !important;
+}
 
 // 图标/颜色 灰色部分宽度调整一致
 .el-input-group__append, .el-input-group__prepend {

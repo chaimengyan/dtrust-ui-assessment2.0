@@ -17,6 +17,10 @@
             <template slot="menuRight" slot-scope="{size}">
                 <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
             </template>
+            <template slot="projectChangeForm" >
+                <span style="font-size: 12px;" v-html="form.projectChange&&form.projectChange.replace(/\|\|/g, '<br/>')">
+                </span>
+            </template>
             <template slot="attributeAddForm" >
                 <span style="font-size: 12px;" v-html="form.attributeAdd&&form.attributeAdd.replace(/\|\|/g, '<br/>')">
                 </span>

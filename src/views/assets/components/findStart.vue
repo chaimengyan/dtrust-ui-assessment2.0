@@ -98,7 +98,7 @@ export default {
             if(this.findAssetTab === 'findForm') {
                 this.$refs.findForm.validate((valid, done,msg) => {
                      if (valid) {
-                        this.findForm.jobUrl = `http://116.205.172.167:38082/#/findAssets`
+                        this.findForm.jobUrl = `http://assets.idatatrust.com/#/findAssets`
                         this.findForm.findType = this.findType
                         const {evaluatorsHandle, ...rest} = this.findForm
                         for (let i = 0; i < evaluatorsHandle.length; i++) {
