@@ -17,16 +17,20 @@
             <template slot="menuRight" slot-scope="{size}">
                 <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
             </template>
+            <template slot="sceneChangeForm" >
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.sceneChange">
+                </span>
+            </template>
             <template slot="projectAddForm" >
-                <span style="font-size: 12px;" v-html="form.projectAdd&&form.projectAdd.replace(/\|\|/g, '<br/>')">
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectAdd">
                 </span>
             </template>
             <template slot="projectDelForm" >
-                <span style="font-size: 12px;" v-html="form.projectDel&&form.projectDel.replace(/\|\|/g, '<br/>')">
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectDel">
                 </span>
             </template>
             <template slot="projectUpdateForm" >
-                <span style="font-size: 12px;" v-html="form.projectUpdate&&form.projectUpdate.replace(/\|\|/g, '<br/>')">
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectUpdate">
                 </span>
             </template>
             </avue-crud>
