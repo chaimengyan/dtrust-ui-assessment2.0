@@ -3,6 +3,7 @@ import iconList from "@/const/iconList";
 import {
   getDeptTreeByTenantId
 } from "@/api/assets/assetsManagement";
+import city from "@/const/json/city"
 
 // item.dicUrl 调接口
 function getSelectOption(item, tenantId) {
@@ -21,7 +22,16 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     if (item.dicUrl) {
       getSelectOption(item, tenantId);
     }
-
+    
+    if(item.type === 'cascader') {
+      item.props = {
+        label: 'name_cn',
+        value: 'name_cn',
+        children: 'cities',
+      }
+      item.dicData = city
+    }
+    
     if(item.type === 'icon') {
       item.iconList = iconList
     }

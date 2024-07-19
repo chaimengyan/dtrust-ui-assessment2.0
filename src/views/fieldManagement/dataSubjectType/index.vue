@@ -41,9 +41,10 @@
         </template>
         <template slot="menu" slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
+            <!-- :disabled="scope.row.createBy === 'admin' || !handleDataPermissions('update', scope.row)" -->
+
             <el-button
               v-if="permissions.field_dataSubjectType_edit"
-              :disabled="scope.row.createBy === 'admin' || !handleDataPermissions('update', scope.row)"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row, scope.index)"

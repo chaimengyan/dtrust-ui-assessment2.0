@@ -47,9 +47,9 @@
           <el-button
             v-if="permissions.assets_businessScenario_export"
             class="filter-item"
-            @click="exportMode"
+            @click="exportMode(true)"
             type="primary"
-            icon="el-icon-upload"
+            icon="el-icon-download"
             v-loading.fullscreen.lock="fullscreenLoading"
             >{{$t('crudCommon.导出模板')}}
           </el-button>
@@ -68,6 +68,14 @@
             icon="el-icon-delete"
             @click="deleteBtn(false)"
             >{{$t('crudCommon.批量删除')}}
+          </el-button>
+          <el-button
+            v-if="permissions.assets_businessScenario_export"
+            type="primary"
+            plain
+            icon="el-icon-download"
+            @click="exportMode(false)"
+            >{{$t('crudCommon.批量导出清单')}}
           </el-button>
         </template>
         <template slot="menu" slot-scope="scope">
@@ -614,10 +622,15 @@ export default {
       this.importDialog = true
     },
     // 导出模板
-    exportMode() {
+    exportMode(isMode) {
+      if(!isMode && !this.ids.length) {
+        this.$message.warning(this.$t('crudCommon.请选择要导出的数据'));
+        return
+      }
       this.fullscreenLoading = true
         let config = { 'responseType': 'blob' }
-        this.axios.get('/assets/assetsBusinessScene/exportExcel', config)
+        const API = isMode ? '/assets/assetsBusinessScene/exportExcel' : `/assets/assetsBusinessScene/exportByIds?ids=${this.ids}`
+        this.axios.get(API, config)
         .then(res=>{
             const fileName = decodeURIComponent(res.headers['content-disposition']).split('=')[1]
             let fileData = []
@@ -626,6 +639,8 @@ export default {
             this.download(blobUrl, fileName)
             this.fullscreenLoading = false
             this.$message.success(this.$t('crudCommon.导出成功'));
+        }).catch(() => {
+          this.fullscreenLoading = false
         })
     },
     // 下载文件
@@ -663,7 +678,7 @@ export default {
 
     // 点击业务场景名称查看详情
     cellClick(row, column) {
-      if(column.label === this.$t('businessScenarioManagement.业务场景名称')) {
+      if(column.columnKey === "sceneName") {
         this.sceneId = row.sceneId
         this.viewColumn = this.$refs.crud.columnOption
         this.rowData = row
@@ -767,7 +782,7 @@ export default {
     deleteBtn(row) {
       const ids = row ? [row.sceneId] : this.ids
       if(!ids.length) {
-        this.$message.error(this.$t('crudCommon.请选择要删除的数据'));
+        this.$message.warning(this.$t('crudCommon.请选择要删除的数据'));
         return
       }
       this.$confirm(this.$t('crudCommon.是否删除本条数据'), this.$t('crudCommon.提示'), {

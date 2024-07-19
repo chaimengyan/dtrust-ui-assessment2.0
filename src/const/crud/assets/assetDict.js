@@ -1,3 +1,4 @@
+import iconList from "@/const/iconList";
 
 export const tableOption = (_this, isOverHidden) => {
   return {
@@ -226,10 +227,11 @@ export const tableOption = (_this, isOverHidden) => {
         label: 'color',
         value: 'color'
       },
-      // {
-      //   label: 'cascader',
-      //   value: 'cascader'
-      // },{
+      {
+        label: '地址',
+        value: 'cascader'
+      },
+      // ,{
       //   label: 'checkbox',
       //   value: 'checkbox'
       // },{
@@ -258,6 +260,75 @@ export const tableOption = (_this, isOverHidden) => {
         value: 'datetime'
       }
     ],
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+    control: (val, form) => {
+      if(val === 'icon') {
+        return {
+          value: {
+            type: 'icon',
+            iconList: iconList,
+            display: true,
+          },
+          checkStrictly: {
+            display: false,
+          }
+        }
+      }else if(val === 'color') {
+        return {
+          value: {
+            type: 'color',
+            display: true,
+          },
+          checkStrictly: {
+            display: false,
+          }
+        }
+      }else if(val === 'cascader') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: true,
+          }
+        }
+      }else {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: false,
+          }
+        }
+      }
+    }
+  },
+  {
+    label: _this.$t('crudCommon.默认值'),
+    prop: 'value',
+    type: 'icon',
+    iconList: iconList,
+    display: false,
+    rules: [{
+      required: true,
+      message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.默认值')}`,
+      trigger: 'change'
+    }]
+  },
+  {
+    label: _this.$t('crudCommon.选中任意节点'),
+    prop: 'checkStrictly',
+    value: false,
+    display: false,
+    type: 'switch',
+    tip: _this.$t('tableConfiguration.选中任意节点'),
+    span: 24,
     rules: [{
       required: false,
       // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,

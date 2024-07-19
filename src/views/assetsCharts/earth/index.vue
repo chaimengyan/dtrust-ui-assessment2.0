@@ -1,5 +1,5 @@
 <template>
-<div class="page">
+<div class="earth-page">
   <iframe 
     src="/earth.html"
     scrolling="no"
@@ -36,5 +36,9 @@ export default {
 </script>
 
 <style scoped>
-
+.earth-page {
+  margin-top: 4px;
+  /* overflow: auto;
+    height: 86vh; */
+}
 </style>

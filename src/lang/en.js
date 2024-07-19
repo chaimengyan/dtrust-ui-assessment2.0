@@ -140,6 +140,8 @@ export default {
     请选择要删除的数据: 'Please select the data to delete!',
     请选择要确认的数据: 'Please select the data to confirm',
     是否确认本条数据: 'Are you sure about this data?',
+    请选择要导出的数据: 'Please select the data to export',
+    批量导出清单: 'Batch export list',
     是: 'yes',
     否: 'no',
     描述: 'describe',
@@ -168,7 +170,9 @@ export default {
     暂无: 'None',
     日期: 'date',
     批量确认: 'Batch confirmation',
-    是否通过审核: 'Passed or not'
+    是否通过审核: 'Passed or not',
+    默认值: 'Default value',
+    选中任意节点: 'Select any node',
   },
   userinfo: {
     信息管理: 'information management',

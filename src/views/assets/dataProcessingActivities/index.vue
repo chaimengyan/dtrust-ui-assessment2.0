@@ -251,7 +251,10 @@ export default {
         this.getList(this.page);
         this.addActivitiesDialog = false
         this.btnLoading = false
-        this.$message.success(res.data.message)
+        const msg = 'activitiesId' in activitiesForm ? '修改数据处理活动成功！' : '添加数据处理活动成功！'
+        this.$message.success(msg)
+      }).catch(() => {
+        this.btnLoading = false
       })
     },
     // 子组件数据保存成功

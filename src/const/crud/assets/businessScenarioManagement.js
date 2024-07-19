@@ -27,7 +27,8 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
       item.iconList = iconList
     }
 
-    if(['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
+    if(item.type === 'cascader'||['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
+      // if(['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
       item.props = {
         label: 'name_cn',
         value: 'name_cn',

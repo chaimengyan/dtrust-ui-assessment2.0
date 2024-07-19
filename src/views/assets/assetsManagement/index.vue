@@ -65,9 +65,9 @@
           <el-button
             v-if="permissions.assets_assetsManagement_export"
             class="filter-item"
-            @click="exportMode"
+            @click="exportMode(true)"
             type="primary"
-            icon="el-icon-upload"
+            icon="el-icon-download"
             v-loading.fullscreen.lock="fullscreenLoading"
             >{{$t('crudCommon.导出模板')}}
           </el-button>
@@ -95,6 +95,14 @@
             icon="el-icon-document-copy"
             @click="copyBtn(false)"
             >{{$t('crudCommon.批量复制')}}
+          </el-button>
+          <el-button
+            v-if="permissions.assets_assetsManagement_batchDel"
+            type="primary"
+            plain
+            icon="el-icon-download"
+            @click="exportMode(false)"
+            >{{$t('crudCommon.批量导出清单')}}
           </el-button>
         </template>
         <template slot="menu" slot-scope="scope">
@@ -583,7 +591,7 @@ export default {
     },
     // 点击资产名称查看详情
     cellClick(row, column) {
-      if(column.label === this.$t('assetsManagement.资产名称')) {
+      if(column.columnKey === "projectName") {
         this.projectId = row.projectId
         this.viewColumn = this.$refs.crud.columnOption
         this.rowData = row
@@ -677,10 +685,15 @@ export default {
 
     },
     // 导出模板
-    exportMode() {
+    exportMode(isMode) {
+      if(!isMode && !this.ids.length) {
+        this.$message.warning(this.$t('crudCommon.请选择要导出的数据'));
+        return
+      }
       this.fullscreenLoading = true
         let config = { 'responseType': 'blob' }
-        this.axios.get('/assets/assetsProject/export', config)
+        const API = isMode ? '/assets/assetsProject/export' : `/assets/assetsProject/exportByIds?ids=${this.ids}`
+        this.axios.get(API, config)
         .then(res=>{
             const fileName = decodeURIComponent(res.headers['content-disposition']).split('=')[1]
             let fileData = []
@@ -689,6 +702,10 @@ export default {
             this.download(blobUrl, fileName)
             this.fullscreenLoading = false
             this.$message.success(this.$t('crudCommon.导出成功'));
+
+        })
+        .catch(() => {
+          this.fullscreenLoading = false
 
         })
     },
@@ -782,7 +799,7 @@ export default {
     deleteBtn(row) {
       const ids = row ? [row.projectId] : this.ids
       if(!ids.length) {
-        this.$message.error(this.$t('crudCommon.请选择要删除的数据'));
+        this.$message.warning(this.$t('crudCommon.请选择要删除的数据'));
         return
       }
       this.$confirm(this.$t('crudCommon.是否删除本条数据'), this.$t('crudCommon.提示'), {
@@ -824,6 +841,9 @@ export default {
             }
           });
         })
+    },
+    exportBtn() {
+
     },
     sizeChange(pageSize) {
       this.page.pageSize = pageSize;

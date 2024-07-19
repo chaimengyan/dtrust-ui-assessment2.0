@@ -97,6 +97,7 @@
                 <template slot="level" slot-scope="scope">
                     <span>
                         <el-tag
+                            style="color: #000000;"
                             :color="scope.row.scores.length !== 0 ? assessLevelColor[scope.row.scores[0].level] : ''">
                             {{  scope.row.scores.length !== 0 ? $t(`crudCommon.${scope.row.scores[0].level}`) 
                                 : $t('crudCommon.暂无') }}

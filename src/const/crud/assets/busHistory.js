@@ -28,7 +28,11 @@ export const tableOption = (_this, isOverHidden) => {
         width: 100,
         label: _this.$t('assetsManagement.属性变化'),
         prop: 'sceneChange',
+        formslot: true,
         type: 'textarea',
+        formatter:(val)=>{
+            return val.sceneChange?.replace(/<[^>]*>/g, ' ')
+          },
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
@@ -37,6 +41,9 @@ export const tableOption = (_this, isOverHidden) => {
         prop: 'projectAdd',
         type: 'textarea',
         formslot: true,
+        formatter:(val)=>{
+            return val.projectAdd?.replace(/<[^>]*>/g, ' ')
+          },
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
@@ -45,6 +52,9 @@ export const tableOption = (_this, isOverHidden) => {
         prop: 'projectDel',
         type: 'textarea',
         formslot: true,
+        formatter:(val)=>{
+            return val.projectDel?.replace(/<[^>]*>/g, ' ')
+          },
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
