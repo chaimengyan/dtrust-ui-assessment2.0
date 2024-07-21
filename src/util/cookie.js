@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import { isEmpty } from 'lodash'
-import { isDev } from './env'
+import { isDev, isTest } from './env'
 
 export default class CookieUtil {
     static defaultOptions = {

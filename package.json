@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:test": "vue-cli-service build --mode=test",
     "build:docker": "SET NODE_OPTIONS=--openssl-legacy-provider&&vue-cli-service build --dest=./docker/dist/",
     "lint": "vue-cli-service lint"
   },
