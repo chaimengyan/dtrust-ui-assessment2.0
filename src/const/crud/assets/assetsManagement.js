@@ -31,6 +31,14 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
       }
       item.dicData = city
     }
+    if(item.type === 'addressSelect') {
+      item.props = {
+        label: 'name_cn',
+        value: 'name_cn',
+      }
+      item.dicData = city
+      item.type = 'select'
+    }
     
     if(item.type === 'icon') {
       item.iconList = iconList

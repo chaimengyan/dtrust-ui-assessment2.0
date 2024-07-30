@@ -212,24 +212,28 @@ export const tableOption = (_this, isOverHidden) => {
     span: 24,
     dicData: [
       {
-        label: 'input',
+        label: _this.$t('tableConfiguration.输入框'),
         value: 'input'
       },{
-        label: 'number',
+        label: _this.$t('tableConfiguration.数字'),
         value: 'number'
       },{
-        label: 'select',
+        label: _this.$t('tableConfiguration.下拉选择'),
         value: 'select'
       },{
-        label: 'icon',
+        label: _this.$t('crudCommon.图标'),
         value: 'icon'
       },{
-        label: 'color',
+        label: _this.$t('crudCommon.颜色'),
         value: 'color'
       },
       {
-        label: '地址',
+        label: _this.$t('tableConfiguration.级联地址'),
         value: 'cascader'
+      },
+      {
+        label: _this.$t('tableConfiguration.下拉地址'),
+        value: 'addressSelect'
       },
       // ,{
       //   label: 'checkbox',
@@ -239,10 +243,10 @@ export const tableOption = (_this, isOverHidden) => {
       //   value: 'radio'
       // },
       {
-        label: 'date',
+        label: _this.$t('crudCommon.日期'),
         value: 'date'
       },{
-        label: 'time',
+        label: _this.$t('tableConfiguration.时间'),
         value: 'time'
       },
       // {
@@ -252,11 +256,12 @@ export const tableOption = (_this, isOverHidden) => {
       //   label: 'upload',
       //   value: 'upload'
       // },
+      // {
+      //   label: _this.$t('tableConfiguration.树形'),
+      //   value: 'tree'
+      // },
       {
-        label: 'tree',
-        value: 'tree'
-      },{
-        label: 'datetime',
+        label: _this.$t('tableConfiguration.日期时间'),
         value: 'datetime'
       }
     ],
@@ -276,6 +281,18 @@ export const tableOption = (_this, isOverHidden) => {
           },
           checkStrictly: {
             display: false,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: false,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
           }
         }
       }else if(val === 'color') {
@@ -286,6 +303,18 @@ export const tableOption = (_this, isOverHidden) => {
           },
           checkStrictly: {
             display: false,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: false,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
           }
         }
       }else if(val === 'cascader') {
@@ -295,6 +324,102 @@ export const tableOption = (_this, isOverHidden) => {
           },
           checkStrictly: {
             display: true,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          }
+        }
+      }else if(val === 'addressSelect') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: true,
+          },
+          estimate: {
+            display: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          }
+        }
+      }else if(val === 'select') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: true,
+          },
+          estimate: {
+            display: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          }
+        }
+      }else if(val === 'date') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: false,
+          },
+          format: {
+            display: true,
+          },
+          valueFormat: {
+            display: true,
+          }
+        }
+      }else if(val === 'time') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: false,
+          },
+          format: {
+            display: true,
+          },
+          valueFormat: {
+            display: true,
           }
         }
       }else {
@@ -303,6 +428,18 @@ export const tableOption = (_this, isOverHidden) => {
             display: false,
           },
           checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: false,
+          },
+          estimate: {
+            display: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
             display: false,
           }
         }
@@ -315,6 +452,7 @@ export const tableOption = (_this, isOverHidden) => {
     type: 'icon',
     iconList: iconList,
     display: false,
+    span: 24,
     rules: [{
       required: true,
       message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.默认值')}`,
@@ -327,7 +465,7 @@ export const tableOption = (_this, isOverHidden) => {
     value: false,
     display: false,
     type: 'switch',
-    tip: _this.$t('tableConfiguration.选中任意节点'),
+    tip: _this.$t('crudCommon.选中任意节点'),
     span: 24,
     rules: [{
       required: false,
@@ -400,6 +538,7 @@ export const tableOption = (_this, isOverHidden) => {
   },{
     label: _this.$t('tableConfiguration.是否多选'),
     prop: 'multiple',
+    display: false,
     value: true,
     tip: _this.$t('tableConfiguration.仅对下拉系列组件生效'),
     type: 'switch',
@@ -427,6 +566,7 @@ export const tableOption = (_this, isOverHidden) => {
     label: '显示值时间格式',
     prop: 'format',
     value: 'yyyy-MM-dd HH:mm',
+    display: false,
     span: 24,
     rules: [{
       required: false,
@@ -438,6 +578,7 @@ export const tableOption = (_this, isOverHidden) => {
     label: '真实值的时间格式',
     prop: 'valueFormat',
     value: 'yyyy-MM-dd HH:mm',
+    display: false,
     span: 24,
     rules: [{
       required: false,
@@ -502,6 +643,7 @@ export const tableOption = (_this, isOverHidden) => {
     label: '是否在评估使用',
     prop: 'estimate',
     value: true,
+    display: false,
     type: 'switch',
     span: 24,
     rules: [{

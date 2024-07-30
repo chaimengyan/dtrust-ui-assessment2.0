@@ -570,21 +570,21 @@ export default {
                             fontSize: 14
                         },
                     },
-                    // legend: {
-                    //     type: 'scroll',
-                    //     orient: 'vertical',
-                    //     right: 10,
-                    //     top: 20,
-                    //     bottom: 20,
-                    //     tooltip: {
-                    //         show: true
-                    //     },
-                    //     textStyle: {
-                    //         width: 50,
-                    //         overflow: 'truncate'
-                    //     },
-                    //     data: proData
-                    // },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        top: 20,
+                        bottom: 20,
+                        tooltip: {
+                            show: true
+                        },
+                        textStyle: {
+                            width: 50,
+                            overflow: 'truncate'
+                        },
+                        data: proData
+                    },
                     series: [
                         {
                             name: '',

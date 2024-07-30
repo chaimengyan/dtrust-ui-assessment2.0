@@ -215,7 +215,7 @@
       handleSave(row, done, loading) {
         addAssetsField(row).then(res => {
             if(res.data.status == 200) {
-                this.getList(this.page);
+                this.$refs.crud.searchReset();
                 done();
                 this.$message.success(res.data.message);
             }
@@ -278,7 +278,7 @@
         }).then(() => {
           addFieldInfo(row).then(res => {
             if(res.data.status == 200) {
-                this.getDictItemList();
+                this.$refs.crudItem.searchReset();
                 done();
                 this.$message.success(res.data.message);
             }

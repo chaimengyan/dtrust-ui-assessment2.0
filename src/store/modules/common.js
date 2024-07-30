@@ -4,7 +4,7 @@ const common = {
 
   state: {
     language: getStore({ name: 'language' }) || 'zh-cn',
-    isCollapse: true,
+    isCollapse: false,
     isFullScreen: false,
     isShade: false,
     screen: -1,

@@ -144,7 +144,7 @@
         addObj(this.form)
           .then(res => {
             if(res.data.status == 200) {
-                this.getList(this.page);
+                this.$refs.crud.searchReset()
                 done();
                 this.$message.success(res.data.message);
             } else {

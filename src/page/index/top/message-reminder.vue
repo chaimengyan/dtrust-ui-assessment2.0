@@ -60,7 +60,7 @@ export default {
     computed: {
         handleFooter() {
             return(item) => {
-                return `${item.updateBy}，${dateFormat(item.updateTime)}`
+                return `${dateFormat(item.updateTime)}`
             }
         }
     },

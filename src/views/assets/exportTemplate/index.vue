@@ -267,7 +267,7 @@
           const API = this.formType === "add" ? addGeneralReportApi : putGeneralReportApi
           API(formData).then(res => {
               if(res.data.status == 200) {
-                  this.getList(this.page);
+                  this.formType === "add" ? this.$refs.crud.searchReset() : this.getList(this.page);
                   this.temDialog = false
                   this.$message.success(res.data.message);
               } 

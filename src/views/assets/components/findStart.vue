@@ -49,6 +49,9 @@ import  FindList from "@/views/assets/components/findList";
 import {isMobile, isEmail} from '@/util/validate'
 import {getObjType} from '@/util/util.js'
 import {findStartOption} from "@/const/crud/components/findStart";
+import { isDev, isTest } from '@/util/env'
+
+const assetsUrl = !isDev() ? !isTest() ? `https://assets.idatatrust.com` : 'http://116.205.172.167:38082' : `http://${window.location.hostname}:38082` 
 
 export default {
     name: "FindStart",
@@ -98,7 +101,7 @@ export default {
             if(this.findAssetTab === 'findForm') {
                 this.$refs.findForm.validate((valid, done,msg) => {
                      if (valid) {
-                        this.findForm.jobUrl = `http://assets.idatatrust.com/#/findAssets`
+                        this.findForm.jobUrl = `${assetsUrl}/#/findAssets`
                         this.findForm.findType = this.findType
                         const {evaluatorsHandle, ...rest} = this.findForm
                         for (let i = 0; i < evaluatorsHandle.length; i++) {

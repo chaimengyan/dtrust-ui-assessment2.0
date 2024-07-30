@@ -25,6 +25,10 @@
                 <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectAdd">
                 </span>
             </template>
+            <template slot="projectUpdateForm" >
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectUpdate">
+                </span>
+            </template>
             <template slot="projectDelForm" >
                 <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.projectDel">
                 </span>

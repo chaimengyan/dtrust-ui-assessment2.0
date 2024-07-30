@@ -502,7 +502,7 @@ export default {
       addObj(rest)
         .then(res => {
           if(res.data.status == 200) {
-              this.getList(this.page);
+              this.$refs.crud.searchReset();
               done();
               this.$message.success(res.data.message);
           } else {
@@ -590,7 +590,7 @@ export default {
           this.$message.success(res.data.message);
           this.importDialog = false
           this.fullscreenLoading = false
-          this.getList(this.page);
+          this.$refs.crud.searchReset();
         }).catch(() => {
           this.importDialog = false
           this.fullscreenLoading = false

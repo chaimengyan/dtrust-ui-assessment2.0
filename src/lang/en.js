@@ -272,6 +272,7 @@ export default {
     当前经纬度: 'Current longitude and latitude:',
     属性变化: 'Attribute changes',
     新增关联: 'Add association',
+    修改关联: 'Update association',
     删除关联: 'Delete association',
     来源评估: 'Source evaluation',
     资产名称: 'Asset name',
@@ -477,6 +478,14 @@ export default {
     是否多选: 'Do you want to select multiple options',
     表单编辑时项是否禁止: 'Is the item prohibited during form editing',
     对应列是否可以排序: 'Can the corresponding columns be sorted',
+    输入框: 'input',
+    数字: 'number',
+    下拉选择: 'select',
+    下拉地址: 'Select address',
+    级联地址: 'Cascade address',
+    时间: 'time',
+    树形: 'tree',
+    日期时间: 'datetime',
 
   },
   enum: {

@@ -248,7 +248,7 @@ export default {
       if(!activitiesForm) return this.btnLoading = false
       const submitApi = 'activitiesId' in activitiesForm ? putObj : addObj
       submitApi(activitiesForm).then(res => {
-        this.getList(this.page);
+        'activitiesId' in activitiesForm ? this.getList(this.page) : this.$refs.crud.searchReset()
         this.addActivitiesDialog = false
         this.btnLoading = false
         const msg = 'activitiesId' in activitiesForm ? '修改数据处理活动成功！' : '添加数据处理活动成功！'

@@ -246,20 +246,35 @@ export const findParent = (menu, id) => {
 };
 
 // 判断当前传入的字段值是否存在于树数据中
+// export function searchTree(nodesArr, searchKey) {
+//   for (let _i = 0; _i < nodesArr.length; _i++) {
+//       if (nodesArr[_i].id === searchKey) {
+//         // 这个return自己想要的结果就行
+//           return true
+//       } else {
+//           if (nodesArr[_i].children && nodesArr[_i].children.length > 0) {
+//             // 如果是vue文件，注意下面换成this.searchTree
+//               let res = searchTree(nodesArr[_i].children, searchKey);
+//               return res
+//           }
+//       }
+//   }
+//   return false
+// }
+
 export function searchTree(nodesArr, searchKey) {
-  for (let _i = 0; _i < nodesArr.length; _i++) {
-      if (nodesArr[_i].id === searchKey) {
-        // 这个return自己想要的结果就行
-          return true
-      } else {
-          if (nodesArr[_i].children && nodesArr[_i].children.length > 0) {
-            // 如果是vue文件，注意下面换成this.searchTree
-              let res = searchTree(nodesArr[_i].children, searchKey);
-              return res
-          }
-      }
+  let item;
+  const list = [...nodesArr]
+  while ((item = list.shift())) {
+
+    if (item.id === searchKey) {
+      return true;
+    }
+    if (item.children && item.children.length) {
+      list.push(...item.children)
+    }
   }
-  return false
+  return false;
 }
 
 /**

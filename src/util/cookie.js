@@ -4,7 +4,7 @@ import { isDev, isTest } from './env'
 
 export default class CookieUtil {
     static defaultOptions = {
-        domain: !isDev() ? 'idatatrust.com' : undefined
+        domain: !isDev() ? isTest() ? '116.205.172.167' : 'idatatrust.com' : undefined
     }
 
     static set(name, value, option={}) {

@@ -142,6 +142,10 @@
     import {getUserList} from "@/api/assets/components/releaseForm";
     import {assessStatusList} from "@/util/enum";
     import * as echarts from 'echarts';
+    import { isDev, isTest } from '@/util/env'
+
+    const estimateUrl = !isDev() ? !isTest() ? `https://assess.idatatrust.com` : 'http://116.205.172.167:38080' : `http://${window.location.hostname}:38080` 
+
     export default {
         name: "evaluationRecord",
         components: { },
@@ -484,7 +488,7 @@
             },
             //查看问卷记录按钮
             viewBtn(row) {
-                const assUrl = `http://assess.idatatrust.com/#/assessment/questionnaireStart/index?infoId=${row.infoId}`
+                const assUrl = `${estimateUrl}/#/assessment/questionnaireStart/index?infoId=${row.infoId}`
                 window.open(assUrl,'_blank')
             },
 
