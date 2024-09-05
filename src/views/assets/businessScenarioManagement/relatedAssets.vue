@@ -20,7 +20,7 @@ import {
 } from "@/api/assets/assetsManagement";
 
 export default {
-    name: "DataSubject",
+    name: "RelatedAssets",
     inject: ['echoCheckedDataSubjectList'],
     computed: {
         echo() {
@@ -29,6 +29,10 @@ export default {
     },
     props: {
         projectId: {
+            type: Number,
+            default: 0
+        },
+        sceneId: {
             type: Number,
             default: 0
         }
@@ -72,8 +76,8 @@ export default {
             // 拉取渲染列表
             // const filters = this.checkedDataSubjectOptions.filter(item => !this.allData[item.projectId])
             const all = this.checkedDataSubjectOptions.map(item => {
-
-                return getProjectAttributesListByProjectId(item.projectId).then(res => {
+                return getProjectAttributesListByProjectId({projectId:item.projectId,sceneId: this.sceneId }).then(res => {
+                    console.log(res.data.data,'res.data.data');
                     const dataSubjectList = res.data.data.map(main => {
                         // 初始化id
                         main.attributes.forEach(a => {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="sys-menu-select">
         <component v-for="item in menus" :key="item.id" :is="componentName(item.children)" :index="`${item.id}`">
             <template slot="title">
                 <el-link
@@ -51,3 +51,45 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+#sys-menu-select {
+    margin: -5px 0;
+    background-color: #fff !important;
+    .el-submenu__title {
+        background-color: #fff;
+        font-size: 12px !important;
+        font-weight: 500;
+        color: #303133;
+        height: 48px;
+        line-height: 48px;
+        .el-link .el-link--inner {
+            > div {
+                font-size: 12px !important
+            }
+        }
+
+        &:hover {
+            .el-link, .el-link--inner {
+                color: #fff !important;
+                > div {
+                    font-size: 12px !important
+                }
+            }
+            color: #fff !important;
+            background-color: #409EFF !important;
+        }
+
+    }
+
+    .el-menu-item {
+        background-color: #fff;
+        font-weight: 500;
+        height: 48px;
+        line-height: 48px;
+        &:hover {
+            color: #fff !important;
+            background-color: #409EFF !important;
+        }
+    }
+}
+</style>

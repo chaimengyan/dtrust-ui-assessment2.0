@@ -636,7 +636,7 @@ export default {
 
     // 打开关联字段弹窗
     relationBtn(row) {
-      this.$refs.assetsRelationFieldRef.relationBtn(row, '100%')
+      this.$refs.assetsRelationFieldRef.relationBtn(row)
       return
       this.fullscreenLoading = true
       this.active = 0

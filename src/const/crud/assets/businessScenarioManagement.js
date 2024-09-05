@@ -11,6 +11,8 @@ function getSelectOption(item, tenantId) {
   })
 }
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
+  option.rowKey = 'sceneId'
+
   option.column.forEach((item, index) => {
     item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')

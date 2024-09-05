@@ -63,11 +63,13 @@
           :page.sync="itemPage"
           :data="tableDictItemData"
           v-model="form"
+          :table-loading="tableLoading"
           :before-open="handleBeforeOpen"
           :option="tableDictItemOption"
           @size-change="itemSizeChange"
           @current-change="itemCurrentChange"
           @row-update="handleItemUpdate"
+          @refresh-change="handleRefreshItemChange"
           @row-save="handleItemSave"
           >
           <template slot="menuRight" slot-scope="{size}">
@@ -194,6 +196,10 @@
         })
       },
       editBtn(row) {
+        console.log(this.$refs.crud.option.column,row,'this.$refs.crud');
+        this.$refs.crud.option.column.map(x => {
+            x.editDisabled = ['prop'].includes(x.prop) ? true : false
+        })
         this.$refs.crud.rowEdit(row)
       },
       // 修改字典
@@ -257,12 +263,14 @@
       },
       getDictItemList() {
         this.dialogFormVisible = true
+        this.tableLoading = true
         getFieldInfoPageByFieldId(Object.assign({
           current: this.itemPage.currentPage,
           size: this.itemPage.pageSize
         }, {fieldId: this.fieldId})).then(res => {
           this.tableDictItemData = res.data.data.records
           this.itemPage.total = res.data.data.total
+          this.tableLoading = false
         })
       },
       handleBeforeOpen(done) {
@@ -278,7 +286,7 @@
         }).then(() => {
           addFieldInfo(row).then(res => {
             if(res.data.status == 200) {
-                this.$refs.crudItem.searchReset();
+                this.getDictItemList();
                 done();
                 this.$message.success(res.data.message);
             }
@@ -313,6 +321,9 @@
         .catch(() => {
           loading();
         });
+      },
+      handleRefreshItemChange() {
+        this.getDictItemList();
       },
       itemSizeChange(pageSize) {
         this.itemPage.pageSize = pageSize

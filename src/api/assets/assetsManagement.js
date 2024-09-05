@@ -119,13 +119,18 @@ export function getAssetsProjectHistoryByPage(query) {
   }
 
   // 根据资产id查询字段(业务场景用)
-export function getProjectAttributesListByProjectId(id) {
+// export function getProjectAttributesListByProjectId(id) {
+//     return request({
+//         url: `/assets/assetsProjectAttributes/getProjectAttributesListByProjectId/${id}`,
+//         method: 'get',
+//     })
+// }
+export function getProjectAttributesListByProjectId(query) {
     return request({
-        url: `/assets/assetsProjectAttributes/getProjectAttributesListByProjectId/${id}`,
+        url: `/assets/assetsProjectAttributes/getProjectAttributesListBySceneIdAndProjectId?sceneId=${query.sceneId}&projectId=${query.projectId}`,
         method: 'get',
     })
 }
-
  // 根据资产id查询待审核字段
  export function getAttributesListByProjectId(query) {
     return request({

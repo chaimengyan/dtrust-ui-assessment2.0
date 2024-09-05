@@ -69,6 +69,12 @@ export default {
         CheckBox,
         AssetsRelationField
     },
+    props: {
+        sceneId: {
+            type: Number,
+            default: 0
+        }
+    },
     inject: ['echoCheckedDataSubjectList', 'checkedProjectBody'],
     computed: {
         echo() {
@@ -243,6 +249,7 @@ export default {
 
         // 打开关联字段弹窗
         relationBtn(row) {
+            row.sceneId = this.sceneId
             this.currentRow = row;
             row.relationDialogSize = '60%'
             this.$refs.assetsRelationFieldRef.relationBtn(row)

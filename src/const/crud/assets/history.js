@@ -37,6 +37,17 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         minRows: 1,
         overHidden: isOverHidden,
+    },{
+        label: _this.$t('assetsManagement.修改关联'),
+        prop: 'attributeUpd',
+        type: 'textarea',
+        formslot: true,
+        formatter:(val)=>{
+            return val.attributeUpd?.replace(/<[^>]*>/g, ' ')
+          },
+        span: 24,
+        minRows: 1,
+        overHidden: isOverHidden,
     }, {
         label: _this.$t('assetsManagement.删除关联'),
         prop: 'attributeDel',

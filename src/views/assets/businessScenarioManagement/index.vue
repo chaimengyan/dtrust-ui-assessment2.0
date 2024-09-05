@@ -97,6 +97,15 @@
               @click="relationBtn(scope.row, scope.index)"
               />
           </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.直接关联字段')" placement="top">
+            <el-button
+              v-if="permissions.assets_businessScenario_relation"
+              :disabled="!handleDataPermissions('update', scope.row)"
+              type="text"
+              icon="el-icon-link"
+              @click="skipAssetBtn(scope.row, scope.index)"
+              />
+          </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('businessScenarioManagement.业务场景评估记录')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_history"
@@ -154,12 +163,14 @@
             <RelatedAssets
                 v-show="active === 0"
                 ref="relatedAssets"
+                :sceneId="sceneId"
                 @change="onDataSubject"
             />
 
           <SelectField
             v-show="active === 1"
             ref="selectField"
+            :sceneId="sceneId"
             />
           <ActRelation
             v-show="active === 2"
@@ -586,7 +597,10 @@ export default {
 
       })
     },
+    // 直接关联字段
+    skipAssetBtn(row) {
 
+    },
     // 根据业务场景id查询关联详情
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {

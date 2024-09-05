@@ -25,6 +25,10 @@
                 <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.attributeAdd">
                 </span>
             </template>
+            <template slot="attributeUpdForm" >
+                <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.attributeUpd">
+                </span>
+            </template>
             <template slot="attributeDelForm" >
                 <span style="font-size: 12px;white-space:pre-wrap;" v-html="form.attributeDel">
                 </span>

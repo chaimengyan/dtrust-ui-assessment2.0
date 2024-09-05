@@ -287,6 +287,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: false,
+            value: false,
           },
           format: {
             display: false,
@@ -309,6 +310,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: false,
+            value: false,
           },
           format: {
             display: false,
@@ -327,9 +329,11 @@ export const tableOption = (_this, isOverHidden) => {
           },
           multiple: {
             display: false,
+            value: false
           },
           estimate: {
             display: true,
+            value: true,
           },
           format: {
             display: false,
@@ -351,6 +355,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: true,
+            value: true,
           },
           format: {
             display: false,
@@ -372,6 +377,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: true,
+            value: true,
           },
           format: {
             display: false,
@@ -393,6 +399,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: false,
+            value: false,
           },
           format: {
             display: true,
@@ -414,6 +421,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: false,
+            value: false,
           },
           format: {
             display: true,
@@ -435,6 +443,7 @@ export const tableOption = (_this, isOverHidden) => {
           },
           estimate: {
             display: true,
+            value: true,
           },
           format: {
             display: false,
@@ -539,7 +548,7 @@ export const tableOption = (_this, isOverHidden) => {
     label: _this.$t('tableConfiguration.是否多选'),
     prop: 'multiple',
     display: false,
-    value: true,
+    value: false,
     tip: _this.$t('tableConfiguration.仅对下拉系列组件生效'),
     type: 'switch',
     span: 24,
@@ -563,7 +572,7 @@ export const tableOption = (_this, isOverHidden) => {
     overHidden: isOverHidden,
   },
   {
-    label: '显示值时间格式',
+    label: _this.$t('tableConfiguration.显示值时间格式'),
     prop: 'format',
     value: 'yyyy-MM-dd HH:mm',
     display: false,
@@ -575,7 +584,7 @@ export const tableOption = (_this, isOverHidden) => {
     }],
     overHidden: isOverHidden,
   },{
-    label: '真实值的时间格式',
+    label: _this.$t('tableConfiguration.真实值的时间格式'),
     prop: 'valueFormat',
     value: 'yyyy-MM-dd HH:mm',
     display: false,
@@ -588,7 +597,7 @@ export const tableOption = (_this, isOverHidden) => {
     overHidden: isOverHidden,
   },
   {
-    label: '搜索项框栅列',
+    label: _this.$t('tableConfiguration.搜索项框栅列'),
     prop: 'searchSpan',
     value: 10,
     type: 'number',
@@ -601,7 +610,7 @@ export const tableOption = (_this, isOverHidden) => {
     overHidden: isOverHidden,
   },
   {
-    label: '搜索项标题宽度',
+    label: _this.$t('tableConfiguration.搜索项标题宽度'),
     prop: 'searchLabelWidth',
     value: 70,
     type: 'number',
@@ -626,23 +635,23 @@ export const tableOption = (_this, isOverHidden) => {
   //   }],
   //   overHidden: isOverHidden,
   // },
+  // {
+  //   label: _this.$t('tableConfiguration.是否为搜索项'),
+  //   prop: 'search',
+  //   value: false,
+  //   type: 'switch',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
   {
-    label: '是否为搜索项',
-    prop: 'search',
-    value: false,
-    type: 'switch',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },
-  {
-    label: '是否在评估使用',
+    label: _this.$t('tableConfiguration.是否在评估使用'),
     prop: 'estimate',
-    value: true,
+    value: false,
     display: false,
     type: 'switch',
     span: 24,

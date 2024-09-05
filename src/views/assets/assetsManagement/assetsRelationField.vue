@@ -188,7 +188,7 @@ export default {
       this.relationDialogSize = row.relationDialogSize || this.relationDialogSize
       this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
       this.relationDialog = true
-      const Api = this.isAssets ? this.getAssetsProjectAttributesListByProjectId(this.projectId) : this.getProjectAttributesListByProjectId(this.projectId)
+      const Api = this.isAssets ? this.getAssetsProjectAttributesListByProjectId(this.projectId) : this.getProjectAttributesListByProjectId({projectId:this.projectId, sceneId:row.sceneId})
       Api.then(()  => {
         this.saveBtnText = this.echoCheckedDataSubjectList.length ? this.$t('assetsManagement.修改') : this.$t('assetsManagement.保存')
         this.isShow = true
