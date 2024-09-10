@@ -10,9 +10,9 @@ export function getAssetsProjectByPage(query) {
   }
 
   // 查询所有资产
-export function getAllAssetsProject() {
+export function getAllAssetsProject(sceneId) {
     return request({
-      url: '/assets/assetsProject/getAllAssetsProject',
+      url: `/assets/assetsProject/getAllAssetsProject?sceneId=${sceneId}`,
       method: 'get',
     })
   }
@@ -155,5 +155,13 @@ export function getVersionProjectByPage(query) {
         url: `/assets/assetsProject/getVersionProjectByPage`,
         method: 'get',
         params: query
+    })
+}
+
+// 资产名查重
+export function checkProjectName(projectName) {
+    return request({
+        url: `/assets/assetsProject/checkProjectName?projectName=${projectName}`,
+        method: 'get',
     })
 }

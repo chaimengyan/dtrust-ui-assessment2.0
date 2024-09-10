@@ -1,7 +1,11 @@
 <template>
     <basic-container v-loading="loading" class="relation-container">
         <el-row :gutter="20">
+            <el-button icon="el-icon-plus" round style="margin: 10px;" @click="addVirtualAssets('add')">新增虚拟资产</el-button>
+
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
+                <div>编辑</div>
+
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.projectId">
                     <div class="grid-content bg-purple">
                         <el-checkbox :label="item.projectId">
@@ -11,17 +15,44 @@
                 </el-col>
             </el-checkbox-group>
         </el-row>
+        <el-dialog
+            width="55%"
+            v-if="assessmentDialog"
+            :close-on-click-modal="false"
+            :visible.sync="assessmentDialog"
+            append-to-body
+            :fullscreen="isFullscreen">
+            <div class="dialog-header" slot="title">
+                <span class="dialog-header-title">{{$t('assetsManagement.新增')}}</span>
+                <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
+                    <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+                </div>
+            </div>
+            <FindAssetForm
+                ref="findAssetForm"
+                :findStatus="0"
+                :isVirtualAssets="true"
+                @commitJob="commitJob"
+            />
+        </el-dialog>
     </basic-container>
 </template>
 <script>
 import {
+    addObj,
+    delObj,
+    putObj,
     getAllAssetsProject,
     getProjectAttributesListByProjectId
 } from "@/api/assets/assetsManagement";
+import  FindAssetForm from "@/views/assets/assetsManagement/findAssetForm";
 
 export default {
     name: "RelatedAssets",
     inject: ['echoCheckedDataSubjectList'],
+    components: {
+        FindAssetForm
+    },
     computed: {
         echo() {
             return this.echoCheckedDataSubjectList()
@@ -46,13 +77,23 @@ export default {
             checkedDataSubjectOptions: [],
 
             allData: {},
-            loading: false
+            loading: false,
+            assessmentDialog: false,
+            isFullscreen: false,
+            virtualAssetType: '',
         };
     },
     created() {
         this.getMainBodList()
     },
     methods: {
+        addVirtualAssets(type) {
+            this.virtualAssetType = type
+            this.assessmentDialog = true
+        },
+        commitJob(form, done) {
+            console.log(form, 'fffffffff');
+        },
         async setDefaultValue() {
             if (this.echo.length) {
                 this.checkedDataSubjectList = this.echo.map(item => item.projectId) || []
@@ -60,7 +101,7 @@ export default {
             }
         },
         getMainBodList() {
-            getAllAssetsProject().then(res => {
+            getAllAssetsProject(this.sceneId).then(res => {
                 this.dataSubjectList = res.data.data
                 this.setDefaultValue()
             })

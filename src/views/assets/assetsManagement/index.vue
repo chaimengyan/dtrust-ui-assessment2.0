@@ -579,6 +579,7 @@ export default {
       });
     },
     handleOpenBefore(show, type) {
+      window.boxType = type
       this.curVersion = this.form.version || 0
       this.getAllAssetsBusinessScene()
       show();

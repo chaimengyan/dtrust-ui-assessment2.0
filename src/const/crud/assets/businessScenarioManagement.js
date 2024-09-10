@@ -1,15 +1,30 @@
 import iconList from "@/const/iconList";
 import city from "@/const/json/city"
 import {
-  getDeptTreeByTenantId
+  getDeptTreeByTenantId,
 } from "@/api/assets/assetsManagement";
-
+import {
+  checkSceneName
+} from "@/api/assets/businessScenarioManagement";
 // item.dicUrl 调接口
 function getSelectOption(item, tenantId) {
   getDeptTreeByTenantId(tenantId).then(res => {
     item.dicData = res.data.data || []
   })
 }
+
+const validateSceneName = (rule, value, callback) => {
+  checkSceneName(value).then(res => {
+    if (window.boxType === 'edit') callback()
+    let result = res.data.data
+    if (!result) {
+      callback(new Error('业务场景名已存在'))
+    } else {
+      callback()
+    }
+  })
+}
+
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
   option.rowKey = 'sceneId'
 
@@ -24,7 +39,9 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
       }
       getSelectOption(item, tenantId);
     }
-
+    if(item.prop === 'sceneName') {
+      item.rules.push({ validator: validateSceneName, trigger: 'blur' })
+    }
     if(item.type === 'icon') {
       item.iconList = iconList
     }

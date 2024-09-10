@@ -77,3 +77,28 @@ export function auditScene(obj) {
         data: obj
     })
 }
+
+  // 根据id查询业务场景直接关联字段
+  export function getAttributesBySceneId(id) {
+    return request({
+        url: `/assets/assetsSceneAttribute/getAttributesBySceneId/${id}`,
+        method: 'get',
+    })
+}
+
+  // 新增或修改业务场景直接关联字段
+  export function addOrUpdateStepAsset(obj) {
+    return request({
+        url: `/assets/assetsSceneAttribute/addOrUpdate`,
+        method: 'post',
+        data: obj
+    })
+}
+
+// 业务场景名查重
+export function checkSceneName(sceneName) {
+    return request({
+        url: `/assets/assetsBusinessScene/checkSceneName?sceneName=${sceneName}`,
+        method: 'get',
+    })
+}

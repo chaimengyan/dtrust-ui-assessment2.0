@@ -17,6 +17,7 @@
         :data="list"
         @cell-click="cellClick"
         @selection-change="selectionChange"
+        :before-open="handleOpenBefore"
       >
       <template slot="menuRight" slot-scope="{size}">
         <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
@@ -97,15 +98,6 @@
               @click="relationBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.直接关联字段')" placement="top">
-            <el-button
-              v-if="permissions.assets_businessScenario_relation"
-              :disabled="!handleDataPermissions('update', scope.row)"
-              type="text"
-              icon="el-icon-link"
-              @click="skipAssetBtn(scope.row, scope.index)"
-              />
-          </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('businessScenarioManagement.业务场景评估记录')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_history"
@@ -134,7 +126,7 @@
               @click="deleteBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('enum.审核')" placement="top">
+          <!-- <el-tooltip class="item" effect="dark" :content="$t('enum.审核')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_del&&scope.row.status === 1"
               :disabled="!handleDataPermissions('update', scope.row)"
@@ -142,7 +134,7 @@
               icon="el-icon-s-check"
               @click="examineBtn(scope.row, scope.index)"
               />
-          </el-tooltip>
+          </el-tooltip> -->
         </template>
       </avue-crud>
     </basic-container>
@@ -180,10 +172,6 @@
             @saveSuccess="saveSuccess"
              />
         </template>
-
-
-
-
 
       <div class="demo-drawer__footer">
           <el-button
@@ -355,7 +343,7 @@ export default {
     ReleaseForm,
     Details,
     FindStart,
-    EvaluationRecord
+    EvaluationRecord,
     },
     provide() {
         return {
@@ -597,10 +585,6 @@ export default {
 
       })
     },
-    // 直接关联字段
-    skipAssetBtn(row) {
-
-    },
     // 根据业务场景id查询关联详情
     getProjectAttributesBySceneId(sceneId) {
       return getProjectAttributesBySceneId(sceneId).then(res => {
@@ -737,6 +721,10 @@ export default {
     },
     handleRefreshChange() {
       this.getList(this.page);
+    },
+    handleOpenBefore(show, type) {
+      window.boxType = type
+      show();
     },
     handleUpdate(row, index) {
       this.$refs.crud.rowEdit(row, index);

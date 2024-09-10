@@ -1,7 +1,8 @@
 
 import iconList from "@/const/iconList";
 import {
-  getDeptTreeByTenantId
+  getDeptTreeByTenantId,
+  checkProjectName
 } from "@/api/assets/assetsManagement";
 import city from "@/const/json/city"
 
@@ -9,6 +10,18 @@ import city from "@/const/json/city"
 function getSelectOption(item, tenantId) {
   getDeptTreeByTenantId(tenantId).then(res => {
     item.dicData = res.data.data || []
+  })
+}
+
+const validateProjectName = (rule, value, callback) => {
+  checkProjectName(value).then(res => {
+    if (window.boxType === 'edit') callback()
+    let result = res.data.data
+    if (!result) {
+      callback(new Error('资产名已存在'))
+    } else {
+      callback()
+    }
   })
 }
 
@@ -22,7 +35,9 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     if (item.dicUrl) {
       getSelectOption(item, tenantId);
     }
-    
+    if(item.prop === 'projectName') {
+      item.rules.push({ validator: validateProjectName, trigger: 'blur' })
+    }
     if(item.type === 'cascader') {
       item.props = {
         label: 'name_cn',

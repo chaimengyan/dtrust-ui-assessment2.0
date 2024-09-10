@@ -29,6 +29,7 @@ import {
   getTableByName,
   getAssetsFieldByTableName
 } from "@/api/customConfiguration/tableConfiguration";
+import { mapGetters } from "vuex";
 export default {
     name: "FindAssetForm",
     components: {
@@ -38,6 +39,10 @@ export default {
           type: Number,
           default: 0
       },
+      isVirtualAssets: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
         return {
@@ -58,6 +63,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(["userInfo"]),
         // findAssetFormOption() {
         //     return tableOption(this, this.$route.query.tenantId, false, true)
         // },
@@ -74,7 +80,8 @@ export default {
                         ...tableRes.data.data,
                         column: res.data.data
                     };
-                    tableOption(this, this.$route.query.tenantId, false, true, this.findAssetFormOption)
+                    const tenantId = this.isVirtualAssets ? this.userInfo.tenantId : this.$route.query.tenantId
+                    tableOption(this, tenantId, false, true, this.findAssetFormOption)
                     // this.$refs.crud.refreshTable()
                 })
             })
