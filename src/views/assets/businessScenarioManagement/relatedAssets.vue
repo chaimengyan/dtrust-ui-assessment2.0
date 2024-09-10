@@ -11,6 +11,9 @@
                         <el-checkbox :label="item.projectId">
                             {{item.projectName}}
                         </el-checkbox>
+                        <div class="action-btn-group">
+                            <span>删除</span>
+                        </div>
                     </div>
                 </el-col>
             </el-checkbox-group>
@@ -184,12 +187,22 @@ export default {
     background: #e5e9f2;
 }
 .grid-content {
+    position: relative;
     word-wrap: break-word;
     border-radius: 4px;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .action-btn-group {
+        position: absolute;
+        right: 0;
+        top: 0;
+        >span {
+            font-size: 14px !important;
+        }
+    }
 }
 .row-bg {
     padding: 10px 0;
