@@ -1,6 +1,6 @@
 <template>
     <basic-container>
-        <avue-form ref="findAssetForm" :disabled="!!findStatus" v-model="findAssetForm" :option="findAssetFormOption" @submit="submitBtn">
+        <avue-form v-loading="loading" ref="findAssetForm" :disabled="!!findStatus" v-model="findAssetForm" :option="findAssetFormOption" @submit="submitBtn">
             <!-- 经纬度 -->
             <template slot="hostingLocation">
                 <avue-input v-model="findAssetForm.hostingLocation" @focus="openMap" :placeholder="`${$t('crudCommon.请选择')}${$t('assetsManagement.托管位置')}`"  />
@@ -42,6 +42,10 @@ export default {
       isVirtualAssets: {
         type: Boolean,
         default: false
+      },
+      assetInfo: {
+        type: Object,
+        default: () => {}
       }
     },
     data() {
@@ -60,6 +64,7 @@ export default {
             showMap:false,
             map: null,
             findAssetFormOption: {},
+            loading:false,
         }
     },
     computed: {
@@ -70,6 +75,10 @@ export default {
     },
     created() {
         this.getTable()
+        this.loading = true
+        if(this.isVirtualAssets && JSON.stringify(this.assetInfo) !== '{}') {
+            this.findAssetForm = this.assetInfo
+        }
     },
     methods: {
         //查询table/资产表格/表单配置
@@ -82,6 +91,7 @@ export default {
                     };
                     const tenantId = this.isVirtualAssets ? this.userInfo.tenantId : this.$route.query.tenantId
                     tableOption(this, tenantId, false, true, this.findAssetFormOption)
+                    this.loading = false
                     // this.$refs.crud.refreshTable()
                 })
             })

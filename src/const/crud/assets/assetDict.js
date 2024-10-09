@@ -123,19 +123,21 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
-  },{
-    label: _this.$t('tableConfiguration.弹出表单是否显示'),
-    prop: 'display',
-    value: true,
-    type: 'switch',
-    span: 24,
-    rules: [{
-      required: false,
-      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
-      trigger: 'blur'
-    }],
-    overHidden: isOverHidden,
-  },{
+  },
+  // {
+  //   label: _this.$t('tableConfiguration.弹出表单是否显示'),
+  //   prop: 'display',
+  //   value: true,
+  //   type: 'switch',
+  //   span: 24,
+  //   rules: [{
+  //     required: false,
+  //     // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+  //     trigger: 'blur'
+  //   }],
+  //   overHidden: isOverHidden,
+  // },
+  {
     label: _this.$t('tableConfiguration.是否必填'),
     prop: 'required',
     value: true,
@@ -300,7 +302,9 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             type: 'color',
-            display: true,
+            display: false,
+            addDisplay: false,
+            editDisplay: true
           },
           checkStrictly: {
             display: false,
@@ -320,6 +324,29 @@ export const tableOption = (_this, isOverHidden) => {
           }
         }
       }else if(val === 'cascader') {
+        return {
+          value: {
+            display: false,
+          },
+          checkStrictly: {
+            display: true,
+          },
+          multiple: {
+            display: false,
+            value: false
+          },
+          estimate: {
+            display: true,
+            value: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          }
+        }
+      }else if(val === 'tree') {
         return {
           value: {
             display: false,

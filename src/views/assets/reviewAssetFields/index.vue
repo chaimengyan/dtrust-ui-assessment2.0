@@ -146,7 +146,8 @@ import ReviewDialog  from "@/views/assets/reviewAssetFields/reviewDialog"
             {
               current: page.currentPage,
               size: page.pageSize,
-              status: 1
+              status: 1,
+              virtual: true
             },
             params
           )

@@ -61,6 +61,7 @@ mounted() {
 
 
     .menu-item {
+        width: 160px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

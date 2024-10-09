@@ -1,4 +1,4 @@
-FROM nginx
+FROM registry.cn-hangzhou.aliyuncs.com/yjhu/nginx
 
 COPY ./dist /data
 

@@ -124,24 +124,26 @@ export const tableOption = (_this, isOverHidden) => {
         }],
         overHidden: isOverHidden,
       },
+      // {
+      //   label: _this.$t('crudCommon.图标'),
+      //   prop: 'attributesIcon',
+      //   type: 'icon',
+      //   value: 'iconfont icon-zd-zhuzhi',
+      //   span: 24,
+      //   iconList: iconList,
+      //   rules: [{
+      //     required: true,
+      //     message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.图标')}`,
+      //     trigger: 'change'
+      //   }]
+      // }, 
       {
-        label: _this.$t('crudCommon.图标'),
-        prop: 'attributesIcon',
-        type: 'icon',
-        value: 'iconfont icon-zd-zhuzhi',
-        span: 24,
-        iconList: iconList,
-        rules: [{
-          required: true,
-          message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.图标')}`,
-          trigger: 'change'
-        }]
-      }, {
         label: _this.$t('crudCommon.颜色'),
         prop: 'attributesColor',
         type: 'color',
-        value: 'rgba(28, 153, 128, 1)',
+        value: '',
         span: 24,
+        addDisplay: false,
         rules: [{
           required: true,
           message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.颜色')}`,

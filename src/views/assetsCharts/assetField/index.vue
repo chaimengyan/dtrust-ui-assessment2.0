@@ -16,7 +16,8 @@
               class="attributes-block icon-block"
               @click="handleClick($event, item)"
             >
-              <i style="pointer-events: none;font-size: 18px;" :class="item.attributesIcon"></i>
+              <!-- <i style="pointer-events: none;font-size: 18px;" :class="item.attributesIcon"></i> -->
+              <div style="font-size:12px;">{{item.attributesName.substring(0, 2)}}</div>
             </div>
           </el-tooltip>
         </template>

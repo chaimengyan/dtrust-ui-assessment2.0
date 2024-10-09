@@ -165,3 +165,11 @@ export function checkProjectName(projectName) {
         method: 'get',
     })
 }
+
+// 删除虚拟资产
+export function delVirtualAssetObj(id) {
+    return request({
+        url: `/assets/assetsProject/deleteVirtualById?id=${id}`,
+        method: 'delete',
+    })
+}

@@ -1,18 +1,17 @@
 <template>
     <basic-container v-loading="loading" class="relation-container">
         <el-row :gutter="20">
-            <el-button icon="el-icon-plus" round style="margin: 10px;" @click="addVirtualAssets('add')">新增虚拟资产</el-button>
+            <el-button icon="el-icon-plus" round style="margin: 10px;" @click="addVirtualAssets('add',{})">新增虚拟资产</el-button>
 
             <el-checkbox-group v-model="checkedDataSubjectList" @change="handleCheckedChange">
-                <div>编辑</div>
-
                 <el-col :span="6" v-for="item in dataSubjectList" :key="item.projectId">
                     <div class="grid-content bg-purple">
                         <el-checkbox :label="item.projectId">
                             {{item.projectName}}
                         </el-checkbox>
-                        <div class="action-btn-group">
-                            <span>删除</span>
+                        <div v-if="item.sceneId" class="action-btn-group">
+                            <el-button size="mini" type="text" icon="el-icon-edit" @click="addVirtualAssets('edit', item)"></el-button>
+                            <el-button size="mini" style="color:red;" type="text" icon="el-icon-delete" @click="deleteBtn(item)"></el-button>
                         </div>
                     </div>
                 </el-col>
@@ -26,7 +25,7 @@
             append-to-body
             :fullscreen="isFullscreen">
             <div class="dialog-header" slot="title">
-                <span class="dialog-header-title">{{$t('assetsManagement.新增')}}</span>
+                <span class="dialog-header-title">{{virtualAssetType === 'add' ? $t('dataProcessingActivities.新增'):$t('crudCommon.编辑')}}</span>
                 <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
@@ -35,6 +34,7 @@
                 ref="findAssetForm"
                 :findStatus="0"
                 :isVirtualAssets="true"
+                :assetInfo="assetInfo"
                 @commitJob="commitJob"
             />
         </el-dialog>
@@ -43,7 +43,7 @@
 <script>
 import {
     addObj,
-    delObj,
+    delVirtualAssetObj,
     putObj,
     getAllAssetsProject,
     getProjectAttributesListByProjectId
@@ -84,18 +84,47 @@ export default {
             assessmentDialog: false,
             isFullscreen: false,
             virtualAssetType: '',
+            assetInfo: {},
         };
     },
     created() {
         this.getMainBodList()
     },
     methods: {
-        addVirtualAssets(type) {
+        addVirtualAssets(type, row) {
+            window.boxType = type
+            this.assetInfo = row
             this.virtualAssetType = type
             this.assessmentDialog = true
         },
         commitJob(form, done) {
-            console.log(form, 'fffffffff');
+            form.sceneId = this.sceneId
+            const Api = this.virtualAssetType === 'add' ? addObj : putObj
+            Api(form).then(res => {
+                this.$message.success(res.data.message)
+                this.assessmentDialog = false
+                this.getMainBodList()
+                done()
+            }).catch(() => {
+                done()
+            })
+        },
+        deleteBtn(row) {
+            this.$confirm(this.$t('crudCommon.是否删除本条数据'), this.$t('crudCommon.提示'), {
+                confirmButtonText: this.$t('crudCommon.删除'),
+                cancelButtonText: this.$t('crudCommon.不删除'),
+                type: "warning",
+            })
+            .then(() => {
+                delVirtualAssetObj(row.projectId).then((res) => {
+                    if (res.data.status === 200) {
+                        this.$message.success(res.data.message);
+                        this.getMainBodList()
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+            })
         },
         async setDefaultValue() {
             if (this.echo.length) {

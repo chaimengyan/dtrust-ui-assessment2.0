@@ -581,7 +581,7 @@ export default {
     handleOpenBefore(show, type) {
       window.boxType = type
       this.curVersion = this.form.version || 0
-      this.getAllAssetsBusinessScene()
+      // this.getAllAssetsBusinessScene()
       show();
     },
     // 获取全部业务场景
