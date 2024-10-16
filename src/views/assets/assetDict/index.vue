@@ -196,10 +196,12 @@
         })
       },
       editBtn(row) {
-        console.log(this.$refs.crud.option.column,row,'this.$refs.crud');
-        this.$refs.crud.option.column.map(x => {
-            x.editDisabled = ['prop'].includes(x.prop) ? true : false
-        })
+        // if(!row.canUpdate){
+        if(row.createBy === 'admin'){
+          this.$refs.crud.option.column.map(x => {
+            x.editDisabled = ['label'].includes(x.prop) ? false : true
+          })
+        }
         this.$refs.crud.rowEdit(row)
       },
       // 修改字典

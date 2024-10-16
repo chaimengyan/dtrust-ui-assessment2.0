@@ -18,7 +18,7 @@ const validateSceneName = (rule, value, callback) => {
     if (window.boxType === 'edit') callback()
     let result = res.data.data
     if (!result) {
-      callback(new Error('业务场景名已存在'))
+      callback(new Error('业务活动名已存在'))
     } else {
       callback()
     }

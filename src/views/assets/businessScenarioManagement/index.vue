@@ -43,7 +43,7 @@
             @click="findBusiness"
             type="primary"
             icon="el-icon-position"
-            >{{$t('businessScenarioManagement.发现业务场景')}}
+            >{{$t('businessScenarioManagement.发现业务活动')}}
           </el-button>
           <el-button
             v-if="permissions.assets_businessScenario_export"
@@ -98,7 +98,7 @@
               @click="relationBtn(scope.row, scope.index)"
               />
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('businessScenarioManagement.业务场景评估记录')" placement="top">
+          <el-tooltip class="item" effect="dark" :content="$t('businessScenarioManagement.业务活动评估记录')" placement="top">
             <el-button
               v-if="permissions.assets_businessScenario_history"
               type="text"
@@ -219,13 +219,13 @@
       </div>
     </el-dialog>
     <el-dialog
-      title="查看业务场景详情"
+      title="查看业务活动详情"
       width="70%"
       v-if="detailsDialog"
       :visible.sync="detailsDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('businessScenarioManagement.查看业务场景详情')}}</span>
+        <span class="dialog-header-title">{{$t('businessScenarioManagement.查看业务活动详情')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
@@ -239,14 +239,14 @@
         />
     </el-dialog>
     <el-dialog
-      :title="$t('businessScenarioManagement.发现业务场景')"
+      :title="$t('businessScenarioManagement.发现业务活动')"
       width="70%"
       v-if="findDialog"
       :close-on-click-modal="false"
       :visible.sync="findDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('businessScenarioManagement.发现业务场景')}}</span>
+        <span class="dialog-header-title">{{$t('businessScenarioManagement.发现业务活动')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
@@ -291,13 +291,13 @@
     </el-dialog>
     <el-dialog
       v-if="historyDialog"
-      :title="$t('businessScenarioManagement.业务场景评估记录')"
+      :title="$t('businessScenarioManagement.业务活动评估记录')"
        width="70%"
        :visible.sync="historyDialog"
        append-to-body
        :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('businessScenarioManagement.业务场景评估记录')}}</span>
+        <span class="dialog-header-title">{{$t('businessScenarioManagement.业务活动评估记录')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
@@ -519,7 +519,7 @@ export default {
 
     // 重新评估
     reassess(sceneId) {
-      this.$confirm(this.$t('businessScenarioManagement.是否对本业务场景发起新的评估'),
+      this.$confirm(this.$t('businessScenarioManagement.是否对本业务活动发起新的评估'),
       this.$t('crudCommon.提示'), {
         confirmButtonText: this.$t('crudCommon.确定'),
         cancelButtonText: this.$t('crudCommon.取消'),

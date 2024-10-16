@@ -16,7 +16,7 @@
 
         <!-- 业务场景 -->
         <div class="middleScene">
-            <div class="title">业务场景</div>
+            <div class="title">业务活动</div>
             <template v-for="scene in sceneList">
                 <div
                     class="sceneItem"

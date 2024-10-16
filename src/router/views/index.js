@@ -37,7 +37,7 @@ export default [{
     redirect: '/assets/businessScenarioManagement/index',
     children: [{
         path: 'index',
-        name: '业务场景管理',
+        name: '业务活动管理',
         component: () =>
             import ( /* webpackChunkName: "page" */ '@/views/assets/businessScenarioManagement'),
     }]

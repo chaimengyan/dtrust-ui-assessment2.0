@@ -14,7 +14,7 @@
         </div>
         <div class="downContent">
             <div class="leftType">
-                <div v-if="typeList.includes('0')" class="typeItem" >{{$t('assetbusin.业务场景')}}</div>
+                <div v-if="typeList.includes('0')" class="typeItem" >{{$t('assetbusin.业务活动')}}</div>
                 <div v-if="typeList.includes('1')" class="typeItem" >{{$t('assetbusin.字段类别')}}</div>
                 <div v-if="typeList.includes('2')" class="typeItem" >{{$t('assetbusin.字段')}}</div>
                 <div v-if="typeList.includes('3')" class="typeItem" >{{$t('assetbusin.收集')}}</div>

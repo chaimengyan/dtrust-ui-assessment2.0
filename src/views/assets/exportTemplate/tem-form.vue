@@ -63,22 +63,22 @@
             </template>
             
             <template v-if='[2,3,5].includes(temForm.type)'>
-                <el-form-item :label="$t('exportTemplate.是否展示业务场景的基本信息')" prop="sceneSimple">
+                <el-form-item :label="$t('exportTemplate.是否展示业务活动的基本信息')" prop="sceneSimple">
                     <el-switch v-model="temForm.sceneSimple" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneSimple' :label="$t('exportTemplate.业务场景的基本信息排序')" prop="sceneSimpleSort">
+                <el-form-item v-if='temForm.sceneSimple' :label="$t('exportTemplate.业务活动的基本信息排序')" prop="sceneSimpleSort">
                     <el-input-number v-model="temForm.sceneSimpleSort" controls-position="right" />
                 </el-form-item>
-                <el-form-item :label="$t('exportTemplate.是否展示业务场景统计图')" prop="sceneChart">
+                <el-form-item :label="$t('exportTemplate.是否展示业务活动统计图')" prop="sceneChart">
                     <el-switch v-model="temForm.sceneChart" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneChart' :label="$t('exportTemplate.业务场景统计图排序')" prop="sceneChartSort">
+                <el-form-item v-if='temForm.sceneChart' :label="$t('exportTemplate.业务活动统计图排序')" prop="sceneChartSort">
                     <el-input-number v-model="temForm.sceneChartSort" controls-position="right" />
                 </el-form-item>
-                <el-form-item :label="$t('exportTemplate.是否展示业务场景字段列表')" prop="sceneAttribute">
+                <el-form-item :label="$t('exportTemplate.是否展示业务活动字段列表')" prop="sceneAttribute">
                     <el-switch v-model="temForm.sceneAttribute" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneAttribute' :label="$t('exportTemplate.业务场景字段列表排序')" prop="sceneAttributeSort">
+                <el-form-item v-if='temForm.sceneAttribute' :label="$t('exportTemplate.业务活动字段列表排序')" prop="sceneAttributeSort">
                     <el-input-number v-model="temForm.sceneAttributeSort" controls-position="right" />
                 </el-form-item>
             </template>
@@ -170,11 +170,11 @@
                     value: 1
                 },
                 {
-                    label: this.$t('exportTemplate.业务场景评估模板'),
+                    label: this.$t('exportTemplate.业务活动评估模板'),
                     value: 2
                 },
                 {
-                    label: this.$t('exportTemplate.资产业务场景评估模板'),
+                    label: this.$t('exportTemplate.资产业务活动评估模板'),
                     value: 3
                 },
                 {
@@ -182,7 +182,7 @@
                     value: 4
                 },
                 {
-                    label: this.$t('exportTemplate.业务场景信息模板'),
+                    label: this.$t('exportTemplate.业务活动信息模板'),
                     value: 5
                 },
                 {

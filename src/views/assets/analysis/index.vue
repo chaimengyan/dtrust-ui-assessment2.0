@@ -645,7 +645,7 @@ export default {
                         }
                     },
                      title: {
-                        text: this.$t('analysis.业务场景分布按机构'),
+                        text: this.$t('analysis.业务活动分布按机构'),
                         textStyle: {
                             fontSize: 14
                         },
@@ -790,7 +790,7 @@ export default {
                         }
                     },
                     title: {
-                        text: this.$t('analysis.获取最近几个月的业务场景风险'),
+                        text: this.$t('analysis.获取最近几个月的业务活动风险'),
                         textStyle: {
                             fontSize: 14
                         },
@@ -937,7 +937,7 @@ export default {
                         }
                     },
                     title: {
-                        text: this.$t('analysis.获取最近几个月未评估的资产或业务场景'),
+                        text: this.$t('analysis.获取最近几个月未评估的资产或业务活动'),
                         textStyle: {
                             fontSize: 14
                         },
@@ -995,7 +995,7 @@ export default {
                         {
                             type: 'value',
                             gridIndex: 1,
-                            name: this.$t('analysis.业务场景数量'),
+                            name: this.$t('analysis.业务活动数量'),
                             minInterval: 1,
                             nameTextStyle: {
                                 color: '#1481f2',

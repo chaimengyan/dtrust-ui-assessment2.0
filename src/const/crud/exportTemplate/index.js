@@ -124,7 +124,7 @@ export const tableOption = (_this, isOverHidden) => {
       span: 24,
       overHidden: isOverHidden,
     }, {
-      label: _this.$t('businessScenarioManagement.业务场景名称'),
+      label: _this.$t('businessScenarioManagement.业务活动名称'),
       prop: 'sceneName',
       span: 24,
       overHidden: isOverHidden,

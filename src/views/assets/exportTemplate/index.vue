@@ -142,7 +142,7 @@
                 <el-select v-if="templateType === 4" v-model="assetsId" :placeholder="`${$t('crudCommon.请选择')}${$t('businessScenarioManagement.资产')}`" clearable>
                     <el-option v-for="item in assetsOptions" :key="item.projectId" :label="item.projectName" :value="item.projectId" />
                 </el-select>
-                <el-select v-if="templateType === 5" v-model="sceneId" :placeholder="`${$t('crudCommon.请选择')}${$t('assetbusin.业务场景')}`" clearable>
+                <el-select v-if="templateType === 5" v-model="sceneId" :placeholder="`${$t('crudCommon.请选择')}${$t('assetbusin.业务活动')}`" clearable>
                     <el-option v-for="item in sceneOptions" :key="item.sceneId" :label="item.sceneName" :value="item.sceneId" />
                 </el-select>
             </div>

@@ -1,7 +1,7 @@
 <template>
     <basic-container>
         <el-tabs type="border-card">
-            <el-tab-pane :label="$t('businessScenarioManagement.业务场景详情')">
+            <el-tab-pane :label="$t('businessScenarioManagement.业务活动详情')">
                 <el-descriptions title="" :column="2" size="mini" border>
                     <template v-for="item,index in viewColumn" >
                         <el-descriptions-item
