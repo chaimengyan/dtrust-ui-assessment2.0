@@ -201,6 +201,10 @@
           this.$refs.crud.option.column.map(x => {
             x.editDisabled = ['label'].includes(x.prop) ? false : true
           })
+        }else {
+          this.$refs.crud.option.column.map(x => {
+            x.editDisabled =  false
+          })
         }
         this.$refs.crud.rowEdit(row)
       },

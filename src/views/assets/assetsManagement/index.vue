@@ -202,7 +202,7 @@
     </el-dialog>
     <el-dialog
       :title="$t('assetsManagement.启动评估')"
-      width="40%"
+      width="35%"
       v-if="assessmentDialog"
       :visible.sync="assessmentDialog"
       :close-on-click-modal="false"
@@ -873,7 +873,6 @@ export default {
       this.getList(this.page);
     },
     handleUpdate(row, index) {
-      console.log(this.$refs, '2222222');
       this.$refs.crud.rowEdit(row, index);
     },
   },

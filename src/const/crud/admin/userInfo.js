@@ -1,5 +1,5 @@
 
-export const tableOption = (_this, tenantId) => {
+export const tableOption = (_this, tenantId, roleIds) => {
   // 设置手机号的验证规则
 const checkPhone = (rule, value, callback) => {
   if (!value) {
@@ -87,7 +87,7 @@ const checkPhone = (rule, value, callback) => {
     prop: 'roleList',
     // formslot: true,
     type: 'select',
-    dicUrl: '/admin/role/list',
+    dicUrl: `/admin/role/listByIds?ids=${roleIds}`,
     multiple:true,
     props: {
         label: 'roleName',

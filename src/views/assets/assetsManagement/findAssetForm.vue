@@ -133,10 +133,19 @@ export default {
             })
             },
         submitBtn(form, done) {
-            if(Array.isArray(form.organizationalSecurityMeasures) || typeof form.organizationalSecurityMeasures === 'object') {
-                form.organizationalSecurityMeasures = form.organizationalSecurityMeasures.join()
+            // if(Array.isArray(form.organizationalSecurityMeasures) || typeof form.organizationalSecurityMeasures === 'object') {
+            //     form.organizationalSecurityMeasures = form.organizationalSecurityMeasures.join()
+            // }
+            let formReduce = {}
+            for(let key in form) {
+                if(Array.isArray(form[key])) {
+                    form[key] = form[key].join()
+                }
+                if(key.substr(0, 1) !== '$') {
+                    formReduce[key] = form[key]
+                }
             }
-            this.$emit('commitJob',form, done)
+            this.$emit('commitJob',formReduce, done)
         },
         saveLatlng() {
             this.showMap = false

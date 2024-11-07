@@ -142,7 +142,7 @@
                 <el-select v-if="templateType === 4" v-model="assetsId" :placeholder="`${$t('crudCommon.请选择')}${$t('businessScenarioManagement.资产')}`" clearable>
                     <el-option v-for="item in assetsOptions" :key="item.projectId" :label="item.projectName" :value="item.projectId" />
                 </el-select>
-                <el-select v-if="templateType === 5" v-model="sceneId" :placeholder="`${$t('crudCommon.请选择')}${$t('assetbusin.业务活动')}`" clearable>
+                <el-select v-if="templateType === 5" v-model="sceneId" :placeholder="`${$t('crudCommon.请选择')}${$t('exportTemplate.业务活动')}`" clearable>
                     <el-option v-for="item in sceneOptions" :key="item.sceneId" :label="item.sceneName" :value="item.sceneId" />
                 </el-select>
             </div>
@@ -162,6 +162,8 @@
             getEvaluationListApi,
             getRecordsApi
         } from '@/api/exportTemplate/index'
+    import { getAllAssetsBusinessScene } from "@/api/assets/businessScenarioManagement";
+    import { getAllAssetsProject } from "@/api/assets/assetsManagement";
     import {exportRecordOption, tableOption} from '@/const/crud/exportTemplate/index'
     import temForm from '@/views/assets/exportTemplate/tem-form.vue'
     import {mapGetters} from 'vuex'
@@ -348,12 +350,12 @@
             })
         },
         getAllAssetsProject() {
-            getAllAssetsProjectApi().then(res => {
+            getAllAssetsProject('').then(res => {
                 this.assetsOptions = res.data.data
             })
         },
         getAllAssetsBusinessScene() {
-            getAllAssetsBusinessSceneApi().then(res => {
+            getAllAssetsBusinessScene().then(res => {
                 this.sceneOptions = res.data.data
             })
         },

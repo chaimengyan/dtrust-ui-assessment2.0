@@ -515,6 +515,7 @@ export default {
     已截止: 'Expired',
   },
   exportTemplate: {
+    业务活动: 'Business activity',
     导出报告: 'Export report',
     模板名称: 'Template Name',
     导出记录: 'Export Record',

@@ -1,0 +1,257 @@
+<template>
+    <div class="user">
+      <basic-container>
+        <avue-crud
+          :option="option"
+          ref="crud"
+          v-model="form"
+          :page.sync="page"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :table-loading="listLoading"
+          @search-change="handleFilter"
+          @search-reset="resetChange"
+          @refresh-change="handleRefreshChange"
+          @row-update="update"
+          @row-save="create"
+          @selection-change="selectionChange"
+          :data="list"
+        >
+          <template slot="menuRight" slot-scope="{size}">
+            <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
+          </template>
+  
+          <template slot="menuLeft">
+            <el-button
+              v-if="permissions.field_fieldMasterData_add"
+              class="filter-item"
+              @click="$refs.crud.rowAdd()"
+              type="primary"
+              icon="el-icon-plus"
+              >{{$t('crudCommon.添加')}}
+            </el-button>
+            <el-button
+              v-if="permissions.field_fieldMasterData_batchDel"
+              type="primary"
+              plain
+              icon="el-icon-delete"
+              @click="deleteBtn(false)"
+              >{{$t('crudCommon.批量删除')}}
+            </el-button>
+          </template>
+          <template slot="menu" slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
+                <el-button
+                v-if="permissions.field_fieldMasterData_edit"
+                :disabled="!handleDataPermissions('update', scope.row)"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row, scope.index)"
+                />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
+                <el-button
+                v-if="permissions.field_fieldMasterData_del"
+                :disabled="!handleDataPermissions('delete', scope.row)"
+                type="text"
+                icon="el-icon-delete"
+                @click="deleteBtn(scope.row, scope.index)"
+                />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.关联')" placement="top">
+                <el-button
+                v-if="permissions.field_fieldMasterData_del"
+                :disabled="!handleDataPermissions('delete', scope.row)"
+                type="text"
+                icon="el-icon-delete"
+                @click="relationBtn(scope.row, scope.index)"
+                />
+            </el-tooltip>
+          </template>
+        </avue-crud>
+        <el-dialog
+          :title="$t('fieldManagement.批量编辑主体类型')" 
+          width="70%" 
+          :visible.sync="relationshipDialog" 
+          append-to-body
+          :close-on-click-modal="false" 
+          :fullscreen="isFullscreen">
+          <div class="dialog-header" slot="title">
+            <span class="dialog-header-title">{{$t('fieldManagement.批量编辑主体类型')}}</span>
+            <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
+              <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+            </div>
+          </div> 
+          <Relationship />
+          <span slot="footer" class="dialog-footer">
+            <!-- <el-button
+              type="primary"
+              icon="el-icon-circle-check"
+              v-loading.fullscreen.lock="fullscreenLoading"
+              @click="sumbitDataSubject">{{$t('assetsManagement.修改')}}</el-button>
+            <el-button 
+              icon="el-icon-circle-close"
+              @click="dataSubjectDialog = false">{{$t('assetsManagement.取消')}}</el-button> -->
+  
+          </span>
+        </el-dialog>
+        
+      </basic-container>
+    </div>
+  </template>
+  
+  <script>
+  import {
+    getTransferActivityByPage,
+  } from "@/api/assets/crossBorderData";
+  import { tableOption} from '@/const/crud/assets/crossBorderData'
+  import Relationship from '@/views/assets/crossBorderData/relationship/index'
+  import { mapGetters } from "vuex";
+  export default {
+    name: "crossBorderData",
+    components: { Relationship },
+    data() {
+      return {
+        page: {
+          total: 0, // 总页数
+          currentPage: 1, // 当前页数
+          pageSize: 20, // 每页显示多少条,
+          isAsc: false, //是否倒序
+        },
+        query: {},
+        list: [],
+        listLoading: true,
+        form: {},
+        ids: [],
+        fullscreenLoading: false,
+        isFullscreen: false,
+        isOverHidden: true,
+        relationshipDialog: false,
+      };
+    },
+    computed: {
+      ...mapGetters(["permissions"]),
+      option() {
+        return tableOption(this, this.isOverHidden)
+      },
+    },
+    watch: {
+    },
+    created() {
+        this.relationshipDialog = true
+    //   this.getList(this.page);
+    },
+    methods: {
+        relationBtn() {
+            this.relationshipDialog = true
+        },
+      changeArray() {
+        this.isOverHidden = !this.isOverHidden
+        tableOption(this, this.isOverHidden)
+      },
+      getList(page, params) {
+        this.listLoading = true;
+        getTransferActivityByPage(
+          Object.assign(
+            {
+              current: page.currentPage,
+              size: page.pageSize,
+            },
+            params
+          )
+        ).then((response) => {
+          this.list = response.data.data.records
+          this.page.total = response.data.data.total;
+          this.listLoading = false;
+        });
+      },
+
+      sizeChange(pageSize) {
+        this.page.pageSize = pageSize;
+        this.getList(this.page, this.query);
+      },
+      currentChange(current) {
+        this.page.currentPage = current;
+        this.getList(this.page, this.query);
+      },
+      handleFilter(param, done) {
+        this.query = param;
+        this.page.currentPage = 1;
+        this.getList(this.page, param);
+        done();
+      },
+      resetChange(){
+        this.query = {}
+        this.getList(this.page, this.query);
+      },
+      handleRefreshChange() {
+        this.getList(this.page);
+      },
+      handleUpdate(row, index) {
+        this.$refs.crud.rowEdit(row, index);
+      },
+      create(row, done, loading) {
+        addObj(this.form)
+          .then(res => {
+            if(res.data.status == 200) {
+                this.$refs.crud.searchReset();
+                done();
+                this.$message.success(res.data.message);
+            } else {
+                loading();
+            }
+        })
+        .catch(() => {
+            loading();
+        });
+      },
+      update(row, index, done, loading) {
+        putObj(this.form)
+          .then(res => {
+            if(res.data.status == 200) {
+                this.getList(this.page);
+                done();
+                this.$message.success(res.data.message);
+            } else {
+                loading();
+            }
+        })
+        .catch(() => {
+            loading();
+        });
+      },
+
+      deleteBtn(row) {
+        const ids = row ? [row.attributesId] : this.ids
+        if(!ids.length) {
+          this.$message.error(this.$t('crudCommon.请选择要删除的数据'));
+          return
+        }
+        this.$confirm(this.$t('crudCommon.是否删除本条数据'), this.$t('crudCommon.提示'), {
+          confirmButtonText: this.$t('crudCommon.删除'),
+          cancelButtonText: this.$t('crudCommon.不删除'),
+          type: "warning",
+        })
+          .then(() => {
+            delObj(ids).then((res) => {
+              if (res.data.status == 200) {
+                this.$message.success(res.data.message);
+                this.$refs.crud.toggleSelection()
+                this.handleRefreshChange();
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          })
+      },
+      selectionChange(list){
+        this.ids = list.map(item => (item.attributesId))
+      },
+    },
+  };
+  </script>
+  <style lang="scss" scoped>
+  ::v-deep  .avue-icon i {
+    font-size: 16px !important;
+  }
+  </style>

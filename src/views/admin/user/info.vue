@@ -106,7 +106,7 @@
         computed: {
             ...mapGetters(["roles", "userInfo"]),
             option() {
-                return tableOption(this, this.userInfo.tenantId)
+                return tableOption(this, this.userInfo.tenantId, this.roles)
             },
         },
         methods: {

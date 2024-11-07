@@ -166,6 +166,7 @@ export default {
                     })
                     this.allData[item.projectId] = {
                         projectId: item.projectId,
+                        sceneId: item.sceneId,
                         projectName: item.projectName,
                         dataSubjectList
                     }

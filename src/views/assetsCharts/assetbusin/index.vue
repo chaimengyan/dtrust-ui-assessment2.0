@@ -1,19 +1,22 @@
 <template>
     <div class="outerContainer">
         <!-- <MyChartsTemplate /> -->
-        <FreeEcharts />
+        <!-- <FreeEcharts /> -->
+        <Swimlane />
     </div>
 </template>
 
 <script>
 
- import MyChartsTemplate from "@/views/assetsCharts/assetbusin/myChartsTemplate"
- import FreeEcharts from "@/views/assetsCharts/assetbusin/freeEcharts"
+//  import MyChartsTemplate from "@/views/assetsCharts/assetbusin/myChartsTemplate"
+//  import FreeEcharts from "@/views/assetsCharts/assetbusin/freeEcharts"
+ import Swimlane from "@/views/assetsCharts/swimlane/index"
   export default {
     name: 'Assetbusin',
     components: {
-        MyChartsTemplate,
-        FreeEcharts
+        // MyChartsTemplate,
+        // FreeEcharts,
+        Swimlane
     },
     data() {
         return {
