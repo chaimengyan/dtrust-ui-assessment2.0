@@ -70,14 +70,14 @@
           </template>
         </avue-crud>
         <el-dialog
-          :title="$t('fieldManagement.批量编辑主体类型')" 
+          :title="$t('fieldManagement.资产关联')" 
           width="70%" 
           :visible.sync="relationshipDialog" 
           append-to-body
           :close-on-click-modal="false" 
           :fullscreen="isFullscreen">
           <div class="dialog-header" slot="title">
-            <span class="dialog-header-title">{{$t('fieldManagement.批量编辑主体类型')}}</span>
+            <span class="dialog-header-title">{{$t('fieldManagement.资产关联')}}</span>
             <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
               <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>

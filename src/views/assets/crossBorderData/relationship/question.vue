@@ -7,19 +7,14 @@
                         <el-button size="small" class="ml-2" @click="addChild(b)">添加逻辑组</el-button>
                         <el-button size="small" class="mr-2" @click="addConditions(b.id)">添加条件</el-button>
                     </template>
-                    <div v-if="!b.logic">
-                        <div style="display:inline-block;margin-left: 20px;">有</div><el-input-number style="margin: auto 8px" :disabled="isView" size="small" v-model="b.count" @update:model-value="updateLogicGroup(b)"></el-input-number>个满足即可触发
-                    </div>
-
-                    <!-- <el-icon v-if="!isView" class="icon error" @click="removeLogicGroup(b.id)"><RemoveFilled /></el-icon> -->
+                    <el-button type="danger" icon="el-icon-delete" @click="removeLogicGroup(b.id)" circle></el-button>
                 </div>
-                <div class="evaluation-item-content" v-for="qt in b.conditions" :key="qt?.id">
+                <div class="evaluation-item-content" >
                     <el-row :gutter="20"  class="mr-12 flex" >
                         <el-col :span="4">
                             <el-select 
                                 :disabled="isView"
                                 v-model="qt.triggerType" 
-                                @update:model-value="updateConditions(qt)" 
                                 placeholder="请选择触发条件类型" 
                                 size="small">
                                 <el-option
@@ -35,7 +30,6 @@
                                 :disabled="isView"
                                 :placeholder="`请选择问题`" 
                                 v-model="qt.questionId" 
-                                @update:model-value="updateConditions(qt)" 
                                 size="small">
                                 <el-option
                                     v-for="item in questionList"
@@ -46,7 +40,7 @@
                             </el-select>
                         </el-col>
                         <el-col :span="4">
-                            <el-select :disabled="isView" v-model="qt.expression" @update:model-value="updateConditions(qt)" size="small">
+                            <el-select :disabled="isView" v-model="qt.expression" size="small">
                                 <el-option
                                     v-for="item in Expression[qt.triggerType]"
                                     :key="item.value"
@@ -57,8 +51,7 @@
                         </el-col>
                         <el-col :span="4">
                             <template v-if="qt.triggerType === 2">
-                                <el-input :disabled="isView" v-if="qtType(qt.questionId) === ComponentType.input" size="small" v-model="qt.value" @update:model-value="updateConditions(qt)"></el-input>
-                                <el-select :disabled="isView" v-else-if="optionTypes.includes(qtType(qt.questionId))" size="small" v-model="qt.value" @update:model-value="updateConditions(qt)">
+                                <el-select :disabled="isView" size="small" v-model="qt.value">
                                     <el-option
                                         v-for="item in qtOption(qt.questionId)"
                                         :key="item.value"
@@ -67,19 +60,16 @@
                                     />
                                 </el-select>
                             </template>
-                            <template v-else >
-                                <el-input-number :disabled="isView" size="small" v-model="qt.value" @update:model-value="updateConditions(qt)"></el-input-number>
-                            </template>
                         </el-col>
                     </el-row>
                     <template v-if="!isView" >
-                        <!-- <el-icon class="mr-12 icon primary" @click="addConditions(b.id)"><CirclePlusFilled /></el-icon> -->
-                        <!-- <el-icon class="icon error" @click="removeConditions(b.id, qt)"><RemoveFilled /></el-icon> -->
+                        <el-button type="warning" icon="el-icon-plus" @click="addConditions(b.id)" circle></el-button>
+                        <el-button type="danger" icon="el-icon-delete" @click="removeConditions(b.id, qt)" circle></el-button>
                     </template>
                 </div>
         
                 <Question 
-                    :ref="v => childRef[b.id] = v" 
+                    :ref="childRef" 
                     :isView="isView"
                     :level="level + 1" 
                     :questionList="questionList" 
