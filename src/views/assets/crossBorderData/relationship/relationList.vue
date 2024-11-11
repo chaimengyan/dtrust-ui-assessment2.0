@@ -23,12 +23,12 @@
                         <el-button v-if="checkedAssets.length !==0" icon="el-icon-edit" @click="editAssets" circle></el-button>
                     </div>
                     <div style="margin: 15px 0;"></div>
-                    <el-checkbox-group v-model="checkedAssets" @change="handleCheckedAssetsChange">
+                    <!-- <el-checkbox-group v-model="checkedAssets" @change="handleCheckedAssetsChange">
                         <el-checkbox 
                             v-for="assets in assetsList.filter(a=>item.assets.includes(a.projectId))" 
                             :label="assets.projectName" 
                             :key="assets.projectId">{{assets.projectName}}</el-checkbox>
-                    </el-checkbox-group>
+                    </el-checkbox-group> -->
                 </div>
 
                 <div class="assets-card" >
@@ -57,7 +57,7 @@
                             filterable></el-select>
                     </el-form-item>
                 </div>
-                <relation-list v-model="item.children" :index="newIndex(i)" @input="onFlush" />
+                <relation-list v-model="item.children" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
             </div>
         </div>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-
+import { cloneDeep } from 'lodash'
 export default {
     name: "relation-list",
     props: {
@@ -101,7 +101,7 @@ export default {
             default: () => []
         },
         index: {
-            type: Number,
+            type: [Number, String],
             default: 0
         },
         assetsList: {
@@ -166,14 +166,16 @@ export default {
         },
         createObject() {
             return {
-                id: Math.random()
+                id: Math.random(),
+                activitiesDisc: ''
             }
         },
         handleAdd(record) {
             const index = this.value.findIndex(item => item.id === record.id)
             if (index != -1) {
                 const arr = [...this.value]
-                arr[index].children = arr[index].children ? [] : [...(arr[index].children || [])]
+                
+                arr[index].children = !arr[index].children ? [] : [...(arr[index].children || [])]
                 arr[index].children.push(this.createObject())
                 this.change(arr)
             }
@@ -188,7 +190,7 @@ export default {
             } 
         },
         onFlush() {
-            this.change([...this.value])
+            this.change(cloneDeep(this.value))
         }
     },
 }

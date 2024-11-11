@@ -69,7 +69,7 @@ export default {
         },
 
         handleAddQuestion() {
-            this.relationshipForm.questionList.push({
+            this.relationshipForm.relationList.push({
                 id: Math.random()
             })
         },
