@@ -16,12 +16,11 @@
 
 <script>
 import { getAllAssetsProject } from "@/api/assets/assetsManagement";
-import AssetsInfo from '@/views/assets/crossBorderData/relationship/assetsInfo'
 import RelationList from '@/views/assets/crossBorderData/relationship/relationList.vue'
 
 export default {
     name: "relationship",
-    components: {AssetsInfo, RelationList },
+    components: { RelationList },
     props: {
         qnId: {
             type: String,
@@ -38,14 +37,13 @@ export default {
                 {
                     id: 1,
                     assets: '',
-                    activitiesIdList: [],
-                    assetsSceneProjectAttributesActivitiesList: [],
+                    activitiesIdList: '',
+                    dataScale: '',
+                    activitiesDisc: '',
                     children: []
                 },
             ]
         },
-        
-        activitiesOptions: [],
         assetsList: [],
       }
     },
@@ -85,17 +83,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.assets-card {
-    margin-top:10px;
-    background-color: #edf4ff;
-    padding: 10px;
-    border-radius: 8px;
-    .assets-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center
-    }
-}
+
 .evaluation {
     // width: 100%;
     // height: 600px;

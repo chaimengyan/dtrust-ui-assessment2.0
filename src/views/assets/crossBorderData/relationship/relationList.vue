@@ -19,16 +19,8 @@
 
                 <div class="assets-card" >
                     <div class="assets-card-header">
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                        <el-button v-if="checkedAssets.length !==0" icon="el-icon-edit" @click="editAssets" circle></el-button>
+                        <el-button v-if="item.assets" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                     </div>
-                    <div style="margin: 15px 0;"></div>
-                    <!-- <el-checkbox-group v-model="checkedAssets" @change="handleCheckedAssetsChange">
-                        <el-checkbox 
-                            v-for="assets in assetsList.filter(a=>item.assets.includes(a.projectId))" 
-                            :label="assets.projectName" 
-                            :key="assets.projectId">{{assets.projectName}}</el-checkbox>
-                    </el-checkbox-group> -->
                 </div>
 
                 <div class="assets-card" >
@@ -36,25 +28,33 @@
                         <el-select
                             v-model="item.activitiesIdList"
                             :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
-                            :options="activitiesTypeOptions"
-                            :props="{ multiple: false}"
-                            @change="changeEvent"
-                            filterable></el-select>
+                            filterable>
+                            <el-option
+                                v-for="t in activitiesTypeOptions"
+                                :key="t.value"
+                                :label="t.label"
+                                :value="t.value"
+                            />
+                        </el-select>
                     </el-form-item>
                     <el-form-item :label="$t('.数据处理活动描述')" >
                         <el-input
                             v-model="item.activitiesDisc"
-                            :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动描述')}`"
+                            :placeholder="activitiesDiscPlaceholder[item.activitiesIdList]"
                             type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item :label="$t('.数据量级')" >
                         <el-select
                             v-model="item.dataScale"
                             :placeholder="`${$t('crudCommon.请选择')}${$t('.数据量级')}`"
-                            :options="dataScaleOptions"
-                            :props="{ multiple: false}"
-                            @change="changeEvent"
-                            filterable></el-select>
+                            filterable>
+                            <el-option
+                                v-for="d in dataScaleOptions"
+                                :key="d.value"
+                                :label="d.label"
+                                :value="d.value"
+                            />
+                        </el-select>
                     </el-form-item>
                 </div>
                 <relation-list v-model="item.children" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
@@ -93,8 +93,11 @@
 
 <script>
 import { cloneDeep } from 'lodash'
+import AssetsInfo from '@/views/assets/crossBorderData/relationship/assetsInfo'
+
 export default {
     name: "relation-list",
+    components: { AssetsInfo },
     props: {
         value: {
             type: Array,
@@ -113,12 +116,12 @@ export default {
       return {
         isFullscreen: false,
 
-        checkAll: false,
-        checkedAssets: [],
-        isIndeterminate: true,
-
         editAssetsDialog: false,
-
+        activitiesDiscPlaceholder: {
+            '0': '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
+            '1': '请说明存储的期限，存储的方式，如是否加密等',
+            '2': '请说明使用的方式是否涉及自动化决策等'
+        },
         activitiesTypeOptions: [{
             label: '传输至',
             value: '0'
@@ -144,18 +147,9 @@ export default {
     mounted() {
     },
     methods: {
-        changeEvent() {},
-        editAssets() {
+        editAssets(item) {
+            console.log(item,'iiiiitttttt');
             this.editAssetsDialog = true
-        },
-        handleCheckAllChange(val) {
-            this.checkedAssets = val ? this.relationshipForm.assets : [];
-            this.isIndeterminate = false;
-        },
-        handleCheckedAssetsChange(value) {
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.relationshipForm.assets.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.relationshipForm.assets.length;
         },
         newIndex(i) {
             return this.index ? `${this.index}-${i + 1}` : i + 1
@@ -197,7 +191,17 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-
+.assets-card {
+    margin-top:10px;
+    background-color: #edf4ff;
+    padding: 10px;
+    border-radius: 8px;
+    .assets-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center
+    }
+}
     .evaluation-content, .child-question {
         margin-top: 40px;
         border: 1px solid #c7c7c7;
