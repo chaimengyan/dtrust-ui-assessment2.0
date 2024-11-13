@@ -18,11 +18,13 @@
                 </el-select>
             </el-form-item>
         </el-form>
+
         <SelectField
             ref="selectField"
-            :projectId="projectId"
+            :projectId="project.projectId"
             :isAssets="true"
         />
+
         <el-dialog
             :title="$t('assetsManagement.地图')"
             width="70%"
@@ -49,22 +51,34 @@
 
 <script>
 
-import  SelectField from "@/views/assets/assetsManagement/selectField";
-
+import  SelectField from "@/views/assets/crossBorderData/relationship/assetsInfo/selectField";
+import {
+  getAssetsProjectAttributesListByProjectId,
+} from "@/api/assets/assetsManagement";
 
 export default {
     name: "AssetsInfo",
     components: {
         SelectField,
     },
+    provide() {
+        return {
+            echoCheckedDataSubjectList: () => this.echoCheckedAssetObjList,
+            checkedProjectBody: () => this.checkedProjectBody,
+        }
+    },
     props: {
-        projectId: {
-            type: Number,
-            default: 0
+        project: {
+            type: Object,
+            default: () => {}
         }
     },
     data() {
         return {
+            // 回显资产对象列表
+            echoCheckedAssetObjList: [],
+            checkedProjectBody: [],
+            allData: {},
             isFullscreen: false,
             assetsForm: {
                 positionInfo:'',
@@ -98,8 +112,40 @@ export default {
 
     },
     created() {
+        this.getProjectAttributesList()
+       
     },
     methods: {
+        getProjectAttributesList() {
+            getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
+                const dataSubjectList = res.data.data.map(main => {
+                    // 初始化id
+                    main.attributes.forEach(a => {
+                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
+                    })// 初始化id
+                    main.categoryList.forEach(a => {
+                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+                    })
+                    return {
+                        ...main,
+                        mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
+                    }
+                })
+
+                this.allData[this.project.projectId] = {
+                    projectId: this.project.projectId,
+                    projectName: this.project.projectName,
+                    dataSubjectList
+                }
+
+                const data = [this.allData[this.project.projectId]]
+                this.checkedProjectBody = [...data]
+                console.log(this.checkedProjectBody,'this.checkedProjectBody');
+                this.$refs.selectField.mounted()
+                this.$refs.selectField.setValue()
+                const attrs = this.$refs.selectField.getAttrs()
+            })
+        },
         openMap() {
             this.showMap = true
             this.$nextTick(() => {

@@ -74,7 +74,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo />
+            <AssetsInfo :project="project" />
             <span slot="footer" class="dialog-footer">
             <!-- <el-button
               type="primary"
@@ -115,7 +115,7 @@ export default {
     data() {
       return {
         isFullscreen: false,
-
+        project: {},
         editAssetsDialog: false,
         activitiesDiscPlaceholder: {
             '0': '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
@@ -149,6 +149,8 @@ export default {
     methods: {
         editAssets(item) {
             console.log(item,'iiiiitttttt');
+            this.project = this.assetsList.find(a => a.projectId === item.assets)
+            console.log(this.project, 'this.project');
             this.editAssetsDialog = true
         },
         newIndex(i) {
