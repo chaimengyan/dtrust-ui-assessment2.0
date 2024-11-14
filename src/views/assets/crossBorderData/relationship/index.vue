@@ -70,7 +70,12 @@ export default {
 
         handleAddQuestion() {
             this.relationshipForm.transferRelevanceList.push({
-                id: Math.random()
+                id: Math.random(),
+                projectId: '',
+                dataActivityType: '',
+                dataScale: '',
+                dataActivityDescription: '',
+                transferRelevanceList: []
             })
         },
 

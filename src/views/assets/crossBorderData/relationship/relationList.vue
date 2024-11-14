@@ -1,6 +1,7 @@
 <template>
     <div>
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
+            {{ item }}
             <div class="evaluation-item" >
                 <div class="evaluation-item-content">
                     <span class="mr-12">{{ newIndex(i) }}. </span>
@@ -168,9 +169,12 @@ export default {
         saveOrUpdate() {
 
             const data = this.$refs.assetsInfoRef.assetsResult()
-            this.value[0].projectInfo = data.projectInfo
-            this.value[0].transferAttributes = data.transferAttributes
+            // this.value[0].projectInfo = data.projectInfo
+            // this.value[0].transferAttributes = data.transferAttributes
             // this.findNodeById(this.value,this.currentLevel.id,data)
+            console.log(this.value,'lllllllll');
+            this.currentLevel.data = data
+            
             this.editAssetsDialog = false
             
         },
@@ -217,6 +221,7 @@ export default {
             } 
         },
         onFlush() {
+            console.log('===')
             this.change(cloneDeep(this.value))
         }
     },
