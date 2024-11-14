@@ -9,6 +9,7 @@ export const tableOption = (_this, isOverHidden) => {
     menuAlign: 'center',
     searchMenuSpan: 4,
     editBtn: false,
+    addBtn: false,
     delBtn: false,
     align: 'center',
     addBtn: false,
@@ -28,13 +29,13 @@ export const tableOption = (_this, isOverHidden) => {
       size:'mini',
       rules: [{
         required: true,
-        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.字段名称')}`,
+        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.跨境活动名称')}`,
         trigger: 'blur'
       }],
       overHidden: isOverHidden,
     }, {
         label: _this.$t('crudCommon.描述'),
-        prop: 'managingOrganization',
+        prop: 'description',
         span: 24,
         rules: [{
           required: false,
@@ -42,88 +43,7 @@ export const tableOption = (_this, isOverHidden) => {
           trigger: 'blur'
         }],
         overHidden: isOverHidden,
-      }, {
-        label: _this.$t('fieldManagement.数据主体类型'),// 用于搜索
-        prop: 'description',
-        hide: true,
-        props: {
-            label: 'mainBodyName',
-            value: 'mainBodyId'
-        },
-        type:'select',
-        span: 24,
-        filterable: true,
-        search: true,
-        searchLabelWidth:100,
-        searchSpan: 5,
-        dicUrl: `/assets/assetsAttributesMainBody/getMainBodList`,
-        editDisabled: false,
-        addDisplay: false,
-        editDisplay: false,
-        viewDisplay: false,
       },
-      {
-        label: _this.$t('fieldManagement.字段类别'),
-        prop: 'activityProcessOwner',
-        props: {
-            label: 'categoryName',
-            value: 'categoryId'
-        },
-        type:'select',
-        span: 24,
-        filterable: true,
-        search: true,
-        searchLabelWidth:80,
-        searchSpan: 5,
-        dicUrl: `/assets/assetsAttributesCategory/getCategoryList`,
-        rules: [{
-          required: true,
-          message: `${_this.$t('crudCommon.请选择')}${_this.$t('fieldManagement.字段类别')}`,
-          trigger: 'change'
-        }],
-        overHidden: isOverHidden,
-      }, {
-        label: _this.$t('fieldManagement.数据分级'),
-        prop: 'type',
-        props: {
-            label: 'typeName',
-            value: 'typeId'
-        },
-        type:'select',
-        span: 24,
-        filterable: true,
-        search: true,
-        searchLabelWidth:80,
-        searchSpan: 5,
-        dicUrl: `/assets/assetsAttributesType/getTypeList`,
-        rules: [{
-          required: true,
-          message: `${_this.$t('crudCommon.请选择')}${_this.$t('fieldManagement.数据分级')}`,
-          trigger: 'change'
-        }],
-        overHidden: isOverHidden,
-      },
-      {
-        width: 120,
-        label: _this.$t('fieldManagement.数据主体类型'),
-        prop: 'dataSubjectsRegion',
-        props: {
-            label: 'mainBodyName',
-            value: 'mainBodyId'
-        },
-        type:'select',
-        multiple: true,
-        span: 24,
-        filterable: true,
-        dicUrl: `/assets/assetsAttributesMainBody/getMainBodList`,
-        rules: [{
-          required: true,
-          message: `${_this.$t('crudCommon.请选择')}${_this.$t('fieldManagement.数据主体类型')}`,
-          trigger: 'change'
-        }],
-        overHidden: isOverHidden,
-      },
- 
       {
       label: _this.$t('crudCommon.创建人'),
       prop: 'dataSubjectsVolume',

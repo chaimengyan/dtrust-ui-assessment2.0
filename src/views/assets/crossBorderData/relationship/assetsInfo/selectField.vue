@@ -157,8 +157,9 @@ export default {
                     item.list.forEach(item => {
                         const echoItem = this.getEchoAttr(item)
                         const newItem = echoItem ? echoItem : item
-                        console.log(echoItem, 'ok')
-                        newItem.mainBodyId = main._id
+                        console.log(main, 'ok')
+                        const [projectId, mainBodyId] =main._id.split('.')
+                        newItem.mainBodyId = mainBodyId*1
                         newItem.mainBodyName = main.label
                         newItem._id = item._id
                         result.push(newItem)

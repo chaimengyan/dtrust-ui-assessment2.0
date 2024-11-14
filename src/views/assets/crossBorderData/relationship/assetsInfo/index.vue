@@ -2,11 +2,11 @@
     <div>
         <el-form ref="assetsFormRef" :model="assetsForm" label-width="120px">
             <el-form-item label="位置信息">
-                <el-input v-model="assetsForm.positionInfo" @focus="openMap" placeholder="请选择位置信息" />
+                <el-input v-model="assetsForm.hostingLocation" @focus="openMap" placeholder="请选择位置信息" />
             </el-form-item>
             <el-form-item label="资产类别">
                 <el-select
-                    v-model="assetsForm.assetsType"
+                    v-model="assetsForm.category"
                     :placeholder="`${$t('crudCommon.请选择')}${$t('.资产类别')}`"
                     filterable>
                     <el-option
@@ -38,7 +38,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div>
-            <div>{{$t('assetsManagement.当前位置')}} {{ assetsForm.positionInfo }} <br/>
+            <div>{{$t('assetsManagement.当前位置')}} {{ assetsForm.hostingLocation }} <br/>
                 {{$t('assetsManagement.当前经纬度')}} {{ assetsForm.lng }}, {{ assetsForm.lat }}
             </div>
             <div id="baiduMap" />
@@ -81,10 +81,10 @@ export default {
             allData: {},
             isFullscreen: false,
             assetsForm: {
-                positionInfo:'',
+                hostingLocation:'',
                 lat:'',
                 lng:'',
-                assetsType:''
+                category:''
             },
             fieldProps: {multiple: true},
             fieldOptions: [],
@@ -112,10 +112,22 @@ export default {
 
     },
     created() {
+        console.log(this.project, 'projectprojectproject');
         this.getProjectAttributesList()
        
     },
     methods: {
+        assetsInfoInit(assets) {
+            this.assetsForm.projectId = assets.projectId
+            this.assetsForm.projectName = assets.projectName
+            this.assetsForm.hostingLocation = assets.hostingLocation
+            this.assetsForm.lat = assets.lat
+            this.assetsForm.lng = assets.lng
+        },
+        assetsResult() {
+            const attrs = this.$refs.selectField.getAttrs()
+            return {projectInfo: this.assetsForm, transferAttributes: attrs}
+        },
         getProjectAttributesList() {
             getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {
@@ -143,7 +155,6 @@ export default {
                 console.log(this.checkedProjectBody,'this.checkedProjectBody');
                 this.$refs.selectField.mounted()
                 this.$refs.selectField.setValue()
-                const attrs = this.$refs.selectField.getAttrs()
             })
         },
         openMap() {
@@ -160,7 +171,7 @@ export default {
                 this.map.enableScrollWheelZoom(true) // 滚轮放大缩小地图
                 this.assetsForm.lng = this.assetsForm.lng ? this.assetsForm.lng : '116.404'
                 this.assetsForm.lat = this.assetsForm.lat ? this.assetsForm.lat : '39.915'
-                this.assetsForm.positionInfo = this.assetsForm.positionInfo ? this.assetsForm.positionInfo : '北京市'
+                this.assetsForm.hostingLocation = this.assetsForm.hostingLocation ? this.assetsForm.hostingLocation : '北京市'
                 const point = new BMapGL.Point(this.assetsForm.lng, this.assetsForm.lat);
 
                 this.map.centerAndZoom(point, 15);

@@ -8,7 +8,7 @@
                 <el-input v-model="relationshipForm.description" type="textarea" :rows="2" placeholder="请输入业务活动描述" />
             </el-form-item>
             <el-button type="primary" icon="el-icon-plus" circle @click="handleAddQuestion"></el-button>
-            <relation-list v-model="relationshipForm.relationList" :assetsList="assetsList" />
+            <relation-list v-model="relationshipForm.transferRelevanceList" :assetsList="assetsList" />
         </el-form>
         
     </div>
@@ -33,14 +33,14 @@ export default {
         relationshipForm: {
             name: '',
             description:'',
-            relationList: [
+            transferRelevanceList: [
                 {
                     id: 1,
-                    assets: '',
-                    activitiesIdList: '',
+                    projectId: '',
+                    dataActivityType: '',
                     dataScale: '',
-                    activitiesDisc: '',
-                    children: []
+                    dataActivityDescription: '',
+                    transferRelevanceList: []
                 },
             ]
         },
@@ -54,7 +54,9 @@ export default {
         init() {
             this.getAllAssetsProject()
         },
-      
+        getData() {
+            return this.relationshipForm
+        },
 
         addBlock(id) {
             this.$refs.questionRef[id].addBlock();
@@ -67,7 +69,7 @@ export default {
         },
 
         handleAddQuestion() {
-            this.relationshipForm.relationList.push({
+            this.relationshipForm.transferRelevanceList.push({
                 id: Math.random()
             })
         },

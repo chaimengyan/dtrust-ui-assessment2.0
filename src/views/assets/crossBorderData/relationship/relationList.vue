@@ -5,7 +5,7 @@
                 <div class="evaluation-item-content">
                     <span class="mr-12">{{ newIndex(i) }}. </span>
                     涉及的资产：
-                    <el-select v-model="item.assets" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12 flex">
+                    <el-select v-model="item.projectId" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12 flex">
                         <el-option
                             v-for="a in assetsList"
                             :key="a.projectId"
@@ -19,14 +19,14 @@
 
                 <div class="assets-card" >
                     <div class="assets-card-header">
-                        <el-button v-if="item.assets" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
+                        <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                     </div>
                 </div>
 
                 <div class="assets-card" >
                     <el-form-item :label="$t('.数据处理活动类型')" >
                         <el-select
-                            v-model="item.activitiesIdList"
+                            v-model="item.dataActivityType"
                             :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
                             filterable>
                             <el-option
@@ -39,8 +39,8 @@
                     </el-form-item>
                     <el-form-item :label="$t('.数据处理活动描述')" >
                         <el-input
-                            v-model="item.activitiesDisc"
-                            :placeholder="activitiesDiscPlaceholder[item.activitiesIdList]"
+                            v-model="item.dataActivityDescription"
+                            :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
                             type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item :label="$t('.数据量级')" >
@@ -57,13 +57,14 @@
                         </el-select>
                     </el-form-item>
                 </div>
-                <relation-list v-model="item.children" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                <relation-list v-model="item.transferRelevanceList" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
             </div>
         </div>
         <el-dialog
+            v-if="editAssetsDialog"
             :title="$t('fieldManagement.资产信息')" 
-            width="40%" 
+            width="60%" 
             :visible.sync="editAssetsDialog" 
             append-to-body
             :close-on-click-modal="false" 
@@ -74,16 +75,16 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo :project="project" />
+            <AssetsInfo ref="assetsInfoRef" :project="project" />
             <span slot="footer" class="dialog-footer">
-            <!-- <el-button
+            <el-button
               type="primary"
               icon="el-icon-circle-check"
               v-loading.fullscreen.lock="fullscreenLoading"
-              @click="sumbitDataSubject">{{$t('assetsManagement.修改')}}</el-button>
+              @click="saveOrUpdate">{{$t('assetsManagement.修改')}}</el-button>
             <el-button 
               icon="el-icon-circle-close"
-              @click="dataSubjectDialog = false">{{$t('assetsManagement.取消')}}</el-button> -->
+              @click="editAssetsDialog = false">{{$t('assetsManagement.取消')}}</el-button>
   
             </span>
         </el-dialog>
@@ -117,6 +118,7 @@ export default {
         isFullscreen: false,
         project: {},
         editAssetsDialog: false,
+        fullscreenLoading: false,
         activitiesDiscPlaceholder: {
             '0': '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
             '1': '请说明存储的期限，存储的方式，如是否加密等',
@@ -141,17 +143,46 @@ export default {
         },{
             label: '三百万',
             value: '2'
-        }]
+        }],
+        currentLevel: {},
       }
     },
     mounted() {
     },
     methods: {
+        findNodeById(value, id, data) {
+            for (let v of value) {
+                if (v.id === id) {
+                    const {projectInfo, transferAttributes} = data
+                    console.log(v,'vvvv');
+                    v.projectInfo = projectInfo
+                    v.transferAttributes = transferAttributes
+                }else {
+                    for (let child of v.transferRelevanceList) {
+                        this.findNodeById(child, id, data);
+                    }
+                }
+            }
+            
+        },
+        saveOrUpdate() {
+
+            const data = this.$refs.assetsInfoRef.assetsResult()
+            this.value[0].projectInfo = data.projectInfo
+            this.value[0].transferAttributes = data.transferAttributes
+            // this.findNodeById(this.value,this.currentLevel.id,data)
+            this.editAssetsDialog = false
+            
+        },
         editAssets(item) {
+            this.currentLevel = item
             console.log(item,'iiiiitttttt');
-            this.project = this.assetsList.find(a => a.projectId === item.assets)
+            this.project = this.assetsList.find(a => a.projectId === item.projectId)
             console.log(this.project, 'this.project');
             this.editAssetsDialog = true
+            this.$nextTick(() => {
+                this.$refs.assetsInfoRef.assetsInfoInit(this.project)
+            })
         },
         newIndex(i) {
             return this.index ? `${this.index}-${i + 1}` : i + 1
@@ -163,7 +194,7 @@ export default {
         createObject() {
             return {
                 id: Math.random(),
-                activitiesDisc: ''
+                dataActivityDescription: ''
             }
         },
         handleAdd(record) {
@@ -171,8 +202,8 @@ export default {
             if (index != -1) {
                 const arr = [...this.value]
                 
-                arr[index].children = !arr[index].children ? [] : [...(arr[index].children || [])]
-                arr[index].children.push(this.createObject())
+                arr[index].transferRelevanceList = !arr[index].transferRelevanceList ? [] : [...(arr[index].transferRelevanceList || [])]
+                arr[index].transferRelevanceList.push(this.createObject())
                 this.change(arr)
             }
            

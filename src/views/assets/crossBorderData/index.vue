@@ -25,7 +25,7 @@
             <el-button
               v-if="permissions.field_fieldMasterData_add"
               class="filter-item"
-              @click="$refs.crud.rowAdd()"
+              @click="relationBtn('add')"
               type="primary"
               icon="el-icon-plus"
               >{{$t('crudCommon.添加')}}
@@ -64,7 +64,7 @@
                 :disabled="!handleDataPermissions('delete', scope.row)"
                 type="text"
                 icon="el-icon-delete"
-                @click="relationBtn(scope.row, scope.index)"
+                @click="relationBtn('edit', scope.row)"
                 />
             </el-tooltip>
           </template>
@@ -82,16 +82,16 @@
               <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>
           </div> 
-          <Relationship />
+          <Relationship ref="relationshipRef" />
           <span slot="footer" class="dialog-footer">
-            <!-- <el-button
+            <el-button
               type="primary"
               icon="el-icon-circle-check"
               v-loading.fullscreen.lock="fullscreenLoading"
-              @click="sumbitDataSubject">{{$t('assetsManagement.修改')}}</el-button>
+              @click="saveOrUpdateBtn">{{$t('assetsManagement.修改')}}</el-button>
             <el-button 
               icon="el-icon-circle-close"
-              @click="dataSubjectDialog = false">{{$t('assetsManagement.取消')}}</el-button> -->
+              @click="relationshipDialog = false">{{$t('assetsManagement.取消')}}</el-button>
   
           </span>
         </el-dialog>
@@ -103,6 +103,9 @@
   <script>
   import {
     getTransferActivityByPage,
+    saveOrUpdateObj,
+    delObj,
+    getTransferActivityById
   } from "@/api/assets/crossBorderData";
   import { tableOption} from '@/const/crud/assets/crossBorderData'
   import Relationship from '@/views/assets/crossBorderData/relationship/index'
@@ -138,13 +141,22 @@
     watch: {
     },
     created() {
-        this.relationshipDialog = true
-    //   this.getList(this.page);
+        // this.relationshipDialog = true
+      this.getList(this.page);
     },
     methods: {
-        relationBtn() {
-            this.relationshipDialog = true
-        },
+      saveOrUpdateBtn() {
+        const data = this.$refs.relationshipRef.getData()
+        saveOrUpdateObj(data).then(res => {
+          if(res.data.status === 200) {
+            this.relationshipDialog = false
+
+          }
+        })
+      },
+      relationBtn(type, row) {
+          this.relationshipDialog = true
+      },
       changeArray() {
         this.isOverHidden = !this.isOverHidden
         tableOption(this, this.isOverHidden)
