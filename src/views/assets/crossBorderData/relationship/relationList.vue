@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
-            {{ item }}
+            <!-- {{ item }} -->
             <div class="evaluation-item" >
                 <div class="evaluation-item-content">
                     <span class="mr-12">{{ newIndex(i) }}. </span>
@@ -16,12 +16,31 @@
                     </el-select>
                     <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
+                    <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                 </div>
 
-                <div class="assets-card" >
-                    <div class="assets-card-header">
-                        <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
+                <!-- <div class="assets-card" > -->
+                <div v-if="item.projectId">
+                    <div v-if="'projectInfo' in item && Object.keys(item.projectInfo).length !== 0" class="assets-card-header">
+                        <el-tag>位置信息：{{item.projectInfo.hostingLocation}}</el-tag>
+                        <el-tag>资产类别：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
                     </div>
+                    <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
+                        <el-collapse-item title="字段信息" name="1">
+                            <div 
+                                style="white-space: normal;"
+                                v-for="mainBody in handleAttributes(item.transferAttributes)"
+                                :key="mainBody.mainBodyId">
+                                <div>{{mainBody.mainBodyName}}</div>
+                                <el-tag 
+                                    v-for="attr in item.transferAttributes.filter(t=>t.mainBodyId===mainBody.mainBodyId)"
+                                    :key="attr.attributesId">
+                                    {{attr.attributesName}}
+                                </el-tag>
+
+                            </div>
+                        </el-collapse-item>
+                    </el-collapse>
                 </div>
 
                 <div class="assets-card" >
@@ -76,7 +95,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo ref="assetsInfoRef" :project="project" />
+            <AssetsInfo ref="assetsInfoRef" :isFirstLevel="isFirstLevel" :project="project" />
             <span slot="footer" class="dialog-footer">
             <el-button
               type="primary"
@@ -121,19 +140,19 @@ export default {
         editAssetsDialog: false,
         fullscreenLoading: false,
         activitiesDiscPlaceholder: {
-            '0': '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
-            '1': '请说明存储的期限，存储的方式，如是否加密等',
-            '2': '请说明使用的方式是否涉及自动化决策等'
+            0: '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
+            1: '请说明存储的期限，存储的方式，如是否加密等',
+            2: '请说明使用的方式是否涉及自动化决策等'
         },
         activitiesTypeOptions: [{
             label: '传输至',
-            value: '0'
+            value: 0
         },{
             label: '存储于',
-            value: '1'
+            value: 1
         },{
             label: '被使用',
-            value: '2'
+            value: 2
         }],
         dataScaleOptions: [{
             label: '一百万',
@@ -145,47 +164,52 @@ export default {
             label: '三百万',
             value: '2'
         }],
+        assetsTypeOptions: [
+            {
+                label: '内部资产',
+                value: 0
+            },{
+                label: '境外内部资产',
+                value: 1
+            },{
+                label: '第三方资产',
+                value: 2
+            },{
+                label: '境外第三方资产',
+                value: 3
+            },
+        ],
         currentLevel: {},
+        isFirstLevel: false,
       }
     },
     mounted() {
     },
     methods: {
-        findNodeById(value, id, data) {
-            for (let v of value) {
-                if (v.id === id) {
-                    const {projectInfo, transferAttributes} = data
-                    console.log(v,'vvvv');
-                    v.projectInfo = projectInfo
-                    v.transferAttributes = transferAttributes
-                }else {
-                    for (let child of v.transferRelevanceList) {
-                        this.findNodeById(child, id, data);
-                    }
+
+        handleAttributes(attributes) {
+            const mainBodyList = attributes.reduce((acc, cur) => {
+                if(!acc.map(a=>a.mainBodyId).includes(cur.mainBodyId)) {
+                    acc.push(cur)
                 }
-            }
-            
+                return acc
+            }, [])
+            return mainBodyList
         },
         saveOrUpdate() {
-
             const data = this.$refs.assetsInfoRef.assetsResult()
-            // this.value[0].projectInfo = data.projectInfo
-            // this.value[0].transferAttributes = data.transferAttributes
-            // this.findNodeById(this.value,this.currentLevel.id,data)
-            console.log(this.value,'lllllllll');
-            this.currentLevel.data = data
-            
+            this.currentLevel.projectInfo = data.projectInfo
+            this.currentLevel.transferAttributes = data.transferAttributes
             this.editAssetsDialog = false
-            
         },
         editAssets(item) {
+            this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)
+            console.log(item, '>>>>?????');
             this.currentLevel = item
-            console.log(item,'iiiiitttttt');
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
-            console.log(this.project, 'this.project');
             this.editAssetsDialog = true
             this.$nextTick(() => {
-                this.$refs.assetsInfoRef.assetsInfoInit(this.project)
+                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo)
             })
         },
         newIndex(i) {
@@ -231,12 +255,12 @@ export default {
 <style lang="scss" scoped>
 .assets-card {
     margin-top:10px;
-    background-color: #edf4ff;
+    background-color: #f7faff;
     padding: 10px;
     border-radius: 8px;
     .assets-card-header {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
         align-items: center
     }
 }

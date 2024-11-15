@@ -20,7 +20,7 @@ export const tableOption = (_this, isOverHidden) => {
     height: 500, 
     dialogWidth: '35%',
     column: [{
-      label: _this.$t('fieldManagement.跨境活动名称'),
+      label: _this.$t('.跨境活动名称'),
       prop: 'name',
       span: 24,
       search: true,

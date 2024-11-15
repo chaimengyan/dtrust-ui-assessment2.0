@@ -46,7 +46,7 @@
                 :disabled="!handleDataPermissions('update', scope.row)"
                 type="text"
                 icon="el-icon-edit"
-                @click="handleUpdate(scope.row, scope.index)"
+                @click="relationBtn('edit', scope.row)"
                 />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
@@ -58,19 +58,11 @@
                 @click="deleteBtn(scope.row, scope.index)"
                 />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.关联')" placement="top">
-                <el-button
-                v-if="permissions.field_fieldMasterData_del"
-                :disabled="!handleDataPermissions('delete', scope.row)"
-                type="text"
-                icon="el-icon-delete"
-                @click="relationBtn('edit', scope.row)"
-                />
-            </el-tooltip>
           </template>
         </avue-crud>
         <el-dialog
           :title="$t('fieldManagement.资产关联')" 
+          v-if="relationshipDialog"
           width="70%" 
           :visible.sync="relationshipDialog" 
           append-to-body
@@ -141,7 +133,6 @@
     watch: {
     },
     created() {
-        // this.relationshipDialog = true
       this.getList(this.page);
     },
     methods: {
@@ -150,12 +141,19 @@
         saveOrUpdateObj(data).then(res => {
           if(res.data.status === 200) {
             this.relationshipDialog = false
+            this.$message.success('保存成功！');
+            this.$refs.crud.searchReset();
 
           }
         })
       },
       relationBtn(type, row) {
           this.relationshipDialog = true
+          if(type === 'edit') {
+            getTransferActivityById(row.id).then(res => {
+              this.$refs.relationshipRef.init(res.data.data)
+            })
+          }
       },
       changeArray() {
         this.isOverHidden = !this.isOverHidden
@@ -208,7 +206,7 @@
             if(res.data.status == 200) {
                 this.$refs.crud.searchReset();
                 done();
-                this.$message.success(res.data.message);
+                this.$message.success('保存成功！');
             } else {
                 loading();
             }
@@ -234,7 +232,7 @@
       },
 
       deleteBtn(row) {
-        const ids = row ? [row.attributesId] : this.ids
+        const ids = row ? [row.id] : this.ids
         if(!ids.length) {
           this.$message.error(this.$t('crudCommon.请选择要删除的数据'));
           return

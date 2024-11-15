@@ -37,9 +37,11 @@ export default {
                 {
                     id: 1,
                     projectId: '',
-                    dataActivityType: '',
+                    dataActivityType: null,
                     dataScale: '',
                     dataActivityDescription: '',
+                    projectInfo: {},
+                    transferAttributes: [],
                     transferRelevanceList: []
                 },
             ]
@@ -48,11 +50,12 @@ export default {
       }
     },
     mounted() {
-        this.init()
+        this.getAllAssetsProject()
+        this.init(this.relationshipForm)
     },
     methods: {
-        init() {
-            this.getAllAssetsProject()
+        init(data) {
+            this.relationshipForm = data
         },
         getData() {
             return this.relationshipForm
@@ -72,7 +75,7 @@ export default {
             this.relationshipForm.transferRelevanceList.push({
                 id: Math.random(),
                 projectId: '',
-                dataActivityType: '',
+                dataActivityType: null,
                 dataScale: '',
                 dataActivityDescription: '',
                 transferRelevanceList: []

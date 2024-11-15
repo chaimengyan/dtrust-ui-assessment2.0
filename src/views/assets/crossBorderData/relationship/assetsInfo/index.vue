@@ -20,6 +20,7 @@
         </el-form>
 
         <SelectField
+            v-if="isFirstLevel"
             ref="selectField"
             :projectId="project.projectId"
             :isAssets="true"
@@ -71,6 +72,10 @@ export default {
         project: {
             type: Object,
             default: () => {}
+        },
+        isFirstLevel: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -84,23 +89,23 @@ export default {
                 hostingLocation:'',
                 lat:'',
                 lng:'',
-                category:''
+                category:null
             },
             fieldProps: {multiple: true},
             fieldOptions: [],
             assetsTypeOptions: [
                 {
                     label: '内部资产',
-                    value: '0'
+                    value: 0
                 },{
                     label: '境外内部资产',
-                    value: '1'
+                    value: 1
                 },{
                     label: '第三方资产',
-                    value: '2'
+                    value: 2
                 },{
                     label: '境外第三方资产',
-                    value: '3'
+                    value: 3
                 },
             ],
             showMap:false,
@@ -119,6 +124,7 @@ export default {
     methods: {
         assetsInfoInit(assets) {
             this.assetsForm.projectId = assets.projectId
+            this.assetsForm.category = assets.category
             this.assetsForm.projectName = assets.projectName
             this.assetsForm.hostingLocation = assets.hostingLocation
             this.assetsForm.lat = assets.lat
