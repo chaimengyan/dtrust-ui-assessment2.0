@@ -35,7 +35,7 @@ export default {
             description:'',
             transferRelevanceList: [
                 {
-                    id: 1,
+                    id: Math.random(),
                     projectId: '',
                     dataActivityType: null,
                     dataScale: '',
@@ -72,14 +72,18 @@ export default {
         },
 
         handleAddQuestion() {
-            this.relationshipForm.transferRelevanceList.push({
+            const arr = [...this.relationshipForm.transferRelevanceList]
+            arr.push({
                 id: Math.random(),
                 projectId: '',
                 dataActivityType: null,
                 dataScale: '',
                 dataActivityDescription: '',
-                transferRelevanceList: []
+                transferRelevanceList: [],
+                projectInfo: {},
+                transferAttributes: [],
             })
+            this.relationshipForm.transferRelevanceList = arr;
         },
 
         

@@ -1,7 +1,34 @@
 <template>
     <div>
+
+        <el-dialog
+            v-if="editAssetsDialog"
+            :title="$t('fieldManagement.资产信息')" 
+            width="60%" 
+            :visible.sync="editAssetsDialog" 
+            append-to-body
+            :close-on-click-modal="false" 
+            :fullscreen="isFullscreen">
+            <div class="dialog-header" slot="title">
+                <span class="dialog-header-title">{{$t('fieldManagement.资产信息')}}</span>
+                <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
+                    <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+                </div>
+            </div> 
+            <AssetsInfo ref="assetsInfoRef" :isFirstLevel="isFirstLevel" :project="project" />
+            <span slot="footer" class="dialog-footer">
+            <el-button
+              type="primary"
+              icon="el-icon-circle-check"
+              v-loading.fullscreen.lock="fullscreenLoading"
+              @click="saveOrUpdate">{{$t('assetsManagement.修改')}}</el-button>
+            <el-button 
+              icon="el-icon-circle-close"
+              @click="editAssetsDialog = false">{{$t('assetsManagement.取消')}}</el-button>
+  
+            </span>
+        </el-dialog>
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
-            <!-- {{ item }} -->
             <div class="evaluation-item" >
                 <div class="evaluation-item-content">
                     <span class="mr-12">{{ newIndex(i) }}. </span>
@@ -81,33 +108,7 @@
 
             </div>
         </div>
-        <el-dialog
-            v-if="editAssetsDialog"
-            :title="$t('fieldManagement.资产信息')" 
-            width="60%" 
-            :visible.sync="editAssetsDialog" 
-            append-to-body
-            :close-on-click-modal="false" 
-            :fullscreen="isFullscreen">
-            <div class="dialog-header" slot="title">
-                <span class="dialog-header-title">{{$t('fieldManagement.资产信息')}}</span>
-                <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
-                    <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
-                </div>
-            </div> 
-            <AssetsInfo ref="assetsInfoRef" :isFirstLevel="isFirstLevel" :project="project" />
-            <span slot="footer" class="dialog-footer">
-            <el-button
-              type="primary"
-              icon="el-icon-circle-check"
-              v-loading.fullscreen.lock="fullscreenLoading"
-              @click="saveOrUpdate">{{$t('assetsManagement.修改')}}</el-button>
-            <el-button 
-              icon="el-icon-circle-close"
-              @click="editAssetsDialog = false">{{$t('assetsManagement.取消')}}</el-button>
-  
-            </span>
-        </el-dialog>
+      
     </div>
 
 </template>
@@ -183,6 +184,11 @@ export default {
         isFirstLevel: false,
       }
     },
+    watch: {
+        value() {
+            console.log('===----')
+        }
+    },
     mounted() {
     },
     methods: {
@@ -200,6 +206,8 @@ export default {
             const data = this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes
+            this.currentLevel.checkFields = data.checkFields
+            this.currentLevel.renderList = data.renderList
             this.editAssetsDialog = false
         },
         editAssets(item) {
@@ -209,7 +217,7 @@ export default {
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
             this.$nextTick(() => {
-                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo)
+                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo, item.checkFields, item.renderList)
             })
         },
         newIndex(i) {
@@ -222,7 +230,13 @@ export default {
         createObject() {
             return {
                 id: Math.random(),
-                dataActivityDescription: ''
+                projectId: '',
+                dataActivityType: null,
+                dataScale: '',
+                dataActivityDescription: '',
+                transferRelevanceList: [],
+                projectInfo: {},
+                transferAttributes: [],
             }
         },
         handleAdd(record) {

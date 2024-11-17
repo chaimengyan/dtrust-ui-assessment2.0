@@ -118,24 +118,31 @@ export default {
     },
     created() {
         console.log(this.project, 'projectprojectproject');
-        this.getProjectAttributesList()
        
     },
     methods: {
-        assetsInfoInit(assets) {
+        assetsInfoInit(assets, checkFields, renderList) {
             this.assetsForm.projectId = assets.projectId
             this.assetsForm.category = assets.category
             this.assetsForm.projectName = assets.projectName
             this.assetsForm.hostingLocation = assets.hostingLocation
             this.assetsForm.lat = assets.lat
             this.assetsForm.lng = assets.lng
+            this.getProjectAttributesList().then(() => {
+                setTimeout(() => {
+                this.$refs.selectField.setCheckAttrs(checkFields ? { checkFields, renderList } : undefined)
+                })
+            })
         },
         assetsResult() {
             const attrs = this.$refs.selectField.getAttrs()
-            return {projectInfo: this.assetsForm, transferAttributes: attrs}
+            const checkFields  = this.$refs.selectField.getCheckAttrs()
+            const renderList  = this.$refs.selectField.getRenderList()
+
+            return {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
         },
         getProjectAttributesList() {
-            getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
+            return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {
                     // 初始化id
                     main.attributes.forEach(a => {

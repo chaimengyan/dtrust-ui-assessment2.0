@@ -119,8 +119,8 @@ export default {
     methods: {
         mounted() {
             setTimeout(() => {
-                this.buildRenderList()
-                this.buildEchoFields()
+                // this.buildRenderList()
+                // this.buildEchoFields()
             })
         },
         setValue() {
@@ -135,6 +135,25 @@ export default {
             const allCheckedIds = this.getAllCheckedIds()
             console.log(allAttrs, allCheckedIds, 'allCheckedIds')
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
+        },
+        getCheckAttrs() {
+            return this.checkAllFields
+        },
+        getRenderList() {
+            return this.renderList
+        },
+        setCheckAttrs(data) {
+            if (!data) {
+                // setTimeout(() => {
+                    this.buildRenderList()
+                    this.buildEchoFields()
+                // })
+                this.setValue();
+                return
+            }
+            this.checkAllFields = data.checkFields
+            this.renderList = data.renderList
+            this.setValue();
         },
         getEchoAttr(item) {
             for (let i = 0; i < this.echo.length; i++) {
@@ -273,7 +292,6 @@ export default {
         },
         // 在回显选中未构建完成时，判断分类下是否有选中的字段
         isCategoryHasChecked(_id) {
-
             for (let i = 0; i < this.echo.length; i++) {
                 const data = this.echo[i].dataSubjectList
 
