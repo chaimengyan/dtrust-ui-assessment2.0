@@ -31,3 +31,11 @@ export function getTransferActivityById(id) {
         method: 'get',
     })
 }
+
+// 获取跨境活动泳道图
+export function getSwimLaneDiagramsById(id) {
+    return request({
+        url: `/assets/transferActivity/swimLaneDiagrams?id=${id}`,
+        method: 'get',
+    })
+}

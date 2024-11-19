@@ -3,7 +3,8 @@
 </template>
 
 <script>
-   import { Graph, Cell, CellView, Node } from '@antv/x6'
+  import { Graph, Cell, CellView, Node } from '@antv/x6'
+  import {getSwimLaneDiagramsById} from '@/api/assets/crossBorderData'
 
 Graph.registerNode(
   'lane',
@@ -363,16 +364,26 @@ const data = [
     },
     data() {
         return {
-            graph: null
+            graph: null,
+            swimlaneData: [],
         }
     },
     computed: {
         
     },
     mounted() {
-        this.initGraph()
     },
     methods: {
+      swimlaneInit(row) {
+        console.log(row, 'rowwwwww');
+        this.getSwimLaneDiagrams(row.id)
+      },
+      getSwimLaneDiagrams(id) {
+        getSwimLaneDiagramsById(id).then(res => {
+          this.swimlaneData = res.data.data
+          this.initGraph()
+        })
+      },
         initGraph() {
             this.graph =  new Graph({
                 container: document.getElementById('container'),
@@ -400,7 +411,7 @@ const data = [
             })
 
             const cells = []
-            data.forEach((item) => {
+            this.swimlaneData.forEach((item) => {
             if (item.shape === 'lane-edge') {
                 cells.push(this.graph.createEdge(item))
             } else {

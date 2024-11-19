@@ -49,6 +49,15 @@
                 @click="relationBtn('edit', scope.row)"
                 />
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.泳道图')" placement="top">
+                <el-button
+                v-if="permissions.field_fieldMasterData_edit"
+                :disabled="!handleDataPermissions('update', scope.row)"
+                type="text"
+                icon="el-icon-picture-outline"
+                @click="swimlaneBtn(scope.row)"
+                />
+            </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
                 <el-button
                 v-if="permissions.field_fieldMasterData_del"
@@ -87,7 +96,22 @@
   
           </span>
         </el-dialog>
-        
+        <el-dialog
+          :title="$t('fieldManagement.泳道图')" 
+          v-if="swimlaneDialog"
+          width="70%" 
+          :visible.sync="swimlaneDialog" 
+          append-to-body
+          :close-on-click-modal="false" 
+          :fullscreen="isFullscreen">
+          <div class="dialog-header" slot="title">
+            <span class="dialog-header-title">{{$t('fieldManagement.泳道图')}}</span>
+            <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
+              <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+            </div>
+          </div> 
+          <Swimlane ref="swimlaneRef" />
+        </el-dialog>
       </basic-container>
     </div>
   </template>
@@ -102,9 +126,10 @@
   import { tableOption} from '@/const/crud/assets/crossBorderData'
   import Relationship from '@/views/assets/crossBorderData/relationship/index'
   import { mapGetters } from "vuex";
+  import Swimlane from "@/views/assetsCharts/swimlane/index"
   export default {
     name: "crossBorderData",
-    components: { Relationship },
+    components: { Relationship,Swimlane },
     data() {
       return {
         page: {
@@ -122,6 +147,7 @@
         isFullscreen: false,
         isOverHidden: true,
         relationshipDialog: false,
+        swimlaneDialog: false,
       };
     },
     computed: {
@@ -136,6 +162,12 @@
       this.getList(this.page);
     },
     methods: {
+      swimlaneBtn(row) {
+        this.swimlaneDialog = true
+        this.$nextTick(() => {
+          this.$refs.swimlaneRef.swimlaneInit(row)
+        })
+      },
       saveOrUpdateBtn() {
         const data = this.$refs.relationshipRef.getData()
         saveOrUpdateObj(data).then(res => {
