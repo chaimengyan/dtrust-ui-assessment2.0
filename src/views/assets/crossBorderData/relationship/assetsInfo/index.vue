@@ -56,6 +56,7 @@ import  SelectField from "@/views/assets/crossBorderData/relationship/assetsInfo
 import {
   getAssetsProjectAttributesListByProjectId,
 } from "@/api/assets/assetsManagement";
+import { cloneDeep } from "lodash";
 
 export default {
     name: "AssetsInfo",
@@ -121,18 +122,34 @@ export default {
        
     },
     methods: {
-        assetsInfoInit(assets, checkFields, renderList) {
+        assetsInfoInit(assets, attrs) {
             this.assetsForm.projectId = assets.projectId
             this.assetsForm.category = assets.category
             this.assetsForm.projectName = assets.projectName
             this.assetsForm.hostingLocation = assets.hostingLocation
             this.assetsForm.lat = assets.lat
             this.assetsForm.lng = assets.lng
-            this.getProjectAttributesList().then(() => {
-                setTimeout(() => {
-                this.$refs.selectField.setCheckAttrs(checkFields ? { checkFields, renderList } : undefined)
+            
+            this.getProjectAttributesList(attrs)
+        },
+        // 属性回显数据结构
+        attrTransferProject(attrs) {
+            if (!attrs.length) {
+                return []
+            }
+            const data = cloneDeep(this.checkedProjectBody)
+            const project = data[0];
+            project.dataSubjectList.forEach(main => {
+                const oldAttrs = main.attributes;
+
+                const attrList = attrs
+                .map(attr => oldAttrs.find(item => item.attributesId === attr.attributesId))
+                .filter(item => {
+                    return `${project.projectId}.${item.mainBodyId}` === main.mainBodyId
                 })
+                main.attributes = attrList
             })
+            return data;
         },
         assetsResult() {
             const attrs = this.$refs.selectField.getAttrs()
@@ -141,7 +158,7 @@ export default {
 
             return {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
         },
-        getProjectAttributesList() {
+        getProjectAttributesList(attrs) {
             return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {
                     // 初始化id
@@ -165,7 +182,7 @@ export default {
 
                 const data = [this.allData[this.project.projectId]]
                 this.checkedProjectBody = [...data]
-                console.log(this.checkedProjectBody,'this.checkedProjectBody');
+                this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
                 this.$refs.selectField.mounted()
                 this.$refs.selectField.setValue()
             })

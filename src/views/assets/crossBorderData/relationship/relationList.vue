@@ -206,8 +206,6 @@ export default {
             const data = this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes
-            this.currentLevel.checkFields = data.checkFields
-            this.currentLevel.renderList = data.renderList
             this.editAssetsDialog = false
         },
         editAssets(item) {
@@ -217,7 +215,7 @@ export default {
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
             this.$nextTick(() => {
-                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo, item.checkFields, item.renderList)
+                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo, item.transferAttributes)
             })
         },
         newIndex(i) {

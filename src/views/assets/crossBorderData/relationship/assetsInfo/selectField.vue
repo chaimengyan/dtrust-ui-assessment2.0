@@ -119,8 +119,8 @@ export default {
     methods: {
         mounted() {
             setTimeout(() => {
-                // this.buildRenderList()
-                // this.buildEchoFields()
+                this.buildRenderList()
+                this.buildEchoFields()
             })
         },
         setValue() {
@@ -145,15 +145,15 @@ export default {
         setCheckAttrs(data) {
             if (!data) {
                 // setTimeout(() => {
-                    this.buildRenderList()
-                    this.buildEchoFields()
+                    // this.buildRenderList()
+                    // this.buildEchoFields()
                 // })
-                this.setValue();
+                // this.setValue();
                 return
             }
-            this.checkAllFields = data.checkFields
-            this.renderList = data.renderList
-            this.setValue();
+            // this.checkAllFields = data.checkFields
+            // this.renderList = data.renderList
+            // this.setValue();
         },
         getEchoAttr(item) {
             for (let i = 0; i < this.echo.length; i++) {
