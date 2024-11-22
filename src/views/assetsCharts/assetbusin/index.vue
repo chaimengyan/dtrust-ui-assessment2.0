@@ -2,6 +2,7 @@
     <div class="outerContainer">
         <!-- <MyChartsTemplate /> -->
         <FreeEcharts />
+        <!-- <Modee /> -->
     </div>
 </template>
 
@@ -9,11 +10,13 @@
 
 //  import MyChartsTemplate from "@/views/assetsCharts/assetbusin/myChartsTemplate"
  import FreeEcharts from "@/views/assetsCharts/assetbusin/freeEcharts"
+//  import Modee from "@/views/assetsCharts/swimlane/modee"
   export default {
     name: 'Assetbusin',
     components: {
         // MyChartsTemplate,
         FreeEcharts,
+        // Modee
     },
     data() {
         return {

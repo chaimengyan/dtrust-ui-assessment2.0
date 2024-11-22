@@ -380,7 +380,12 @@ const data = [
       },
       getSwimLaneDiagrams(id) {
         getSwimLaneDiagramsById(id).then(res => {
-          this.swimlaneData = res.data.data
+          this.swimlaneData = res.data.data.map(a=>{
+            if(a.id==="1732271063611") {
+              a.label = 'chuanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            }
+            return a
+          })
           this.initGraph()
         })
       },
