@@ -69,9 +69,9 @@ export default {
     },
     mounted() {
         document.addEventListener("visibilitychange", this.openMessage);
-        setInterval(() => {
-            this.openMessage()
-        }, 10000);
+        // setInterval(() => {
+        //     this.openMessage()
+        // }, 10000);
     },
     beforeDestroy() {
       document.removeEventListener("visibilitychange", this.openMessage);

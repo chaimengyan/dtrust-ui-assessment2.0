@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <el-dialog
             v-if="editAssetsDialog"
             :title="$t('fieldManagement.资产信息')" 
@@ -41,7 +40,7 @@
                             :value="a.projectId"
                         />
                     </el-select>
-                    <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
+                    <el-button @click="showAct()">{{!isShowAct?'添加处理活动':'删除处理活动'}}</el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
                     <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                 </div>
@@ -70,20 +69,28 @@
                     </el-collapse>
                 </div>
 
-                <div class="assets-card" >
-                    <el-form-item :label="$t('.数据处理活动类型')" >
-                        <el-select
-                            v-model="item.dataActivityType"
-                            :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
-                            filterable>
-                            <el-option
-                                v-for="t in activitiesTypeOptions"
-                                :key="t.value"
-                                :label="t.label"
-                                :value="t.value"
-                            />
-                        </el-select>
-                    </el-form-item>
+                <div v-if="isShowAct" class="assets-card" >
+                    <div style="display: flex">
+                        <el-form-item :label="$t('.数据处理活动类型')" >
+                            <el-select
+                                class="mr-12"
+                                v-model="item.dataActivityType"
+                                :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
+                                filterable>
+                                <el-option
+                                    v-for="t in activitiesTypeOptions"
+                                    :key="t.value"
+                                    :label="t.label"
+                                    :value="t.value"
+                                />
+                            </el-select>
+                        </el-form-item>
+                        <div>
+                            <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
+                        </div>
+                    </div>
+                 
+
                     <el-form-item :label="$t('.数据处理活动描述')" >
                         <el-input
                             v-model="item.dataActivityDescription"
@@ -182,6 +189,7 @@ export default {
         ],
         currentLevel: {},
         isFirstLevel: false,
+        isShowAct: false,
       }
     },
     watch: {
@@ -236,6 +244,9 @@ export default {
                 projectInfo: {},
                 transferAttributes: [],
             }
+        },
+        showAct() {
+            this.isShowAct = !this.isShowAct
         },
         handleAdd(record) {
             const index = this.value.findIndex(item => item.id === record.id)
