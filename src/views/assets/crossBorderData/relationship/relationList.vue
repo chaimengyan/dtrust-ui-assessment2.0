@@ -14,7 +14,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo ref="assetsInfoRef" :isFirstLevel="isFirstLevel" :project="project" />
+            <AssetsInfo ref="assetsInfoRef"  :isFirstLevel="!index" :project="project" />
             <span slot="footer" class="dialog-footer">
             <el-button
               type="primary"
@@ -71,7 +71,8 @@
 
                 <div v-if="isShowAct" class="assets-card" >
                     <div style="display: flex">
-                        <el-form-item :label="$t('.数据处理活动类型')" >
+                        <div style="flex: 1;">
+                            <el-form-item :label="$t('.数据处理活动类型')" >
                             <el-select
                                 class="mr-12"
                                 v-model="item.dataActivityType"
@@ -85,6 +86,7 @@
                                 />
                             </el-select>
                         </el-form-item>
+                        </div>
                         <div>
                             <el-tooltip class="item" effect="dark" :content="$t('添加目标资产')" placement="top">
                                 <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>

@@ -3,8 +3,10 @@
 </template>
 
 <script>
-  import { Graph, Cell, CellView, Node } from '@antv/x6'
+  import { createApp } from 'vue'
+  import { Graph, Cell, CellView, Node, ToolsView } from '@antv/x6'
   import {getSwimLaneDiagramsById} from '@/api/assets/crossBorderData'
+  import { Tooltip } from 'element-ui'
 
 Graph.registerNode(
   'lane',
@@ -368,6 +370,7 @@ const data = [
 
 
 
+
   export default {
     name: 'Swimlane',
     components: {
@@ -375,8 +378,12 @@ const data = [
     },
     data() {
         return {
-            graph: null,
-            swimlaneData: [],
+          knob: null,
+          knobChild: null,
+          graph: null,
+          swimlaneData: [],
+          container: null,
+          tooltipContent: '21231231'
         }
     },
     computed: {
@@ -386,7 +393,6 @@ const data = [
     },
     methods: {
       swimlaneInit(row) {
-        console.log(row, 'rowwwwww');
         // this.getSwimLaneDiagrams(row.id)
         this.swimlaneData = data
         this.initGraph()
@@ -403,9 +409,51 @@ const data = [
           this.initGraph()
         })
       },
+      updatePosition(e) {
+        const style = this.knob.style
+        if (e) {
+          const p = this.graph.clientToGraph(e.clientX, e.clientY)
+          style.display = 'block'
+          style.left = `${p.x}px`
+          style.top = `${p.y}px`
+        } else {
+          style.display = 'none'
+          style.left = '-1000px'
+          style.top = '-1000px'
+        }
+      },
+      toggleTooltip(visible) {
+        const that = this;
+          if (visible) {
+            console.log(this.knobChild, 'this.knobChildthis.knobChild')
+            this.knobChild = new Vue({
+              el: this.knobChild,
+              render() {
+                return (
+                  // 假如遇到effect不生效，就用style去调样式
+                  <Tooltip visible={true} content={that.tooltipContent} effect='dark' placement="top">
+                    <div class="tooltip-text">
+                      占位
+                    </div>
+                  </Tooltip>
+                )
+              }
+            })
+          }
+      },
+      createToolContainer() {
+        if (!this.knob) {
+          this.knob = ToolsView.createElement('div', false)
+          this.knobChild = document.createElement('div')
+          this.knob.style.position = 'absolute'
+          this.knob.appendChild(this.knobChild)
+          this.container.appendChild(this.knob)
+        }
+      },
         initGraph() {
+          this.container = document.getElementById('container');
             const graph =  new Graph({
-                container: document.getElementById('container'),
+                container: this.container,
                 connecting: {
                     router: 'orth',
                 },
@@ -428,7 +476,8 @@ const data = [
                     },
                 },
             })
-
+            
+            this.createToolContainer()
 
             this.graph = graph
             const cells = []
@@ -445,15 +494,34 @@ const data = [
             this.graph.on('node:click', ({ e, node, view }) => {
               console.log(e, node, view,'节点');
              })
+
+             this.graph.on('node:click', ({ e, node, view }) => {
+              console.log(e, node, view,'节点');
+             })
+
+
+             this.graph.on('edge:mouseenter', ({ e, node, view }) => {
+              this.updatePosition(e);
+              this.toggleTooltip(true);
+             })
+           
+             this.graph.on('edge:mousemove', ({ e, node, view }) => {
+              this.updatePosition(e);
+             })
+        
             this.graph.on('edge:click', ({ e, edge, view }) => {
-              console.log(e, edge, view,'边');
-              this.graph.setTooltip({
-                  markdown: 'Hello, this is a tooltip for a node!', // 弹窗内容支持Markdown
-                  position: 'bottom-right', // 弹窗位置
-                  offsetX: 10, // 水平偏移
-                  offsetY: 10, // 垂直偏移
-                  fixed: true, // 固定位置
-                })
+              console.log(this.graph, e, edge, view,'边');
+
+              // this.updatePosition(e);
+              // this.toggleTooltip(true);
+              console.log(this.graph, 'okko')
+              // this.graph.setTooltip({
+              //     markdown: 'Hello, this is a tooltip for a node!', // 弹窗内容支持Markdown
+              //     position: 'bottom-right', // 弹窗位置
+              //     offsetX: 10, // 水平偏移
+              //     offsetY: 10, // 垂直偏移
+              //     fixed: true, // 固定位置
+              //   })
 
              })
         },
@@ -470,4 +538,5 @@ const data = [
         text-align: center;
        
     }
+
 </style>
