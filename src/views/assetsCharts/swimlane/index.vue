@@ -1,5 +1,5 @@
 <template>
-    <div id="container" style="min-width: 400px; min-height: 600px;"></div>
+    <div id="container" style="width: 100%; min-width: 400px; min-height: 600px;"></div>
 </template>
 
 <script>
@@ -127,7 +127,7 @@ const data = [
             "x": 60,
             "y": 60
         },
-        "label": "内部资产"
+        "label": "内部资产",
     },
     {
         "id": "2",
@@ -349,7 +349,18 @@ const data = [
         "shape": "lane-edge",
         "source": "12",
         "target": "13",
-        "label": "删除"
+        labels: [
+       
+          {
+        
+            attrs: { label: {  html: `
+                <span  >22222</span>
+              ` } },
+          },
+          {
+            // attrs: { label: { text: '23232323232323233333333333333333333333333333333333333333333333333333333333333333333333333333333' } },
+          },
+        ],
 
     }
 ]
@@ -376,7 +387,10 @@ const data = [
     methods: {
       swimlaneInit(row) {
         console.log(row, 'rowwwwww');
-        this.getSwimLaneDiagrams(row.id)
+        // this.getSwimLaneDiagrams(row.id)
+        this.swimlaneData = data
+        this.initGraph()
+
       },
       getSwimLaneDiagrams(id) {
         getSwimLaneDiagramsById(id).then(res => {
@@ -390,7 +404,7 @@ const data = [
         })
       },
         initGraph() {
-            this.graph =  new Graph({
+            const graph =  new Graph({
                 container: document.getElementById('container'),
                 connecting: {
                     router: 'orth',
@@ -400,7 +414,7 @@ const data = [
                     const cell = cellView.cell
                     const parentId = cell.prop('parent')
                     if (parentId) {
-                        const parentNode = this.graph.getCellById(parentId)
+                        const parentNode = graph.getCellById(parentId)
                         if (parentNode) {
                         return parentNode.getBBox().moveAndExpand({
                             x: 0,
@@ -415,6 +429,8 @@ const data = [
                 },
             })
 
+
+            this.graph = graph
             const cells = []
             this.swimlaneData.forEach((item) => {
             if (item.shape === 'lane-edge') {
@@ -425,6 +441,21 @@ const data = [
             })
             this.graph.resetCells(cells)
             this.graph.zoomToFit({ padding: 10, maxScale: 1 })
+
+            this.graph.on('node:click', ({ e, node, view }) => {
+              console.log(e, node, view,'节点');
+             })
+            this.graph.on('edge:click', ({ e, edge, view }) => {
+              console.log(e, edge, view,'边');
+              this.graph.setTooltip({
+                  markdown: 'Hello, this is a tooltip for a node!', // 弹窗内容支持Markdown
+                  position: 'bottom-right', // 弹窗位置
+                  offsetX: 10, // 水平偏移
+                  offsetY: 10, // 垂直偏移
+                  fixed: true, // 固定位置
+                })
+
+             })
         },
     }
   }

@@ -40,7 +40,7 @@
                             :value="a.projectId"
                         />
                     </el-select>
-                    <el-button @click="showAct()">{{!isShowAct?'添加处理活动':'删除处理活动'}}</el-button>
+                    <el-button @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
                     <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                 </div>
@@ -86,7 +86,9 @@
                             </el-select>
                         </el-form-item>
                         <div>
-                            <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
+                            <el-tooltip class="item" effect="dark" :content="$t('添加目标资产')" placement="top">
+                                <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
+                            </el-tooltip>
                         </div>
                     </div>
                  
@@ -218,12 +220,13 @@ export default {
         },
         editAssets(item) {
             this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)
-            console.log(item, '>>>>?????');
             this.currentLevel = item
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
+            console.log(item, this.project,'>>>>?????');
             this.$nextTick(() => {
-                this.$refs.assetsInfoRef.assetsInfoInit(item.projectInfo, item.transferAttributes)
+                const project = JSON.stringify(item.projectInfo) === '{}' ? this.project : item.projectInfo
+                this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes)
             })
         },
         newIndex(i) {
