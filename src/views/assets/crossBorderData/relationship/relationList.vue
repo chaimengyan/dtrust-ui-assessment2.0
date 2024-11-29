@@ -31,7 +31,7 @@
             <div class="evaluation-item" >
                 <div class="evaluation-item-content">
                     <span class="mr-12">{{ newIndex(i) }}. </span>
-                    涉及的资产：
+                    {{index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}}的资产：
                     <el-select v-model="item.projectId" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12 flex">
                         <el-option
                             v-for="a in assetsList"
@@ -115,7 +115,7 @@
                         </el-select>
                     </el-form-item>
                 </div>
-                <relation-list v-model="item.transferRelevanceList" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
             </div>
         </div>
@@ -144,6 +144,10 @@ export default {
             type: Array,
             default: () => []
         },
+        dataActivityType: {
+            type: Number,
+            default: 0
+        }
     },
     data() {
       return {
@@ -163,7 +167,7 @@ export default {
             label: '存储于',
             value: 1
         },{
-            label: '被使用',
+            label: '使用于',
             value: 2
         }],
         dataScaleOptions: [{
@@ -221,7 +225,7 @@ export default {
             this.editAssetsDialog = false
         },
         editAssets(item) {
-            this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)
+            // this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)
             this.currentLevel = item
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true

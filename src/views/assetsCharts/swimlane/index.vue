@@ -1,5 +1,5 @@
 <template>
-    <div id="container" style="width: 100%; min-width: 400px; min-height: 600px;"></div>
+    <div id="container" style="width: 100%;height: 100%; min-width: 400px; min-height: 600px;"></div>
 </template>
 
 <script>
@@ -129,7 +129,7 @@ const data = [
             "x": 60,
             "y": 60
         },
-        "label": "内部资产",
+        "label": "内部资产"
     },
     {
         "id": "2",
@@ -285,66 +285,162 @@ const data = [
         "shape": "lane-edge",
         "source": "5",
         "target": "6",
-        "label": "收集"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '收集'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集收集' } },
+          },
+        ],
     },
     {
         "id": "15",
         "shape": "lane-edge",
         "source": "6",
         "target": "7",
-        "label": "存储"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '存储'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储' } },
+          },
+        ],
     },
     {
         "id": "16",
         "shape": "lane-edge",
         "source": "7",
         "target": "8",
-        "label": "传输"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '传输'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '传输传输传输传输传输传输传输传输传输传输传输传输传输' } },
+          },
+        ],
     },
     {
         "id": "17",
         "shape": "lane-edge",
         "source": "7",
         "target": "9",
-        "label": "使用"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '使用'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '使用使用使用使用使用使用使用使用使用使用使用使用使用使用' } },
+          },
+        ],
     },
     {
         "id": "18",
         "shape": "lane-edge",
         "source": "8",
         "target": "9",
-        "label": "存档"
-
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '存档'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '存档存档存档存档存档存档存档存档存档存档存档存档存档存档存档' } },
+          },
+        ],
     },
     {
         "id": "19",
         "shape": "lane-edge",
         "source": "9",
         "target": "10",
-        "label": "使用"
-
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '使用'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '使用使用使用使用使用使用使用使用使用使用使用使用使用使用' } },
+          },
+        ],
     },
     {
         "id": "20",
         "shape": "lane-edge",
         "source": "10",
         "target": "11",
-        "label": "传输"
-
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '传输'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '传输传输传输传输传输传输传输传输传输传输传输传输传输传输传输' } },
+          },
+        ],
     },
     {
         "id": "21",
         "shape": "lane-edge",
         "source": "11",
         "target": "12",
-        "label": "使用"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '使用'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '使用使用使用使用使用使用使用使用使用使用使用使用使用使用' } },
+          },
+        ],
     },
     {
         "id": "22",
         "shape": "lane-edge",
         "source": "11",
         "target": "13",
-        "label": "存储"
+        labels: [
+          {
+            attrs: { 
+              label:{
+                text: '存储'
+              }
+            },
+          },
+          {
+            attrs: { label: { text: '存储存储存储存储存储存储存储存储存储存储存储存储存储存储存储' } },
+          },
+        ],
     },
     {
         "id": "23",
@@ -352,15 +448,15 @@ const data = [
         "source": "12",
         "target": "13",
         labels: [
-       
           {
-        
-            attrs: { label: {  html: `
-                <span  >22222</span>
-              ` } },
+            attrs: { 
+              label:{
+                text: '删除'
+              }
+            },
           },
           {
-            // attrs: { label: { text: '23232323232323233333333333333333333333333333333333333333333333333333333333333333333333333333333' } },
+            attrs: { label: { text: '23232323232323233333333333333333333333333333333333333333333333333333333333333333333333333333333' } },
           },
         ],
 
@@ -383,7 +479,8 @@ const data = [
           graph: null,
           swimlaneData: [],
           container: null,
-          tooltipContent: '21231231'
+          tooltipContent: '21231231',
+          CBData: {}
         }
     },
     computed: {
@@ -392,20 +489,17 @@ const data = [
     mounted() {
     },
     methods: {
-      swimlaneInit(row) {
-        // this.getSwimLaneDiagrams(row.id)
-        this.swimlaneData = data
+      
+      swimlaneInit(row, CBData) {
+        this.CBData = CBData
+        this.getSwimLaneDiagrams(row.id)
+        // this.swimlaneData = data
         this.initGraph()
 
       },
       getSwimLaneDiagrams(id) {
         getSwimLaneDiagramsById(id).then(res => {
-          this.swimlaneData = res.data.data.map(a=>{
-            if(a.id==="1732271063611") {
-              a.label = 'chuanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-            }
-            return a
-          })
+          this.swimlaneData = res.data.data
           this.initGraph()
         })
       },
@@ -416,6 +510,7 @@ const data = [
           style.display = 'block'
           style.left = `${p.x}px`
           style.top = `${p.y}px`
+          style.zIndex = 1000
         } else {
           style.display = 'none'
           style.left = '-1000px'
@@ -424,9 +519,33 @@ const data = [
       },
       toggleTooltip(visible) {
         const that = this;
+        if (this.knobChild) {
+          // this.knob.innerHTML = ''
+          this.knobChild.$destroy && this.knobChild.$destroy()
+        }
           if (visible) {
-            console.log(this.knobChild, 'this.knobChildthis.knobChild')
-            this.knobChild = new Vue({
+            // 创建一个 Vue 构造函数并指定渲染的组件
+            // const MyComponentConstructor = Vue.extend(Tooltip);
+
+            // // 创建一个新的 Vue 实例
+            // const instance = new MyComponentConstructor({  propsData: {
+            //   visible: true,
+            //   content: '3333',
+            //   effect: 'dark',
+            //   placement: 'top'
+            // },
+            // // 通过插槽传递默认内容
+            // scopedSlots: {
+            //   default: () => {
+            //     return <div class="tooltip-text">占位</div>;
+            //   }
+            // }});
+
+            // // 将组件挂载到指定的 DOM 节点
+            // instance.$mount(this.knobChild);
+
+
+            new Vue({
               el: this.knobChild,
               render() {
                 return (
@@ -439,6 +558,7 @@ const data = [
                 )
               }
             })
+          console.log(this.knobChild, 'this.knobChild')
           }
       },
       createToolContainer() {
@@ -477,54 +597,79 @@ const data = [
                 },
             })
             
-            this.createToolContainer()
-
             this.graph = graph
             const cells = []
+            const edg = {}
             this.swimlaneData.forEach((item) => {
-            if (item.shape === 'lane-edge') {
+              if (item.shape === 'lane-edge') {
+                item.router =  {
+                  name: 'manhattan',
+                  args: {
+                    startDirections: ['right'],
+                    endDirections: ['left'],
+                  },
+                }
+                edg[item.id] = item.label.split("{")[1].split("}")[0]
+                item.label = item.label.split("{")[0]
                 cells.push(this.graph.createEdge(item))
-            } else {
+              } else {
+                if(item.shape === 'lane-rect') {
+                  item.attrs = {
+                    body: {
+                      // stroke: '#8f8f8f',
+                      strokeWidth: 1,
+                      // fill: '#fff',
+                      rx: 6,
+                      ry: 6,
+                    },
+                  }
+                }
                 cells.push(this.graph.createNode(item))
-            }
+              }
             })
             this.graph.resetCells(cells)
             this.graph.zoomToFit({ padding: 10, maxScale: 1 })
 
             this.graph.on('node:click', ({ e, node, view }) => {
+              const a = this.findValueInArray(this.CBData.transferRelevanceList, node.store.data.projectId)
+              this.tooltipContent = a.hostingLocation || '暂无'
               console.log(e, node, view,'节点');
+              if (this.tooltipContent) {
+                this.createToolContainer()
+                this.updatePosition(e);
+                this.toggleTooltip(true);
+              }
              })
 
-             this.graph.on('node:click', ({ e, node, view }) => {
-              console.log(e, node, view,'节点');
-             })
-
-
-             this.graph.on('edge:mouseenter', ({ e, node, view }) => {
-              this.updatePosition(e);
-              this.toggleTooltip(true);
-             })
+            this.graph.on('edge:click', ({ e, edge, view }) => {
+              console.log(edg[edge.store.data.id],edge.store,'边');
+              this.tooltipContent = edg[edge.store.data.id] || '暂无'
+              if (this.tooltipContent) {
+                this.createToolContainer()
+                this.updatePosition(e);
+                this.toggleTooltip(true);
+              }
+            })
            
-             this.graph.on('edge:mousemove', ({ e, node, view }) => {
-              this.updatePosition(e);
-             })
+            //  this.graph.on('edge:mouseleave', ({ e, node, view }) => {
+            //   this.toggleTooltip(false);
+            //  })
         
             this.graph.on('edge:click', ({ e, edge, view }) => {
               console.log(this.graph, e, edge, view,'边');
-
-              // this.updatePosition(e);
-              // this.toggleTooltip(true);
               console.log(this.graph, 'okko')
-              // this.graph.setTooltip({
-              //     markdown: 'Hello, this is a tooltip for a node!', // 弹窗内容支持Markdown
-              //     position: 'bottom-right', // 弹窗位置
-              //     offsetX: 10, // 水平偏移
-              //     offsetY: 10, // 垂直偏移
-              //     fixed: true, // 固定位置
-              //   })
-
              })
         },
+        
+        findValueInArray(arr, projectId) {
+          for (let i = 0; i < arr.length; i++) {
+            if(arr[i].projectId === projectId) {
+              return arr[i].projectInfo
+            }else {
+              return this.findValueInArray(arr[i].transferRelevanceList, projectId)
+            }
+        }
+      }
     }
   }
 </script>

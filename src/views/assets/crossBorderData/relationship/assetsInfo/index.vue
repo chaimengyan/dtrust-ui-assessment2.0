@@ -151,11 +151,16 @@ export default {
             return data;
         },
         assetsResult() {
-            const attrs = this.$refs.selectField.getAttrs()
-            const checkFields  = this.$refs.selectField.getCheckAttrs()
-            const renderList  = this.$refs.selectField.getRenderList()
+            if(this.isFirstLevel) {
+                const attrs = this.$refs.selectField.getAttrs()
+                const checkFields  = this.$refs.selectField.getCheckAttrs()
+                const renderList  = this.$refs.selectField.getRenderList()
 
-            return {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
+                return {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
+            }else {
+                return {projectInfo: this.assetsForm, transferAttributes: []}
+            }
+           
         },
         getProjectAttributesList(attrs) {
             return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {

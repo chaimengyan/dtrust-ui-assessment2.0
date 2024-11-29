@@ -105,11 +105,29 @@
           :close-on-click-modal="false" 
           :fullscreen="isFullscreen">
           <div class="dialog-header" slot="title">
-            <span class="dialog-header-title">{{$t('fieldManagement.泳道图')}}</span>
+            <span class="dialog-header-title">{{CBData.name}}</span>
             <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
               <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>
           </div> 
+          <div>
+            <div>描述：{{CBData.description}} </div>
+            <el-collapse>
+              <el-collapse-item title="字段信息" name="1">
+                  <div 
+                      style="white-space: normal;"
+                      v-for="mainBody in handleAttributes(CBData.transferRelevanceList[0].transferAttributes)"
+                      :key="mainBody.mainBodyId">
+                      <div>{{mainBody.mainBodyName}}</div>
+                      <el-tag 
+                          v-for="attr in CBData.transferRelevanceList[0].transferAttributes.filter(t=>t.mainBodyId===mainBody.mainBodyId)"
+                          :key="attr.attributesId">
+                          {{attr.attributesName}}
+                      </el-tag>
+                  </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
           <Swimlane ref="swimlaneRef" />
         </el-dialog>
       </basic-container>
@@ -148,6 +166,7 @@
         isOverHidden: true,
         relationshipDialog: false,
         swimlaneDialog: false,
+        CBData:{},
       };
     },
     computed: {
@@ -162,11 +181,23 @@
       this.getList(this.page);
     },
     methods: {
+      handleAttributes(attributes) {
+            const mainBodyList = attributes.reduce((acc, cur) => {
+                if(!acc.map(a=>a.mainBodyId).includes(cur.mainBodyId)) {
+                    acc.push(cur)
+                }
+                return acc
+            }, [])
+            return mainBodyList
+        },
       swimlaneBtn(row) {
-        this.swimlaneDialog = true
-        this.$nextTick(() => {
-          this.$refs.swimlaneRef.swimlaneInit(row)
+        this.getTransferActivityById(row.id).then(()=>{
+          this.swimlaneDialog = true
+          this.$nextTick(() => {
+            this.$refs.swimlaneRef.swimlaneInit(row, this.CBData)
+          })
         })
+        
       },
       saveOrUpdateBtn() {
         const data = this.$refs.relationshipRef.getData()
@@ -182,10 +213,15 @@
       relationBtn(type, row) {
           this.relationshipDialog = true
           if(type === 'edit') {
-            getTransferActivityById(row.id).then(res => {
-              this.$refs.relationshipRef.init(res.data.data)
+            this.getTransferActivityById(row.id).then(() => {
+              this.$refs.relationshipRef.init(this.CBData)
             })
           }
+      },
+      getTransferActivityById(id) {
+        return getTransferActivityById(id).then(res => {
+          this.CBData = res.data.data
+        })
       },
       changeArray() {
         this.isOverHidden = !this.isOverHidden
