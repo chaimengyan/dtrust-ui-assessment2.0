@@ -14,7 +14,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo ref="assetsInfoRef"  :isFirstLevel="!index" :project="project" />
+            <AssetsInfo ref="assetsInfoRef" :firstLevelAttr="firstLevelAttr" :isFirstLevel="!index" :project="project" />
             <span slot="footer" class="dialog-footer">
             <el-button
               type="primary"
@@ -198,6 +198,7 @@ export default {
         currentLevel: {},
         isFirstLevel: false,
         isShowAct: false,
+        firstLevelAttr: [],
       }
     },
     watch: {
@@ -222,7 +223,13 @@ export default {
             const data = this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes
+            if(this.currentLevel.transferAttributes.length === 0) {
+                return this.$message.error('请选择字段！')
+            }
             this.editAssetsDialog = false
+            if(this.index === 0) {
+                this.firstLevelAttr = data.transferAttributes
+            }
         },
         editAssets(item) {
             // this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)

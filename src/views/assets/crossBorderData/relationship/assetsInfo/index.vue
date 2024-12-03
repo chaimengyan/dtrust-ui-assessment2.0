@@ -1,10 +1,10 @@
 <template>
     <div>
-        <el-form ref="assetsFormRef" :model="assetsForm" label-width="120px">
-            <el-form-item label="位置信息">
+        <el-form ref="assetsFormRef" :model="assetsForm" :rules="assetsFormRules" label-width="120px">
+            <el-form-item label="位置信息" prop="hostingLocation">
                 <el-input v-model="assetsForm.hostingLocation" @focus="openMap" placeholder="请选择位置信息" />
             </el-form-item>
-            <el-form-item label="资产类别">
+            <el-form-item label="资产类别" prop="category">
                 <el-select
                     v-model="assetsForm.category"
                     :placeholder="`${$t('crudCommon.请选择')}${$t('.资产类别')}`"
@@ -20,7 +20,6 @@
         </el-form>
 
         <SelectField
-            v-if="isFirstLevel"
             ref="selectField"
             :projectId="project.projectId"
             :isAssets="true"
@@ -77,6 +76,10 @@ export default {
         isFirstLevel: {
             type: Boolean,
             default: false
+        },
+        firstLevelAttr: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -111,6 +114,10 @@ export default {
             ],
             showMap:false,
             map: null,
+            assetsFormRules: {
+                hostingLocation: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('.位置信息')}`, trigger: 'change'}],
+                category: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('.资产类别')}`, trigger: 'change'}],
+            }
         }
     },
     computed: {
@@ -151,45 +158,57 @@ export default {
             return data;
         },
         assetsResult() {
-            if(this.isFirstLevel) {
-                const attrs = this.$refs.selectField.getAttrs()
-                const checkFields  = this.$refs.selectField.getCheckAttrs()
-                const renderList  = this.$refs.selectField.getRenderList()
-
-                return {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
-            }else {
-                return {projectInfo: this.assetsForm, transferAttributes: []}
-            }
-           
+            let data = {}
+            this.$refs.assetsFormRef.validate((valid, done) => {
+                if (valid) {
+                    // if(this.isFirstLevel) {
+                        const attrs = this.$refs.selectField.getAttrs()
+                        const checkFields  = this.$refs.selectField.getCheckAttrs()
+                        const renderList  = this.$refs.selectField.getRenderList()
+                        data = {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
+                    // }else {
+                    //     data = {projectInfo: this.assetsForm, transferAttributes: []}
+                    // }
+                } else {
+                    return false
+                }
+            })
+            return data
         },
         getProjectAttributesList(attrs) {
-            return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
-                const dataSubjectList = res.data.data.map(main => {
-                    // 初始化id
-                    main.attributes.forEach(a => {
-                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
-                    })// 初始化id
-                    main.categoryList.forEach(a => {
-                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+            if(this.isFirstLevel) {
+                return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
+                    const dataSubjectList = res.data.data.map(main => {
+                        // 初始化id
+                        main.attributes.forEach(a => {
+                            a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
+                        })// 初始化id
+                        main.categoryList.forEach(a => {
+                            a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+                        })
+                        return {
+                            ...main,
+                            mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
+                        }
                     })
-                    return {
-                        ...main,
-                        mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
+
+                    this.allData[this.project.projectId] = {
+                        projectId: this.project.projectId,
+                        projectName: this.project.projectName,
+                        dataSubjectList
                     }
+
+                    const data = [this.allData[this.project.projectId]]
+                    this.checkedProjectBody = [...data]
+                    this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
+                    this.$refs.selectField.mounted()
+                    this.$refs.selectField.setValue()
+                console.log(this.checkedProjectBody,'checkedProjectBody');
                 })
-
-                this.allData[this.project.projectId] = {
-                    projectId: this.project.projectId,
-                    projectName: this.project.projectName,
-                    dataSubjectList
-                }
-
-                const data = [this.allData[this.project.projectId]]
-                this.checkedProjectBody = [...data]
-                this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
-                this.$refs.selectField.mounted()
-                this.$refs.selectField.setValue()
-            })
+            }else {
+                console.log(this.firstLevelAttr,'firstLevelAttr');
+            }
+            
         },
         openMap() {
             this.showMap = true
