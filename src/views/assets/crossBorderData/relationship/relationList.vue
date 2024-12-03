@@ -115,7 +115,7 @@
                         </el-select>
                     </el-form-item>
                 </div>
-                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="item.transferAttributes" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
             </div>
         </div>
@@ -147,6 +147,10 @@ export default {
         dataActivityType: {
             type: Number,
             default: 0
+        },
+        filterAttrs: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -239,7 +243,7 @@ export default {
             console.log(item, this.project,'>>>>?????');
             this.$nextTick(() => {
                 const project = JSON.stringify(item.projectInfo) === '{}' ? this.project : item.projectInfo
-                this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes)
+                this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes, this.filterAttrs)
             })
         },
         newIndex(i) {

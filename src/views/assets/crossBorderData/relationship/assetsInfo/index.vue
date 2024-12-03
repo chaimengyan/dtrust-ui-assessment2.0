@@ -128,7 +128,7 @@ export default {
        
     },
     methods: {
-        assetsInfoInit(assets, attrs) {
+        assetsInfoInit(assets, attrs, filterAttrs) {
             this.assetsForm.projectId = assets.projectId
             this.assetsForm.category = assets.category
             this.assetsForm.projectName = assets.projectName
@@ -136,7 +136,7 @@ export default {
             this.assetsForm.lat = assets.lat
             this.assetsForm.lng = assets.lng
             
-            this.getProjectAttributesList(attrs)
+            this.getProjectAttributesList(attrs, filterAttrs)
         },
         // 属性回显数据结构
         attrTransferProject(attrs) {
@@ -175,40 +175,44 @@ export default {
             })
             return data
         },
-        getProjectAttributesList(attrs) {
-            if(this.isFirstLevel) {
-                return getAssetsProjectAttributesListByProjectId(this.project.projectId).then(res => {
-                    const dataSubjectList = res.data.data.map(main => {
-                        // 初始化id
-                        main.attributes.forEach(a => {
-                            a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
-                        })// 初始化id
-                        main.categoryList.forEach(a => {
-                            a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+        getProjectAttributesList(attrs, filterAttrs) {
+            console.log(filterAttrs, 'filterAttrsfilterAttrsfilterAttrs')
+            const projectId = filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId
+
+            return getAssetsProjectAttributesListByProjectId(projectId).then(res => {
+                const dataSubjectList = res.data.data.map(main => {
+                    if (filterAttrs.length) {
+                        main.attributes = filterAttrs;
+                        main.categoryList = main.categoryList.filter(item => {
+                            return filterAttrs.some(attr => attr.categoryId === item.categoryId)
                         })
-                        return {
-                            ...main,
-                            mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
-                        }
-                    })
-
-                    this.allData[this.project.projectId] = {
-                        projectId: this.project.projectId,
-                        projectName: this.project.projectName,
-                        dataSubjectList
                     }
-
-                    const data = [this.allData[this.project.projectId]]
-                    this.checkedProjectBody = [...data]
-                    this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
-                    this.$refs.selectField.mounted()
-                    this.$refs.selectField.setValue()
-                console.log(this.checkedProjectBody,'checkedProjectBody');
+                    // 初始化id
+                    main.attributes.forEach(a => {
+                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
+                    })// 初始化id
+                    main.categoryList.forEach(a => {
+                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+                    })
+                    return {
+                        ...main,
+                        mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
+                    }
                 })
-            }else {
-                console.log(this.firstLevelAttr,'firstLevelAttr');
-            }
-            
+
+                this.allData[this.project.projectId] = {
+                    projectId: this.project.projectId,
+                    projectName: this.project.projectName,
+                    dataSubjectList
+                }
+
+                const data = [this.allData[this.project.projectId]]
+                this.checkedProjectBody = [...data]
+                this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
+                this.$refs.selectField.mounted()
+                this.$refs.selectField.setValue()
+                console.log(this.checkedProjectBody,'checkedProjectBody-----');
+            })
         },
         openMap() {
             this.showMap = true
