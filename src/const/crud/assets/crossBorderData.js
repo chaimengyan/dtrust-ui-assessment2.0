@@ -24,8 +24,8 @@ export const tableOption = (_this, isOverHidden) => {
       prop: 'name',
       span: 24,
       search: true,
-      searchLabelWidth:80,
-      searchSpan: 5,
+      searchLabelWidth:120,
+      searchSpan: 6,
       size:'mini',
       rules: [{
         required: true,

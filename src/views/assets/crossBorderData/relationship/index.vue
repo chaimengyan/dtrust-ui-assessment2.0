@@ -1,10 +1,10 @@
 <template>
     <div class="evaluation">
-        <el-form ref="relationshipFormRef" :model="relationshipForm" label-width="120px">
-            <el-form-item label="业务活动名称：">
+        <el-form ref="relationshipFormRef" :model="relationshipForm" :rules="relationshipFormRule" label-width="120px">
+            <el-form-item label="业务活动名称：" prop="name">
                 <el-input v-model="relationshipForm.name" placeholder="请输入业务活动名称" />
             </el-form-item>
-            <el-form-item label="业务活动描述：">
+            <el-form-item label="业务活动描述：" prop="description">
                 <el-input v-model="relationshipForm.description" type="textarea" :rows="2" placeholder="请输入业务活动描述" />
             </el-form-item>
             <el-button type="primary" icon="el-icon-plus" circle @click="handleAddQuestion"></el-button>
@@ -47,6 +47,11 @@ export default {
             ]
         },
         assetsList: [],
+        relationshipFormRule: {
+            name: [{required: true, message: `${this.$t('crudCommon.请填写')}${this.$t('.业务活动名称')}`, trigger: 'blur'}],
+            description: [{required: true, message: `${this.$t('crudCommon.请填写')}${this.$t('.业务活动描述')}`, trigger: 'blur'}],
+            
+        }
       }
     },
     mounted() {
@@ -58,7 +63,15 @@ export default {
             this.relationshipForm = data
         },
         getData() {
-            return this.relationshipForm
+            this.$refs.relationshipFormRef.validate((valid) => {
+                if (valid) {
+                    // alert('submit!');
+                    return this.relationshipForm
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
 
         addBlock(id) {

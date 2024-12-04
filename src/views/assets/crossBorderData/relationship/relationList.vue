@@ -30,17 +30,23 @@
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
             <div class="evaluation-item" >
                 <div class="evaluation-item-content">
-                    <span class="mr-12">{{ newIndex(i) }}. </span>
-                    {{index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}}的资产：
-                    <el-select v-model="item.projectId" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12 flex">
-                        <el-option
-                            v-for="a in assetsList"
-                            :key="a.projectId"
-                            :label="a.projectName"
-                            :value="a.projectId"
-                        />
-                    </el-select>
-                    <el-button @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
+                    <div style="flex: 1;">
+                        <el-form-item 
+                            :prop="'projectId.' + i "
+                            style="margin-bottom:0;" 
+                            :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
+                            :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
+                            <el-select v-model="item.projectId" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
+                                <el-option
+                                    v-for="a in assetsList"
+                                    :key="a.projectId"
+                                    :label="a.projectName"
+                                    :value="a.projectId"
+                                />
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <el-button v-if="item.projectId" @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
                     <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                 </div>
@@ -72,36 +78,42 @@
                 <div v-if="isShowAct" class="assets-card" >
                     <div style="display: flex">
                         <div style="flex: 1;">
-                            <el-form-item :label="$t('.数据处理活动类型')" >
-                            <el-select
-                                class="mr-12"
-                                v-model="item.dataActivityType"
-                                :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
-                                filterable>
-                                <el-option
-                                    v-for="t in activitiesTypeOptions"
-                                    :key="t.value"
-                                    :label="t.label"
-                                    :value="t.value"
-                                />
-                            </el-select>
-                        </el-form-item>
+                            <el-form-item 
+                                :label="$t('.数据处理活动类型')"
+                                :rules="{ required: true, message: '请选择数据处理活动类型', trigger: 'change' }"  >
+                                <el-select
+                                    class="mr-12"
+                                    v-model="item.dataActivityType"
+                                    :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
+                                    filterable>
+                                    <el-option
+                                        v-for="t in activitiesTypeOptions"
+                                        :key="t.value"
+                                        :label="t.label"
+                                        :value="t.value"
+                                    />
+                                </el-select>
+                            </el-form-item>
                         </div>
-                        <div>
-                            <el-tooltip class="item" effect="dark" :content="$t('添加目标资产')" placement="top">
+                        <div v-if="item.dataActivityType !== null">
+                            <el-tooltip effect="dark" :content="$t('添加目标资产')" placement="top">
                                 <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
                             </el-tooltip>
                         </div>
                     </div>
                  
 
-                    <el-form-item :label="$t('.数据处理活动描述')" >
+                    <el-form-item 
+                        :label="$t('.数据处理活动描述')"
+                        :rules="{ required: true, message: '请填写数据处理活动描述', trigger: 'blur' }" >
                         <el-input
                             v-model="item.dataActivityDescription"
                             :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
                             type="textarea"></el-input>
                     </el-form-item>
-                    <el-form-item :label="$t('.数据量级')" >
+                    <el-form-item 
+                        :label="$t('.数据量级')"
+                        :rules="{ required: true, message: '请选择数据量级', trigger: 'change' }" >
                         <el-select
                             v-model="item.dataScale"
                             :placeholder="`${$t('crudCommon.请选择')}${$t('.数据量级')}`"

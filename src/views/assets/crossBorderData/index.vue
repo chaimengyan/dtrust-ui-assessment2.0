@@ -89,7 +89,7 @@
               type="primary"
               icon="el-icon-circle-check"
               v-loading.fullscreen.lock="fullscreenLoading"
-              @click="saveOrUpdateBtn">{{$t('assetsManagement.修改')}}</el-button>
+              @click="saveOrUpdateBtn">{{btnText}}</el-button>
             <el-button 
               icon="el-icon-circle-close"
               @click="relationshipDialog = false">{{$t('assetsManagement.取消')}}</el-button>
@@ -167,6 +167,7 @@
         relationshipDialog: false,
         swimlaneDialog: false,
         CBData:{},
+        btnText: '',
       };
     },
     computed: {
@@ -213,9 +214,12 @@
       relationBtn(type, row) {
           this.relationshipDialog = true
           if(type === 'edit') {
+            this.btnText = this.$t('assetsManagement.修改')
             this.getTransferActivityById(row.id).then(() => {
               this.$refs.relationshipRef.init(this.CBData)
             })
+          }else {
+            this.btnText = this.$t('assetsManagement.保存')
           }
       },
       getTransferActivityById(id) {
