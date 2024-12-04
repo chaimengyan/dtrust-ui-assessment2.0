@@ -36,7 +36,7 @@
                             style="margin-bottom:0;" 
                             :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
                             :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
-                            <el-select v-model="item.projectId" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
+                            <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
                                 <el-option
                                     v-for="a in assetsList"
                                     :key="a.projectId"
@@ -235,6 +235,16 @@ export default {
             }, [])
             return mainBodyList
         },
+        onSelectChange(item) {
+            item.transferAttributes = []
+            item.projectInfo = {}
+            if (item.transferRelevanceList) {
+                item.transferRelevanceList.forEach(item => {
+                    this.onSelectChange(item)
+                })
+            }
+        },
+       
         saveOrUpdate() {
             const data = this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo

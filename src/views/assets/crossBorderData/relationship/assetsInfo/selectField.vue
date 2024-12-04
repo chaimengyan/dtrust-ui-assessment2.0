@@ -444,7 +444,7 @@ export default {
         // 点击字段多选框事件
         async handleCheckedChange(checkedList, checkId) {
             let [needAddIds, itemChecked, itemList] = this.deleteCheckedOrList(this.checkAllFields, checkedList, checkId)
-
+            console.log(needAddIds, checkId, 'needAddIds')
             // 找到新增id，调用接口设置选中和节点
             if (needAddIds.length) {
                 for (let i = 0; i < needAddIds.length; i++) {
@@ -465,6 +465,7 @@ export default {
 
             this.checkAllFields = [...this.checkAllFields]
             this.renderList = [...this.renderList]
+            console.log(this.checkAllFields, 'checkAllFieldscheckAllFieldscheckAllFields')
             this.setValue()
         },
 

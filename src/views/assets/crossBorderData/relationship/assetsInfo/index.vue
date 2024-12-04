@@ -143,13 +143,16 @@ export default {
             if (!attrs.length) {
                 return []
             }
+
             const data = cloneDeep(this.checkedProjectBody)
             const project = data[0];
+            console.log(project, 'projectproject')
             project.dataSubjectList.forEach(main => {
                 const oldAttrs = main.attributes;
 
                 const attrList = attrs
                 .map(attr => oldAttrs.find(item => item.attributesId === attr.attributesId))
+                .filter(v => v)
                 .filter(item => {
                     return `${project.projectId}.${item.mainBodyId}` === main.mainBodyId
                 })
@@ -176,37 +179,37 @@ export default {
             return data
         },
         getProjectAttributesList(attrs, filterAttrs) {
-            console.log(filterAttrs, 'filterAttrsfilterAttrsfilterAttrs')
             const projectId = filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId
-
+            console.log(filterAttrs, attrs,'filterAttrs')
             return getAssetsProjectAttributesListByProjectId(projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {
                     if (filterAttrs.length) {
-                        main.attributes = filterAttrs;
+                        main.attributes = filterAttrs.filter(item => item.mainBodyId === main.mainBodyId);
+                        // main.mainBodyId = filterAttrs[0].mainBodyId
                         main.categoryList = main.categoryList.filter(item => {
                             return filterAttrs.some(attr => attr.categoryId === item.categoryId)
                         })
                     }
                     // 初始化id
                     main.attributes.forEach(a => {
-                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
+                        a._id = `${projectId}.${main.mainBodyId}.${a.categoryId}.${a.attributesId}`
                     })// 初始化id
                     main.categoryList.forEach(a => {
-                        a._id = `${this.project.projectId}.${main.mainBodyId}.${a.categoryId}`
+                        a._id = `${projectId}.${main.mainBodyId}.${a.categoryId}`
                     })
                     return {
                         ...main,
-                        mainBodyId: `${this.project.projectId}.${main.mainBodyId}`
+                        mainBodyId: `${projectId}.${main.mainBodyId}`
                     }
                 })
 
-                this.allData[this.project.projectId] = {
-                    projectId: this.project.projectId,
+                this.allData[projectId] = {
+                    projectId: projectId,
                     projectName: this.project.projectName,
                     dataSubjectList
                 }
 
-                const data = [this.allData[this.project.projectId]]
+                const data = [this.allData[projectId]]
                 this.checkedProjectBody = [...data]
                 this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
                 this.$refs.selectField.mounted()
