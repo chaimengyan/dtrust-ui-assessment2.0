@@ -1,6 +1,6 @@
 <template>
     <div class="evaluation">
-        <el-form ref="relationshipFormRef" :model="relationshipForm" :rules="relationshipFormRule" label-width="120px">
+        <el-form ref="relationshipFormRef" :model="relationshipForm" :rules="relationshipFormRule" label-width="140px">
             <el-form-item label="业务活动名称：" prop="name">
                 <el-input v-model="relationshipForm.name" placeholder="请输入业务活动名称" />
             </el-form-item>
@@ -8,7 +8,7 @@
                 <el-input v-model="relationshipForm.description" type="textarea" :rows="2" placeholder="请输入业务活动描述" />
             </el-form-item>
             <el-button type="primary" icon="el-icon-plus" circle @click="handleAddQuestion"></el-button>
-            <relation-list v-model="relationshipForm.transferRelevanceList" :assetsList="assetsList" />
+            <relation-list v-model="relationshipForm.transferRelevanceList" :filterAttrs="relationshipForm.transferRelevanceList[0].transferAttributes" :assetsList="assetsList" />
         </el-form>
         
     </div>
@@ -63,15 +63,16 @@ export default {
             this.relationshipForm = data
         },
         getData() {
-            this.$refs.relationshipFormRef.validate((valid) => {
-                if (valid) {
-                    // alert('submit!');
-                    return this.relationshipForm
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
+            return new Promise((resolve) => {
+                this.$refs.relationshipFormRef.validate((valid) => {
+                    if (valid) {
+                        resolve(this.relationshipForm) 
+                    } else {
+                        return false;
+                    }
+                });
+            })
+            
         },
 
         addBlock(id) {

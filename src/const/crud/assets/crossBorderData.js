@@ -23,9 +23,6 @@ export const tableOption = (_this, isOverHidden) => {
       label: _this.$t('.跨境活动名称'),
       prop: 'name',
       span: 24,
-      search: true,
-      searchLabelWidth:120,
-      searchSpan: 6,
       size:'mini',
       rules: [{
         required: true,
@@ -46,7 +43,7 @@ export const tableOption = (_this, isOverHidden) => {
       },
       {
       label: _this.$t('crudCommon.创建人'),
-      prop: 'dataSubjectsVolume',
+      prop: 'createBy',
       span: 24,
       editDisplay: false,
       addDisplay: false,
@@ -55,7 +52,7 @@ export const tableOption = (_this, isOverHidden) => {
     {
       width: 120,
       label: _this.$t('crudCommon.创建时间'),
-      prop: 'purposeOfProcessing',
+      prop: 'createTime',
       type: 'datetime',
       format: 'yyyy-MM-dd HH:mm',
       editDisabled: false,
@@ -82,7 +79,13 @@ export const tableOption = (_this, isOverHidden) => {
       editDisplay: false,
       span: 24,
       overHidden: isOverHidden,
-    }]
+    }, {
+      label: _this.$t('crudCommon.关键字'),
+      hide: true,
+      prop: 'keyword',
+      search: true,
+      display: false,
+  }]
   }
 }
   

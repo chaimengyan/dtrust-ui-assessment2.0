@@ -114,16 +114,19 @@
             <div>描述：{{CBData.description}} </div>
             <el-collapse>
               <el-collapse-item title="字段信息" name="1">
-                  <div 
-                      style="white-space: normal;"
-                      v-for="mainBody in handleAttributes(CBData.transferRelevanceList[0].transferAttributes)"
-                      :key="mainBody.mainBodyId">
-                      <div>{{mainBody.mainBodyName}}</div>
-                      <el-tag 
-                          v-for="attr in CBData.transferRelevanceList[0].transferAttributes.filter(t=>t.mainBodyId===mainBody.mainBodyId)"
+                <div 
+                  style="white-space: normal;"
+                  v-for="mainBody in handleAttributes(CBData.transferRelevanceList[0].transferAttributes)"
+                  :key="mainBody.mainBodyId">
+                  <div>{{mainBody.mainBodyName}}</div>
+                    <div style="margin-left: 10px;" v-for="category in mainBody.children" :key="category.categoryId">
+                      <div style="color:darkgray">{{category.categoryName}}</div>
+                        <el-tag 
+                          v-for="attr in category.children"
                           :key="attr.attributesId">
                           {{attr.attributesName}}
-                      </el-tag>
+                        </el-tag>
+                      </div>
                   </div>
               </el-collapse-item>
             </el-collapse>
@@ -183,13 +186,48 @@
     },
     methods: {
       handleAttributes(attributes) {
-            const mainBodyList = attributes.reduce((acc, cur) => {
-                if(!acc.map(a=>a.mainBodyId).includes(cur.mainBodyId)) {
-                    acc.push(cur)
+            const result = [];
+            // 创建一个辅助对象用于存储 mainBodyId 的引用
+            const mainBodyMap = {};
+            attributes.forEach(item => {
+                // 如果 mainBodyId 不存在于 result 中，创建一个新的 main 对象
+                if (!mainBodyMap[item.mainBodyId]) {
+                    mainBodyMap[item.mainBodyId] = {
+                    mainBodyId: item.mainBodyId,
+                    mainBodyName: item.mainBodyName,
+                    children: []
+                    };
+                    result.push(mainBodyMap[item.mainBodyId]);
                 }
-                return acc
-            }, [])
-            return mainBodyList
+
+                // 检查是否已存在 categoryId 的 children
+                let cidItem = mainBodyMap[item.mainBodyId].children.find(child => child.categoryId === item.categoryId);
+                if (!cidItem) {
+                    cidItem = {
+                        categoryId: item.categoryId,
+                        categoryName: item.categoryName,
+                        children: []
+                    };
+                    mainBodyMap[item.mainBodyId].children.push(cidItem);
+                }
+
+                // 添加子字段
+                cidItem.children.push({
+                    attributesId: item.attributesId,
+                    attributesName: item.attributesName
+                });
+            });
+            console.log(result,'resultresultresult');
+            return result
+        },
+        onSelectChange(item) {
+            item.transferAttributes = []
+            item.projectInfo = {}
+            if (item.transferRelevanceList) {
+                item.transferRelevanceList.forEach(item => {
+                    this.onSelectChange(item)
+                })
+            }
         },
       swimlaneBtn(row) {
         this.getTransferActivityById(row.id).then(()=>{
@@ -201,15 +239,19 @@
         
       },
       saveOrUpdateBtn() {
-        const data = this.$refs.relationshipRef.getData()
-        saveOrUpdateObj(data).then(res => {
-          if(res.data.status === 200) {
-            this.relationshipDialog = false
-            this.$message.success('保存成功！');
-            this.$refs.crud.searchReset();
+        this.fullscreenLoading = true
+        this.$refs.relationshipRef.getData().then(data => {
+          saveOrUpdateObj(data).then(res => {
+            if(res.data.status === 200) {
+              this.relationshipDialog = false
+              this.$message.success('保存成功！');
+              this.fullscreenLoading = false
+              this.$refs.crud.searchReset();
 
-          }
+            }
+          })
         })
+        
       },
       relationBtn(type, row) {
           this.relationshipDialog = true
@@ -327,7 +369,7 @@
           })
       },
       selectionChange(list){
-        this.ids = list.map(item => (item.attributesId))
+        this.ids = list.map(item => (item.id))
       },
     },
   };

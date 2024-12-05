@@ -550,7 +550,9 @@ const data = [
               render() {
                 return (
                   // 假如遇到effect不生效，就用style去调样式
-                  <Tooltip visible={true} content={that.tooltipContent} effect='dark' placement="top">
+                  <Tooltip visible={true} effect='dark' placement="top">
+                    {/* <div slot="content" domPropsInnerHtml={that.tooltipContent}></div> */}
+                    <div slot="content" >{that.tooltipContent}</div>
                     <div class="tooltip-text">
                       占位
                     </div>
@@ -599,7 +601,7 @@ const data = [
             
             this.graph = graph
             const cells = []
-            const edg = {}
+            let edg = {}
             this.swimlaneData.forEach((item) => {
               if (item.shape === 'lane-edge') {
                 item.router =  {
@@ -609,8 +611,7 @@ const data = [
                     endDirections: ['left'],
                   },
                 }
-                edg[item.id] = item.label.split("{")[1].split("}")[0]
-                item.label = item.label.split("{")[0]
+                edg[item.id] = `${item.describe}<br/>${item.attributeCategories.join(',')}`
                 cells.push(this.graph.createEdge(item))
               } else {
                 if(item.shape === 'lane-rect') {
@@ -632,6 +633,7 @@ const data = [
 
             this.graph.on('node:click', ({ e, node, view }) => {
               const a = this.findValueInArray(this.CBData.transferRelevanceList, node.store.data.projectId)
+              if(!a) return
               this.tooltipContent = a.hostingLocation || '暂无'
               console.log(e, node, view,'节点');
               if (this.tooltipContent) {
@@ -642,7 +644,6 @@ const data = [
              })
 
             this.graph.on('edge:click', ({ e, edge, view }) => {
-              console.log(edg[edge.store.data.id],edge.store,'边');
               this.tooltipContent = edg[edge.store.data.id] || '暂无'
               if (this.tooltipContent) {
                 this.createToolContainer()

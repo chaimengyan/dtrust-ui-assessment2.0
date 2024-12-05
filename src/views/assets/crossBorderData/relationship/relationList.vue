@@ -14,7 +14,7 @@
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
             </div> 
-            <AssetsInfo ref="assetsInfoRef" :firstLevelAttr="firstLevelAttr" :isFirstLevel="!index" :project="project" />
+            <AssetsInfo ref="assetsInfoRef" :isFirstLevel="!index" :project="project" />
             <span slot="footer" class="dialog-footer">
             <el-button
               type="primary"
@@ -32,7 +32,6 @@
                 <div class="evaluation-item-content">
                     <div style="flex: 1;">
                         <el-form-item 
-                            :prop="'projectId.' + i "
                             style="margin-bottom:0;" 
                             :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
                             :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
@@ -46,9 +45,12 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                    <el-button v-if="item.projectId" @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
-                    <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
                     <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
+                    <el-button 
+                        v-if="item.projectId&&'projectInfo' in item && Object.keys(item.projectInfo).length !== 0&&'transferAttributes' in item && item.transferAttributes.length !== 0"
+                        @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
+                    <el-button v-if="index" type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
+
                 </div>
 
                 <!-- <div class="assets-card" > -->
@@ -59,17 +61,20 @@
                     </div>
                     <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
                         <el-collapse-item title="字段信息" name="1">
-                            <div 
-                                style="white-space: normal;"
+                            <div style="white-space: normal;"
                                 v-for="mainBody in handleAttributes(item.transferAttributes)"
                                 :key="mainBody.mainBodyId">
                                 <div>{{mainBody.mainBodyName}}</div>
-                                <el-tag 
-                                    v-for="attr in item.transferAttributes.filter(t=>t.mainBodyId===mainBody.mainBodyId)"
-                                    :key="attr.attributesId">
-                                    {{attr.attributesName}}
-                                </el-tag>
-
+                                <div style="margin-left: 10px;" v-for="category in mainBody.children" :key="category.categoryId">
+                                    <div style="color:darkgray">{{category.categoryName}}</div>
+                                    <div style="margin-left: 10px;">
+                                        <el-tag 
+                                            v-for="attr in category.children"
+                                            :key="attr.attributesId">
+                                            {{attr.attributesName}}
+                                        </el-tag>
+                                    </div>
+                                </div>
                             </div>
                         </el-collapse-item>
                     </el-collapse>
@@ -127,7 +132,7 @@
                         </el-select>
                     </el-form-item>
                 </div>
-                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="item.transferAttributes" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
             </div>
         </div>
@@ -187,14 +192,17 @@ export default {
             value: 2
         }],
         dataScaleOptions: [{
-            label: '一百万',
+            label: '0-10000',
             value: '0'
         },{
-            label: '二百万',
+            label: '10000-100000',
             value: '1'
         },{
-            label: '三百万',
+            label: '100000-1000000',
             value: '2'
+        },{
+            label: '>1000000',
+            value: '3'
         }],
         assetsTypeOptions: [
             {
@@ -214,7 +222,6 @@ export default {
         currentLevel: {},
         isFirstLevel: false,
         isShowAct: false,
-        firstLevelAttr: [],
       }
     },
     watch: {
@@ -226,14 +233,50 @@ export default {
     },
     methods: {
 
-        handleAttributes(attributes) {
+        handleMainBodyList(attributes) {
             const mainBodyList = attributes.reduce((acc, cur) => {
                 if(!acc.map(a=>a.mainBodyId).includes(cur.mainBodyId)) {
                     acc.push(cur)
                 }
                 return acc
             }, [])
+            console.log(mainBodyList,'bmainBodyList?????');
             return mainBodyList
+        },
+        handleAttributes(attributes) {
+            const result = [];
+            // 创建一个辅助对象用于存储 mainBodyId 的引用
+            const mainBodyMap = {};
+            attributes.forEach(item => {
+                // 如果 mainBodyId 不存在于 result 中，创建一个新的 main 对象
+                if (!mainBodyMap[item.mainBodyId]) {
+                    mainBodyMap[item.mainBodyId] = {
+                    mainBodyId: item.mainBodyId,
+                    mainBodyName: item.mainBodyName,
+                    children: []
+                    };
+                    result.push(mainBodyMap[item.mainBodyId]);
+                }
+
+                // 检查是否已存在 categoryId 的 children
+                let cidItem = mainBodyMap[item.mainBodyId].children.find(child => child.categoryId === item.categoryId);
+                if (!cidItem) {
+                    cidItem = {
+                        categoryId: item.categoryId,
+                        categoryName: item.categoryName,
+                        children: []
+                    };
+                    mainBodyMap[item.mainBodyId].children.push(cidItem);
+                }
+
+                // 添加子字段
+                cidItem.children.push({
+                    attributesId: item.attributesId,
+                    attributesName: item.attributesName
+                });
+            });
+            console.log(result,'resultresultresult');
+            return result
         },
         onSelectChange(item) {
             item.transferAttributes = []
@@ -249,20 +292,18 @@ export default {
             const data = this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes
+            console.log(this.index,data.transferAttributes,this.filterAttrs,'this.index');
             if(this.currentLevel.transferAttributes.length === 0) {
                 return this.$message.error('请选择字段！')
             }
             this.editAssetsDialog = false
-            if(this.index === 0) {
-                this.firstLevelAttr = data.transferAttributes
-            }
         },
         editAssets(item) {
             // this.isFirstLevel = this.value.map(v=>v.id).includes(item.id)
             this.currentLevel = item
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
-            console.log(item, this.project,'>>>>?????');
+            console.log(this.filterAttrs,'%%%%%%%%');
             this.$nextTick(() => {
                 const project = JSON.stringify(item.projectInfo) === '{}' ? this.project : item.projectInfo
                 this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes, this.filterAttrs)

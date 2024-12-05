@@ -77,10 +77,7 @@ export default {
             type: Boolean,
             default: false
         },
-        firstLevelAttr: {
-            type: Array,
-            default: () => []
-        }
+      
     },
     data() {
         return {
@@ -135,7 +132,6 @@ export default {
             this.assetsForm.hostingLocation = assets.hostingLocation
             this.assetsForm.lat = assets.lat
             this.assetsForm.lng = assets.lng
-            
             this.getProjectAttributesList(attrs, filterAttrs)
         },
         // 属性回显数据结构
