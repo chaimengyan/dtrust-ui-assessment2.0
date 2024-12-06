@@ -611,7 +611,7 @@ const data = [
                     endDirections: ['left'],
                   },
                 }
-                edg[item.id] = `${item.describe}<br/>${item.attributeCategories.join(',')}`
+                edg[item.id] = `处理活动描述：${item.describe}；字段类别：${item.attributeCategories.join(',')}`
                 cells.push(this.graph.createEdge(item))
               } else {
                 if(item.shape === 'lane-rect') {

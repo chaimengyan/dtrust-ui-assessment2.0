@@ -303,7 +303,7 @@ export default {
             this.currentLevel = item
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
-            console.log(this.filterAttrs,'%%%%%%%%');
+            console.log(this.filterAttrs,this.project,'%%%%%%%%');
             this.$nextTick(() => {
                 const project = JSON.stringify(item.projectInfo) === '{}' ? this.project : item.projectInfo
                 this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes, this.filterAttrs)
