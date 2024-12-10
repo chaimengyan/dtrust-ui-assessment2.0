@@ -288,10 +288,10 @@ export default {
             }
         },
        
-        saveOrUpdate() {
-            const data = this.$refs.assetsInfoRef.assetsResult()
+        async saveOrUpdate() {
+            const data = await this.$refs.assetsInfoRef.assetsResult()
             this.currentLevel.projectInfo = data.projectInfo
-            this.currentLevel.transferAttributes = data.transferAttributes
+            this.currentLevel.transferAttributes = data.transferAttributes || []
             console.log(this.index,data.transferAttributes,this.filterAttrs,'this.index');
             if(this.currentLevel.transferAttributes.length === 0) {
                 return this.$message.error('请选择字段！')

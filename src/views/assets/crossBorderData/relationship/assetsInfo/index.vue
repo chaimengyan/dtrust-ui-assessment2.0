@@ -56,6 +56,7 @@ import {
   getAssetsProjectAttributesListByProjectId,
 } from "@/api/assets/assetsManagement";
 import { cloneDeep } from "lodash";
+import { resolve } from "@antv/x6/lib/registry/node-anchor/util";
 
 export default {
     name: "AssetsInfo",
@@ -157,22 +158,20 @@ export default {
             return data;
         },
         assetsResult() {
-            let data = {}
-            this.$refs.assetsFormRef.validate((valid, done) => {
-                if (valid) {
-                    // if(this.isFirstLevel) {
-                        const attrs = this.$refs.selectField.getAttrs()
-                        const checkFields  = this.$refs.selectField.getCheckAttrs()
-                        const renderList  = this.$refs.selectField.getRenderList()
-                        data = {projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList}
-                    // }else {
-                    //     data = {projectInfo: this.assetsForm, transferAttributes: []}
-                    // }
-                } else {
-                    return false
-                }
+            return new Promise(resolve => {
+                this.$refs.assetsFormRef.validate((valid, done) => {
+                    if (valid) {
+                        // if(this.isFirstLevel) {
+                            const attrs = this.$refs.selectField.getAttrs()
+                            const checkFields  = this.$refs.selectField.getCheckAttrs()
+                            const renderList  = this.$refs.selectField.getRenderList()
+                            resolve({projectInfo: this.assetsForm, transferAttributes: attrs, checkFields, renderList})
+                        // }else {
+                        //     data = {projectInfo: this.assetsForm, transferAttributes: []}
+                        // }
+                    }
+                })
             })
-            return data
         },
         getProjectAttributesList(attrs, filterAttrs) {
             const projectId = filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId
