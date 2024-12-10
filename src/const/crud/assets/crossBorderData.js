@@ -20,23 +20,23 @@ export const tableOption = (_this, isOverHidden) => {
     height: 500, 
     dialogWidth: '35%',
     column: [{
-      label: _this.$t('.跨境活动名称'),
+      label: _this.$t('businessScenarioManagement.业务活动名称'),
       prop: 'name',
       span: 24,
       size:'mini',
       rules: [{
         required: true,
-        message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.跨境活动名称')}`,
+        message: `${_this.$t('crudCommon.请输入')}${_this.$t('businessScenarioManagement.业务活动名称')}`,
         trigger: 'blur'
       }],
       overHidden: isOverHidden,
     }, {
-        label: _this.$t('crudCommon.描述'),
+        label: _this.$t('businessScenarioManagement.业务活动描述'),
         prop: 'description',
         span: 24,
         rules: [{
           required: false,
-          message: `${_this.$t('crudCommon.请输入')}${_this.$t('crudCommon.描述')}`,
+          message: `${_this.$t('crudCommon.请输入')}${_this.$t('businessScenarioManagement.业务活动描述')}`,
           trigger: 'blur'
         }],
         overHidden: isOverHidden,

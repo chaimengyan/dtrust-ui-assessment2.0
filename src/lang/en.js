@@ -97,6 +97,7 @@ export default {
     业务活动管理: 'Business Activity Management',
     属性管理: 'Attribute management',
     数据处理活动: 'Data processing activities',
+    数据跨境: 'Cross border data',
     数据地图: 'Data map',
     数据主体映射图: 'Data Subject Mapping Map',
     数据字段映射图: 'Data Field Mapping Map',
@@ -294,6 +295,7 @@ export default {
     字段名: 'Field name',
     字段来源: 'Field source',
     字段数量: 'Number of Field',
+    资产类别: 'Asset category',
   },
  
   businessScenarioManagement: {
@@ -305,6 +307,7 @@ export default {
     请选择资产下面的字段: 'Please select the field below the asset!',
     是否对本业务活动发起新的评估: 'Do you want to launch a new evaluation for this business activity?',
     业务活动名称: 'Business activity name',
+    业务活动描述: 'Business activity describe',
     数据主体区域: 'Data subject area',
     数据处理目的: 'Purpose of data processing',
     传输方式: 'transmission mode',
@@ -331,6 +334,13 @@ export default {
     编辑字段: 'Edit field',
     业务活动评估记录: 'Business activity evaluation record',
     处理活动变更: 'Process activity changes',
+  },
+  crossBorderData: {
+    泳道图: 'Lane diagram',
+    字段信息: 'Field information',
+    数据处理活动类型: 'Types of data processing activities',
+    数据处理活动描述: 'Description of Data Processing Activities',
+    数据量级: 'Data scale',
   },
   evaluationRecord: {
     查看详情: 'View details',

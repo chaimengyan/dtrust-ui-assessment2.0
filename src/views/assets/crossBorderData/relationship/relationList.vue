@@ -56,11 +56,11 @@
                 <!-- <div class="assets-card" > -->
                 <div v-if="item.projectId">
                     <div v-if="'projectInfo' in item && Object.keys(item.projectInfo).length !== 0" class="assets-card-header">
-                        <el-tag>位置信息：{{item.projectInfo.hostingLocation}}</el-tag>
-                        <el-tag>资产类别：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
+                        <el-tag>{{$t('assetsManagement.托管位置')}}：{{item.projectInfo.hostingLocation}}</el-tag>
+                        <el-tag>{{$t('assetsManagement.资产类别')}}：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
                     </div>
                     <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
-                        <el-collapse-item title="字段信息" name="1">
+                        <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
                             <div style="white-space: normal;"
                                 v-for="mainBody in handleAttributes(item.transferAttributes)"
                                 :key="mainBody.mainBodyId">
@@ -84,12 +84,12 @@
                     <div style="display: flex">
                         <div style="flex: 1;">
                             <el-form-item 
-                                :label="$t('.数据处理活动类型')"
-                                :rules="{ required: true, message: '请选择数据处理活动类型', trigger: 'change' }"  >
+                                :label="$t('crossBorderData.数据处理活动类型')"
+                                :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`, trigger: 'change' }"  >
                                 <el-select
                                     class="mr-12"
                                     v-model="item.dataActivityType"
-                                    :placeholder="`${$t('crudCommon.请选择')}${$t('.数据处理活动类型')}`"
+                                    :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`"
                                     filterable>
                                     <el-option
                                         v-for="t in activitiesTypeOptions"
@@ -109,19 +109,19 @@
                  
 
                     <el-form-item 
-                        :label="$t('.数据处理活动描述')"
-                        :rules="{ required: true, message: '请填写数据处理活动描述', trigger: 'blur' }" >
+                        :label="$t('crossBorderData.数据处理活动描述')"
+                        :rules="{ required: true, message: `${$t('crudCommon.请填写')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
                         <el-input
                             v-model="item.dataActivityDescription"
                             :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
                             type="textarea"></el-input>
                     </el-form-item>
                     <el-form-item 
-                        :label="$t('.数据量级')"
-                        :rules="{ required: true, message: '请选择数据量级', trigger: 'change' }" >
+                        :label="$t('crossBorderData.数据量级')"
+                        :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
                         <el-select
                             v-model="item.dataScale"
-                            :placeholder="`${$t('crudCommon.请选择')}${$t('.数据量级')}`"
+                            :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`"
                             filterable>
                             <el-option
                                 v-for="d in dataScaleOptions"

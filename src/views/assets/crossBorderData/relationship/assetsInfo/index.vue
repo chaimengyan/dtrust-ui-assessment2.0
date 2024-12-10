@@ -1,13 +1,13 @@
 <template>
     <div>
         <el-form ref="assetsFormRef" :model="assetsForm" :rules="assetsFormRules" label-width="120px">
-            <el-form-item label="位置信息" prop="hostingLocation">
+            <el-form-item :label="$t('assetsManagement.托管位置')" prop="hostingLocation">
                 <el-input v-model="assetsForm.hostingLocation" @focus="openMap" placeholder="请选择位置信息" />
             </el-form-item>
-            <el-form-item label="资产类别" prop="category">
+            <el-form-item :label="$t('assetsManagement.资产类别')" prop="category">
                 <el-select
                     v-model="assetsForm.category"
-                    :placeholder="`${$t('crudCommon.请选择')}${$t('.资产类别')}`"
+                    :placeholder="`${$t('crudCommon.请选择')}${$t('assetsManagement.资产类别')}`"
                     filterable>
                     <el-option
                         v-for="d in assetsTypeOptions"
@@ -112,8 +112,8 @@ export default {
             showMap:false,
             map: null,
             assetsFormRules: {
-                hostingLocation: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('.位置信息')}`, trigger: 'change'}],
-                category: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('.资产类别')}`, trigger: 'change'}],
+                hostingLocation: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('assetsManagement.托管位置')}`, trigger: 'change'}],
+                category: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('assetsManagement.资产类别')}`, trigger: 'change'}],
             }
         }
     },

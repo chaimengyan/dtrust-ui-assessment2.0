@@ -49,7 +49,7 @@
                 @click="relationBtn('edit', scope.row)"
                 />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('crudCommon.泳道图')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('crossBorderData.泳道图')" placement="top">
                 <el-button
                 v-if="permissions.field_fieldMasterData_edit"
                 :disabled="!handleDataPermissions('update', scope.row)"
@@ -78,7 +78,7 @@
           :close-on-click-modal="false" 
           :fullscreen="isFullscreen">
           <div class="dialog-header" slot="title">
-            <span class="dialog-header-title">{{$t('fieldManagement.资产关联')}}</span>
+            <span class="dialog-header-title">{{btnText === $t('assetsManagement.修改') ? $t('crudCommon.编辑') : $t('dataProcessingActivities.新增')}}</span>
             <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
               <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>
@@ -97,7 +97,7 @@
           </span>
         </el-dialog>
         <el-dialog
-          :title="$t('fieldManagement.泳道图')" 
+          :title="$t('crossBorderData.泳道图')" 
           v-if="swimlaneDialog"
           width="70%" 
           :visible.sync="swimlaneDialog" 
@@ -113,7 +113,7 @@
           <div>
             <div>描述：{{CBData.description}} </div>
             <el-collapse>
-              <el-collapse-item title="字段信息" name="1">
+              <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
                 <div 
                   style="white-space: normal;"
                   v-for="mainBody in handleAttributes(CBData.transferRelevanceList[0].transferAttributes)"
@@ -250,6 +250,8 @@
 
             }
           })
+        }).catch(() => {
+          this.fullscreenLoading = false
         })
         
       },

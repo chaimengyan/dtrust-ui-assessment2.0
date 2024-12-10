@@ -16,9 +16,9 @@
                                 <div :title="item.projectName" style="width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{item.projectName}}
                                 </div>
-                                <div v-if="!item.sceneId">
+                                <!-- <div v-if="!item.sceneId">
                                     <i class="el-icon-circle-plus-outline" @click.stop="relationBtn(item)"></i>
-                                </div>
+                                </div> -->
                             </div>
                         </template>
                         <template v-for="i in item.dataSubjectList">
