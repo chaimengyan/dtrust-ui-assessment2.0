@@ -293,13 +293,14 @@ export default {
         },
         // 在回显选中未构建完成时，判断分类下是否有选中的字段
         isCategoryHasChecked(_id) {
+            console.log(this.echo, _id, 'this.echothis.echo')
             for (let i = 0; i < this.echo.length; i++) {
                 const data = this.echo[i].dataSubjectList
 
                 for (let j = 0; j < data.length; j++) {
                     const [projectId, mainBodyId, categoryId] = _id.split('.')
                     const is = data[j].attributes.find(item => {
-                        return item.projectId === Number(projectId) && item.mainBodyId === Number(mainBodyId) && item.categoryId === Number(categoryId)
+                        return item.projectId == Number(projectId) && item.mainBodyId == Number(mainBodyId) && item.categoryId == Number(categoryId)
                     })
                     if (is) return true
                 }
@@ -330,10 +331,11 @@ export default {
                     list
                 }
             })
+            console.log(this.renderList, this.mainList, '-0-0-0-')
         },
 
         filterAttrs(data, categoryId) {
-            return data.filter(item => item.categoryId === categoryId).map(item => {
+            return data.filter(item => item.categoryId == categoryId).map(item => {
                 return {
                     ...item,
                     _id: item._id,
@@ -366,7 +368,7 @@ export default {
         // 这里的mainBodyId 已经是 projectId + mainBodyId 了
         buildCheckboxList(categoryList, attributes, mainBodyId){
             return categoryList.map((item) => {
-                const attrs = attributes.filter(attr => attr.categoryId === item.categoryId);
+                const attrs = attributes.filter(attr => attr.categoryId == item.categoryId);
                 const attrIds = attrs.map((item) => {
                     return { _id: `${mainBodyId}.${item.categoryId}.${item.attributesId}`, checked: [] };
                 })

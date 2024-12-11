@@ -173,7 +173,7 @@ export default {
             })
         },
         getProjectAttributesList(attrs, filterAttrs) {
-            const projectId = filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId
+            const projectId = this.project.projectId || (filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId)
             console.log(filterAttrs, attrs,'filterAttrs')
             return getAssetsProjectAttributesListByProjectId(projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {
@@ -181,7 +181,7 @@ export default {
                         main.attributes = filterAttrs.filter(item => item.mainBodyId === main.mainBodyId);
                         // main.mainBodyId = filterAttrs[0].mainBodyId
                         main.categoryList = main.categoryList.filter(item => {
-                            return filterAttrs.some(attr => attr.categoryId === item.categoryId)
+                            return filterAttrs.some(attr => attr.categoryId == item.categoryId)
                         })
                     }
                     // 初始化id
@@ -208,7 +208,7 @@ export default {
                 this.echoCheckedAssetObjList = this.attrTransferProject(attrs)
                 this.$refs.selectField.mounted()
                 this.$refs.selectField.setValue()
-                console.log(this.checkedProjectBody,'checkedProjectBody-----');
+                console.log(this.checkedProjectBody,this.echoCheckedAssetObjList,'checkedProjectBody-----');
             })
         },
         openMap() {
