@@ -56,7 +56,6 @@ import {
   getAssetsProjectAttributesListByProjectId,
 } from "@/api/assets/assetsManagement";
 import { cloneDeep } from "lodash";
-import { resolve } from "@antv/x6/lib/registry/node-anchor/util";
 
 export default {
     name: "AssetsInfo",

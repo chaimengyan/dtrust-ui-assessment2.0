@@ -81,6 +81,7 @@ export default {
             return this.echoCheckedDataSubjectList()
         },
         checkedBody() {
+            console.log(this.checkedProjectBody(),'this.checkedProjectBody()');
             this.menuList = [...this.checkedProjectBody()]
             return this.checkedProjectBody()
         },

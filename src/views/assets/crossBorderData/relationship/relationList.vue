@@ -57,7 +57,7 @@
                 <div v-if="item.projectId">
                     <div v-if="'projectInfo' in item && Object.keys(item.projectInfo).length !== 0" class="assets-card-header">
                         <el-tag>{{$t('assetsManagement.托管位置')}}：{{item.projectInfo.hostingLocation}}</el-tag>
-                        <el-tag>{{$t('assetsManagement.资产类别')}}：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
+                        <el-tag v-if="item.projectInfo.category !== null">{{$t('assetsManagement.资产类别')}}：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
                     </div>
                     <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
                         <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
@@ -303,7 +303,7 @@ export default {
             this.currentLevel = item
             this.project = this.assetsList.find(a => a.projectId === item.projectId)
             this.editAssetsDialog = true
-            console.log(this.filterAttrs,this.project,'%%%%%%%%');
+            console.log(this.filterAttrs,this.project,item.projectInfo,'%%%%%%%%');
             this.$nextTick(() => {
                 const project = JSON.stringify(item.projectInfo) === '{}' ? this.project : item.projectInfo
                 this.$refs.assetsInfoRef.assetsInfoInit(project, item.transferAttributes, this.filterAttrs)
