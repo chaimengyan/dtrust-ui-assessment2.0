@@ -49,7 +49,7 @@
                 @click="relationBtn('edit', scope.row)"
                 />
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('crossBorderData.泳道图')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="$t('crossBorderData.数据跨境传输图')" placement="top">
                 <el-button
                 v-if="permissions.field_fieldMasterData_edit"
                 :disabled="!handleDataPermissions('update', scope.row)"
@@ -97,7 +97,7 @@
           </span>
         </el-dialog>
         <el-dialog
-          :title="$t('crossBorderData.泳道图')" 
+          :title="$t('crossBorderData.数据跨境传输图')" 
           v-if="swimlaneDialog"
           width="70%" 
           :visible.sync="swimlaneDialog" 

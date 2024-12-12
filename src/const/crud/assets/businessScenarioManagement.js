@@ -486,7 +486,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
     rowParentKey: 'attributesId',
     reserveSelection:true,
     menu: !isView,
-    align:'center',
+    align:'left',
     menuAlign:'center',
     addBtn: false,
     editBtn: false,

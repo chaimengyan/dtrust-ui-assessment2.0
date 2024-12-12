@@ -173,7 +173,7 @@ export default {
             })
         },
         getProjectAttributesList(attrs, filterAttrs) {
-            const projectId = this.project.projectId || (filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId)
+            const projectId = filterAttrs.length ? filterAttrs[0].projectId : this.project.projectId
             console.log(filterAttrs, attrs,'filterAttrs')
             return getAssetsProjectAttributesListByProjectId(projectId).then(res => {
                 const dataSubjectList = res.data.data.map(main => {

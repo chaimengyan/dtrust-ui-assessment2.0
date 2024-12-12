@@ -29,6 +29,14 @@ import basicContainer from "./components/basic-container/main";
 
 import './icons' // icon
 
+const socket = new WebSocket("ws://192.168.0.111:39999/message/ws")
+Vue.prototype.$socket = socket;
+socket.addEventListener('open',(event)=>{
+  socket.send('hello Server')
+})
+socket.addEventListener('message',(event)=> {
+  console.log('Message from server', event.data);
+})
 // 挂载常用全局方法，import 引入
 Vue.prototype.validatenull = validatenull;
 Vue.prototype.downBlobFile = downBlobFile;

@@ -552,7 +552,11 @@ const data = [
                   // 假如遇到effect不生效，就用style去调样式
                   <Tooltip visible={true} effect='dark' placement="top">
                     {/* <div slot="content" domPropsInnerHtml={that.tooltipContent}></div> */}
-                    <div slot="content" >{that.tooltipContent}</div>
+                    <div slot="content" >
+                      <div>{that.tooltipContent.split('<br/>')[1]}</div>
+                      <br/>
+                      <div>{that.tooltipContent.split('<br/>')[0]}</div>
+                    </div>
                     <div class="tooltip-text">
                       占位
                     </div>
@@ -611,7 +615,7 @@ const data = [
                     endDirections: ['left'],
                   },
                 }
-                edg[item.id] = `处理活动描述：${item.describe}；字段类别：${item.attributeCategories.join(',')}`
+                edg[item.id] = `处理活动描述：${item.describe}；<br/>字段类别：${item.attributeCategories.join(',')}`
                 cells.push(this.graph.createEdge(item))
               } else {
                 if(item.shape === 'lane-rect') {

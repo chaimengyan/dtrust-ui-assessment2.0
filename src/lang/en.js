@@ -336,7 +336,7 @@ export default {
     处理活动变更: 'Process activity changes',
   },
   crossBorderData: {
-    泳道图: 'Lane diagram',
+    数据跨境传输图: 'Cross border data transmission diagram',
     字段信息: 'Field information',
     数据处理活动类型: 'Types of data processing activities',
     数据处理活动描述: 'Description of Data Processing Activities',
