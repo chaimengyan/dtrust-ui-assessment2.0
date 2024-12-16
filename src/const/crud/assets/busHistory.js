@@ -4,7 +4,7 @@ export const tableOption = (_this, isOverHidden) => {
     labelWidth: 150,
     border: false,
     index: true,
-    indexLabel: _this.$t('crudCommon.序号'),
+    indexLabel: '#',
     stripe: true,
     menuAlign: 'center',
     searchMenuSpan: 6,
@@ -25,7 +25,7 @@ export const tableOption = (_this, isOverHidden) => {
         addDisplay: false,
         viewDisplay: false
     }, {
-        width: 100,
+        width: 130,
         label: _this.$t('assetsManagement.属性变化'),
         prop: 'sceneChange',
         formslot: true,
@@ -37,6 +37,7 @@ export const tableOption = (_this, isOverHidden) => {
         minRows: 1,
         overHidden: isOverHidden,
     }, {
+        width: 130,
         label: _this.$t('assetsManagement.新增关联'),
         prop: 'projectAdd',
         type: 'textarea',
@@ -48,6 +49,7 @@ export const tableOption = (_this, isOverHidden) => {
         minRows: 1,
         overHidden: isOverHidden,
     }, {
+        width: 130,
         label: _this.$t('assetsManagement.修改关联'),
         prop: 'projectUpdate',
         type: 'textarea',
@@ -59,6 +61,7 @@ export const tableOption = (_this, isOverHidden) => {
         minRows: 1,
         overHidden: isOverHidden,
     }, {
+        width: 130,
         label: _this.$t('assetsManagement.删除关联'),
         prop: 'projectDel',
         type: 'textarea',
@@ -71,6 +74,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
         },
     {
+        width: 140,
         label: _this.$t('assetsManagement.来源评估'),
         prop: 'evaluationName',
         type: 'textarea',
@@ -98,6 +102,7 @@ export const tableOption = (_this, isOverHidden) => {
         editDisplay: false,
         span: 24
     }, {
+        width: 130,
         label: _this.$t('crudCommon.修改人'),
         prop: 'updateBy',
         span: 24,

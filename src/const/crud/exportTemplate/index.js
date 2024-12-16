@@ -6,7 +6,7 @@ export const tableOption = (_this, isOverHidden) => {
     selection: true,
     reserveSelection:true,
     index: true,
-    indexLabel: _this.$t('crudCommon.序号'),
+    indexLabel: '#',
     stripe: true,
     menuAlign: 'center',
     align: 'center',
@@ -98,7 +98,7 @@ export const tableOption = (_this, isOverHidden) => {
     return {
     border: false,
     index: true,
-    indexLabel: _this.$t('crudCommon.序号'),
+    indexLabel: '#',
     stripe: true,
     menuAlign: 'center',
     menu:false,

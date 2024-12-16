@@ -492,7 +492,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
     editBtn: false,
     delBtn: false,
     refreshBtn: false,
-    searchMenuSpan: 5,
+    searchMenuSpan: 6,
     column:[
       {
         label: "资产id",
@@ -510,8 +510,8 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         hide: true,
       },
         {
-        width: 100,
-        searchLabelWidth:70,
+        width: 120,
+        searchLabelWidth:90,
         searchSpan: 4,
         label:_this.$t('assetsManagement.字段名'),
         prop:'attributesName',
@@ -568,23 +568,24 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
 
       // },
       {
-        width: 120,
+        width: 150,
         searchSpan: 6,
         label:_this.$t('businessScenarioManagement.数据主体类型'),
         prop:'mainBodyName',
-        searchLabelWidth: 100,
+        searchLabelWidth: 130,
         sortable:true,
         search: true,
         overHidden: isOverHidden,
 
       }, {
-        width: 120,
+        width: 190,
         label:_this.$t('assetsManagement.数据主体数量'),
         prop:'volumeOfDataSubjects',
         sortable:true,
       },
       {
-        label:'收集',
+        width: 100,
+        label:_this.$t('enum.收集'),
         prop:'gatherActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
@@ -593,7 +594,8 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
           }
         }
       },{
-        label:'存储',
+        width: 100,
+        label:_this.$t('enum.存储'),
         prop:'storageActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
@@ -602,7 +604,8 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
           }
         }
       },{
-        label:'使用',
+        width: 120,
+        label:_this.$t('enum.使用'),
         prop:'useActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
@@ -611,7 +614,8 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
           }
         }
       },{
-        label:'传输',
+        width: 120,
+        label:_this.$t('enum.传输'),
         prop:'transmitActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
@@ -620,7 +624,8 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
           }
         }
       },{
-        label:'存档/删除',
+        width: 150,
+        label:_this.$t('enum.存档或删除'),
         prop:'delActivitiesList',
         overHidden: isOverHidden,
         formatter(_, cur) {
@@ -635,7 +640,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
       //   overHidden: isOverHidden,
       // },
       {
-        searchLabelWidth:70,
+        searchLabelWidth:80,
         searchSpan: 4,
         label:_this.$t('crudCommon.关键字'),
         prop:'keyword',

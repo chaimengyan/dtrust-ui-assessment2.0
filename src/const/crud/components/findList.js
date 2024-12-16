@@ -4,7 +4,7 @@ export const tableOption = (_this, isOverHidden) => {
         // reserveSelection:true,
         border: false,
         index: true,
-        indexLabel: _this.$t('crudCommon.序号'),
+        indexLabel: '#',
         stripe: true,
         menuAlign: 'center',
         searchMenuSpan: 6,

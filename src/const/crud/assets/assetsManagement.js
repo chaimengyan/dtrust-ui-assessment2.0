@@ -398,7 +398,7 @@ export const fieldRelationOption = (_this, isView, isOverHidden) => {
         hide: true,
       },
       {
-        width: 120,
+        width: 150,
         label:_this.$t('assetsManagement.数据主体类型'),
         prop:'mainBodyName',
         sortable:true,

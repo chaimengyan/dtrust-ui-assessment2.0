@@ -23,7 +23,7 @@
   
           <template slot="menuLeft">
             <el-button
-              v-if="permissions.field_fieldMasterData_add"
+              v-if="permissions.assets_crossBorderData_add"
               class="filter-item"
               @click="relationBtn('add')"
               type="primary"
@@ -31,7 +31,7 @@
               >{{$t('crudCommon.添加')}}
             </el-button>
             <el-button
-              v-if="permissions.field_fieldMasterData_batchDel"
+              v-if="permissions.assets_crossBorderData_batchDel"
               type="primary"
               plain
               icon="el-icon-delete"
@@ -42,7 +42,7 @@
           <template slot="menu" slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.编辑')" placement="top">
                 <el-button
-                v-if="permissions.field_fieldMasterData_edit"
+                v-if="permissions.assets_crossBorderData_edit"
                 :disabled="!handleDataPermissions('update', scope.row)"
                 type="text"
                 icon="el-icon-edit"
@@ -51,7 +51,7 @@
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('crossBorderData.数据跨境传输图')" placement="top">
                 <el-button
-                v-if="permissions.field_fieldMasterData_edit"
+                v-if="permissions.assets_crossBorderData_view"
                 :disabled="!handleDataPermissions('update', scope.row)"
                 type="text"
                 icon="el-icon-picture-outline"
@@ -60,7 +60,7 @@
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('crudCommon.删除')" placement="top">
                 <el-button
-                v-if="permissions.field_fieldMasterData_del"
+                v-if="permissions.assets_crossBorderData_del"
                 :disabled="!handleDataPermissions('delete', scope.row)"
                 type="text"
                 icon="el-icon-delete"

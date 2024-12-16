@@ -5,7 +5,7 @@ export const tableOption = (_this, isOverHidden) => {
   border: false,
   labelWidth: 150,
   index: true,
-  indexLabel: _this.$t('crudCommon.序号'),
+  indexLabel: '#',
   stripe: true,
   menuAlign: 'center',
   align: 'center',
@@ -750,7 +750,7 @@ export const tableDictItemOption = (_this, isOverHidden) => {
   return {
   border: false,
   index: true,
-  indexLabel: _this.$t('crudCommon.序号'),
+  indexLabel: '#',
   stripe: true,
   menuAlign: 'center',
   align: 'center',

@@ -22,17 +22,23 @@ import { iconfontUrl, iconfontVersion } from "@/config/env";
 import * as filters from "./filters"; // 全局filter
 import "./styles/common.scss";
 import basicContainer from "./components/basic-container/main";
+import CookieUtil from '@/util/cookie'
+
 // 字典数据组件
 // import DictResolver from '@/components/DictResolver'
 // 字典标签组件
 // import DictTag from '@/components/DictTag'
 
 import './icons' // icon
-
-const socket = new WebSocket("ws://192.168.0.111:39999/message/ws")
+const token  = CookieUtil.get('access_token')
+const socket = new WebSocket("ws://192.168.0.115:39999/message/ws", 'protocol', {
+  'headers': {
+      'Authorization': `Bearer ${token}`
+  }})
 Vue.prototype.$socket = socket;
 socket.addEventListener('open',(event)=>{
-  socket.send('hello Server')
+  console.log(CookieUtil.get('access_token'),"CookieUtil.get('access_token')");
+  socket.send("1111")
 })
 socket.addEventListener('message',(event)=> {
   console.log('Message from server', event.data);

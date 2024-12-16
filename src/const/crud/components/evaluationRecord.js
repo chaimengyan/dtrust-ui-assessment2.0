@@ -2,10 +2,11 @@ export const tableOption = (_this, isOverHidden) => {
     return {
     border: false,
     index: true,
-    indexLabel: _this.$t('crudCommon.序号'),
+    indexLabel: '#',
     stripe: true,
     menuAlign: 'center',
     searchMenuSpan: 6,
+    searchLabelWidth: 120,
     editBtn: false,
     delBtn: false,
     align: 'center',
@@ -13,21 +14,21 @@ export const tableOption = (_this, isOverHidden) => {
     menuWidth:130,
     column: [{
         fixed: true,
-        width: 100,
+        width: 120,
         label: _this.$t('evaluationRecord.评估名称'),
         prop: 'name',
         sortable:true,
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 130,
         label: _this.$t('evaluationRecord.问卷名称'),
         prop: 'qnName',
         sortable:true,
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 120,
         label: _this.$t('evaluationRecord.被评估人'),
         prop: 'evaluators',
         sortable:true,
@@ -35,7 +36,7 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 120,
         label: _this.$t('evaluationRecord.审核人'),
         sortable:true,
         slot: true,
@@ -43,7 +44,7 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 130,
         label: _this.$t('evaluationRecord.评估状态'),
         sortable:true,
         prop: 'status',
@@ -114,7 +115,7 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 120,
         label: _this.$t('evaluationRecord.风险点'),
         prop: 'risks',
         sortable:true,
@@ -122,7 +123,7 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         overHidden: isOverHidden,
     }, {
-        width: 100,
+        width: 140,
         label: _this.$t('evaluationRecord.评分标准'),
         prop: 'scoringCriteria',
         sortable:true,
@@ -130,6 +131,7 @@ export const tableOption = (_this, isOverHidden) => {
         span: 24,
         overHidden: isOverHidden,
     }, {
+        width: 100,
         label: _this.$t('evaluationRecord.分数'),
         prop: 'scores',
         sortable:true,
