@@ -28,113 +28,117 @@
             </span>
         </el-dialog>
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
-            <div class="evaluation-item" >
-                <div class="evaluation-item-content">
-                    <div style="flex: 1;">
-                        <el-form-item 
-                            style="margin-bottom:0;" 
-                            :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
-                            :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
-                            <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
-                                <el-option
-                                    v-for="a in assetsList"
-                                    :key="a.projectId"
-                                    :label="a.projectName"
-                                    :value="a.projectId"
-                                />
-                            </el-select>
-                        </el-form-item>
-                    </div>
-                    <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
-                    <el-button 
-                        v-if="item.projectId&&'projectInfo' in item && Object.keys(item.projectInfo).length !== 0&&'transferAttributes' in item && item.transferAttributes.length !== 0"
-                        @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
-                    <el-button v-if="index" type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
+            <el-form ref="formRef" :model="item">
 
-                </div>
-
-                <!-- <div class="assets-card" > -->
-                <div v-if="item.projectId">
-                    <div v-if="'projectInfo' in item && Object.keys(item.projectInfo).length !== 0" class="assets-card-header">
-                        <el-tag>{{$t('assetsManagement.托管位置')}}：{{item.projectInfo.hostingLocation}}</el-tag>
-                        <el-tag v-if="item.projectInfo.category !== null">{{$t('assetsManagement.资产类别')}}：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
-                    </div>
-                    <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
-                        <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
-                            <div style="white-space: normal;"
-                                v-for="mainBody in handleAttributes(item.transferAttributes)"
-                                :key="mainBody.mainBodyId">
-                                <div>{{mainBody.mainBodyName}}</div>
-                                <div style="margin-left: 10px;" v-for="category in mainBody.children" :key="category.categoryId">
-                                    <div style="color:darkgray">{{category.categoryName}}</div>
-                                    <div style="margin-left: 10px;">
-                                        <el-tag 
-                                            v-for="attr in category.children"
-                                            :key="attr.attributesId">
-                                            {{attr.attributesName}}
-                                        </el-tag>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-collapse-item>
-                    </el-collapse>
-                </div>
-
-                <div v-if="isShowAct" class="assets-card" >
-                    <div style="display: flex">
+                <div class="evaluation-item" >
+                    <div class="evaluation-item-content">
                         <div style="flex: 1;">
                             <el-form-item 
-                                :label="$t('crossBorderData.数据处理活动类型')"
-                                :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`, trigger: 'change' }"  >
-                                <el-select
-                                    class="mr-12"
-                                    v-model="item.dataActivityType"
-                                    :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`"
-                                    filterable>
+                                prop="projectId"
+                                style="margin-bottom:0;" 
+                                :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
+                                :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
+                                <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
                                     <el-option
-                                        v-for="t in activitiesTypeOptions"
-                                        :key="t.value"
-                                        :label="t.label"
-                                        :value="t.value"
+                                        v-for="a in assetsList"
+                                        :key="a.projectId"
+                                        :label="a.projectName"
+                                        :value="a.projectId"
                                     />
                                 </el-select>
                             </el-form-item>
                         </div>
-                        <div v-if="item.dataActivityType !== null">
-                            <el-tooltip effect="dark" :content="$t('添加目标资产')" placement="top">
-                                <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
-                            </el-tooltip>
-                        </div>
+                        <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
+                        <el-button 
+                            v-if="item.projectId&&'projectInfo' in item && Object.keys(item.projectInfo).length !== 0&&'transferAttributes' in item && item.transferAttributes.length !== 0"
+                            @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
+                        <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
+
                     </div>
-                 
 
-                    <el-form-item 
-                        :label="$t('crossBorderData.数据处理活动描述')"
-                        :rules="{ required: true, message: `${$t('crudCommon.请填写')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
-                        <el-input
-                            v-model="item.dataActivityDescription"
-                            :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
-                            type="textarea"></el-input>
-                    </el-form-item>
-                    <el-form-item 
-                        :label="$t('crossBorderData.数据量级')"
-                        :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
-                        <el-select
-                            v-model="item.dataScale"
-                            :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`"
-                            filterable>
-                            <el-option
-                                v-for="d in dataScaleOptions"
-                                :key="d.value"
-                                :label="d.label"
-                                :value="d.value"
-                            />
-                        </el-select>
-                    </el-form-item>
+                    <!-- <div class="assets-card" > -->
+                    <div v-if="item.projectId">
+                        <div v-if="'projectInfo' in item && Object.keys(item.projectInfo).length !== 0" class="assets-card-header">
+                            <el-tag>{{$t('assetsManagement.托管位置')}}：{{item.projectInfo.hostingLocation}}</el-tag>
+                            <el-tag v-if="item.projectInfo.category !== null">{{$t('assetsManagement.资产类别')}}：{{assetsTypeOptions.find(a=>a.value===item.projectInfo.category).label}}</el-tag>
+                        </div>
+                        <el-collapse v-if="'transferAttributes' in item && item.transferAttributes.length !== 0">
+                            <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
+                                <div style="white-space: normal;"
+                                    v-for="mainBody in handleAttributes(item.transferAttributes)"
+                                    :key="mainBody.mainBodyId">
+                                    <div>{{mainBody.mainBodyName}}</div>
+                                    <div style="margin-left: 10px;" v-for="category in mainBody.children" :key="category.categoryId">
+                                        <div style="color:darkgray">{{category.categoryName}}</div>
+                                        <div style="margin-left: 10px;">
+                                            <el-tag 
+                                                v-for="attr in category.children"
+                                                :key="attr.attributesId">
+                                                {{attr.attributesName}}
+                                            </el-tag>
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </div>
+
+                    <div v-if="isShowAct" class="assets-card" >
+                        <div style="display: flex">
+                            <div style="flex: 1;">
+                                <el-form-item 
+                                    :label="$t('crossBorderData.数据处理活动类型')"
+                                    :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`, trigger: 'change' }"  >
+                                    <el-select
+                                        class="mr-12"
+                                        v-model="item.dataActivityType"
+                                        :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`"
+                                        filterable>
+                                        <el-option
+                                            v-for="t in activitiesTypeOptions"
+                                            :key="t.value"
+                                            :label="t.label"
+                                            :value="t.value"
+                                        />
+                                    </el-select>
+                                </el-form-item>
+                            </div>
+                            <div v-if="item.dataActivityType !== null">
+                                <el-tooltip effect="dark" :content="$t('添加目标资产')" placement="top">
+                                    <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                    
+
+                        <el-form-item 
+                            :label="$t('crossBorderData.数据处理活动描述')"
+                            :rules="{ required: true, message: `${$t('crudCommon.请填写')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
+                            <el-input
+                                v-model="item.dataActivityDescription"
+                                :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
+                                type="textarea"></el-input>
+                        </el-form-item>
+                        <el-form-item 
+                            :label="$t('crossBorderData.数据量级')"
+                            :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
+                            <el-select
+                                v-model="item.dataScale"
+                                :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`"
+                                filterable>
+                                <el-option
+                                    v-for="d in dataScaleOptions"
+                                    :key="d.value"
+                                    :label="d.label"
+                                    :value="d.value"
+                                />
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+
                 </div>
-                <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
-
-            </div>
+            </el-form>
         </div>
       
     </div>
@@ -144,6 +148,7 @@
 <script>
 import { cloneDeep } from 'lodash'
 import AssetsInfo from '@/views/assets/crossBorderData/relationship/assetsInfo'
+import { resolve } from '@antv/x6/lib/registry/node-anchor/util';
 
 export default {
     name: "relation-list",
@@ -232,7 +237,13 @@ export default {
     mounted() {
     },
     methods: {
-
+        validate() {
+            return new Promise((resolve, reject) => {
+                const list = this.$refs.formRef.map(item => item.validate())
+                Promise.all(list).then(resolve, reject)
+            })
+          
+        },
         handleMainBodyList(attributes) {
             const mainBodyList = attributes.reduce((acc, cur) => {
                 if(!acc.map(a=>a.mainBodyId).includes(cur.mainBodyId)) {
@@ -281,6 +292,10 @@ export default {
         onSelectChange(item) {
             item.transferAttributes = []
             item.projectInfo = {}
+            item.dataScale = ''
+            item.dataActivityDescription = ''
+            item.dataActivityType = ''
+            this.isShowAct = false
             if (item.transferRelevanceList) {
                 item.transferRelevanceList.forEach(item => {
                     this.onSelectChange(item)
@@ -290,12 +305,13 @@ export default {
        
         async saveOrUpdate() {
             const data = await this.$refs.assetsInfoRef.assetsResult()
+            if(data.transferAttributes.length === 0) {
+                return this.$message.error('请选择字段！')
+            }
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes || []
             console.log(this.index,data.transferAttributes,this.filterAttrs,'this.index');
-            if(this.currentLevel.transferAttributes.length === 0) {
-                return this.$message.error('请选择字段！')
-            }
+           
             this.editAssetsDialog = false
         },
         editAssets(item) {

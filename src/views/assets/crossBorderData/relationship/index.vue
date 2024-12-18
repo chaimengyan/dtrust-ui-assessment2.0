@@ -8,7 +8,7 @@
                 <el-input v-model="relationshipForm.description" type="textarea" :rows="2" :placeholder="`${$t('crudCommon.请输入')}${$t('businessScenarioManagement.业务活动描述')}`" />
             </el-form-item>
             <el-button type="primary" icon="el-icon-plus" circle @click="handleAddQuestion"></el-button>
-            <relation-list v-model="relationshipForm.transferRelevanceList" :filterAttrs="relationshipForm.transferRelevanceList[0].transferAttributes" :assetsList="assetsList" />
+            <relation-list ref="relationRef" v-model="relationshipForm.transferRelevanceList" :filterAttrs="relationshipForm.transferRelevanceList[0].transferAttributes" :assetsList="assetsList" />
         </el-form>
         
     </div>
@@ -65,12 +65,14 @@ export default {
         getData() {
             return new Promise((resolve, reject) => {
                 this.$refs.relationshipFormRef.validate((valid) => {
-                    if (valid) {
-                        resolve(this.relationshipForm) 
-                    } else {
-                        reject(false)
-                        return false;
-                    }
+                    this.$refs.relationRef.validate().then(() => {
+                        if (valid) {
+                            resolve(this.relationshipForm) 
+                        } else {
+                            reject(false)
+                            return false;
+                        }
+                    }).catch(reject)
                 });
             })
             
