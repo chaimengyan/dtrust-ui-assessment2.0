@@ -2,14 +2,14 @@
     <div>
         <el-dialog
             v-if="editAssetsDialog"
-            :title="$t('fieldManagement.资产信息')" 
+            :title="$t('crossBorderData.资产信息')" 
             width="60%" 
             :visible.sync="editAssetsDialog" 
             append-to-body
             :close-on-click-modal="false" 
             :fullscreen="isFullscreen">
             <div class="dialog-header" slot="title">
-                <span class="dialog-header-title">{{$t('fieldManagement.资产信息')}}</span>
+                <span class="dialog-header-title">{{$t('crossBorderData.资产信息')}}</span>
                 <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
                     <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
                 </div>
@@ -36,7 +36,7 @@
                             <el-form-item 
                                 prop="projectId"
                                 style="margin-bottom:0;" 
-                                :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === dataActivityType).label:'涉及'}的资产：`"
+                                :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === parentData.dataActivityType).label:'涉及'}的资产：`"
                                 :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
                                 <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
                                     <el-option
@@ -103,7 +103,7 @@
                                     </el-select>
                                 </el-form-item>
                             </div>
-                            <div v-if="item.dataActivityType !== null">
+                            <div v-if="item.dataActivityType !== null && item.dataActivityType !==''">
                                 <el-tooltip effect="dark" :content="$t('添加目标资产')" placement="top">
                                     <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
                                 </el-tooltip>
@@ -124,10 +124,11 @@
                             :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
                             <el-select
                                 v-model="item.dataScale"
+                                @visible-change="handleOption(parentData)"
                                 :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`"
                                 filterable>
                                 <el-option
-                                    v-for="d in dataScaleOptions"
+                                    v-for="d in dataScaleOptionsCopy"
                                     :key="d.value"
                                     :label="d.label"
                                     :value="d.value"
@@ -135,7 +136,7 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                    <relation-list v-model="item.transferRelevanceList" :dataActivityType="item.dataActivityType" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                    <relation-list v-model="item.transferRelevanceList" :parentData="item" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
                 </div>
             </el-form>
@@ -166,9 +167,9 @@ export default {
             type: Array,
             default: () => []
         },
-        dataActivityType: {
-            type: Number,
-            default: 0
+        parentData: {
+            type: Object,
+            default: () => {}
         },
         filterAttrs: {
             type: Array,
@@ -209,6 +210,7 @@ export default {
             label: '>1000000',
             value: '3'
         }],
+        dataScaleOptionsCopy: [],
         assetsTypeOptions: [
             {
                 label: '内部资产',
@@ -237,6 +239,13 @@ export default {
     mounted() {
     },
     methods: {
+        handleOption(parentData) {
+            if(parentData && parentData.dataScale) {
+                this.dataScaleOptionsCopy = this.dataScaleOptions.filter(a => a.value > parentData.dataScale||a.value == parentData.dataScale)
+            }else {
+                this.dataScaleOptionsCopy = this.dataScaleOptions
+            }
+        },
         validate() {
             return new Promise((resolve, reject) => {
                 const list = this.$refs.formRef.map(item => item.validate())
@@ -375,6 +384,10 @@ export default {
 
 </script>
 <style lang="scss" scoped>
+::v-deep .el-textarea {
+    display: flex;
+    width: auto;
+}
 .assets-card {
     margin-top:10px;
     background-color: #f7faff;

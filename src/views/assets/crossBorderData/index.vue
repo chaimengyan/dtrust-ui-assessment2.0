@@ -241,6 +241,11 @@
       saveOrUpdateBtn() {
         this.fullscreenLoading = true
         this.$refs.relationshipRef.getData().then(data => {
+          const a = data.transferRelevanceList.map(t=>t.transferRelevanceList)
+          if(a.filter(x=>x.length === 0).length !== 0){
+            this.fullscreenLoading = false
+            return this.$message.warning('请添加目标资产！')
+          }
           saveOrUpdateObj(data).then(res => {
             if(res.data.status === 200) {
               this.relationshipDialog = false

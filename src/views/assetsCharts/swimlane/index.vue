@@ -4,9 +4,10 @@
 
 <script>
   import { createApp } from 'vue'
-  import { Graph, Cell, CellView, Node, ToolsView } from '@antv/x6'
+  import { Graph,  ToolsView, } from '@antv/x6'
   import {getSwimLaneDiagramsById} from '@/api/assets/crossBorderData'
   import { Tooltip } from 'element-ui'
+
 
 Graph.registerNode(
   'lane',
@@ -548,20 +549,36 @@ const data = [
             new Vue({
               el: this.knobChild,
               render() {
-                return (
+                if(that.tooltipContent.includes("<br/>")) {
+                  return (
+                    // 假如遇到effect不生效，就用style去调样式
+                    <Tooltip visible={true} effect='dark' placement="top">
+                      {/* <div slot="content" domPropsInnerHtml={that.tooltipContent}></div> */}
+                      <div slot="content" >
+                        <div>{that.tooltipContent.split('<br/>')[1]}</div>
+                        <br/>
+                        <div>{that.tooltipContent.split('<br/>')[0]}</div>
+                      </div>
+                      <div class="tooltip-text">
+                        占位
+                      </div>
+                    </Tooltip>
+                  )
+                } else {
+                  return (
                   // 假如遇到effect不生效，就用style去调样式
-                  <Tooltip visible={true} effect='dark' placement="top">
-                    {/* <div slot="content" domPropsInnerHtml={that.tooltipContent}></div> */}
-                    <div slot="content" >
-                      <div>{that.tooltipContent.split('<br/>')[1]}</div>
-                      <br/>
-                      <div>{that.tooltipContent.split('<br/>')[0]}</div>
-                    </div>
-                    <div class="tooltip-text">
-                      占位
-                    </div>
-                  </Tooltip>
-                )
+                    <Tooltip visible={true} effect='dark' placement="top">
+                      {/* <div slot="content" domPropsInnerHtml={that.tooltipContent}></div> */}
+                      <div slot="content" >
+                        <div>{that.tooltipContent}</div>
+                      </div>
+                      <div class="tooltip-text">
+                        占位
+                      </div>
+                    </Tooltip>
+                  )
+                }
+               
               }
             })
           console.log(this.knobChild, 'this.knobChild')
@@ -582,6 +599,7 @@ const data = [
                 container: this.container,
                 connecting: {
                     router: 'orth',
+                    connector: 'rounded',
                 },
                 translating: {
                     restrict(cellView) {
@@ -608,6 +626,14 @@ const data = [
             let edg = {}
             this.swimlaneData.forEach((item) => {
               if (item.shape === 'lane-edge') {
+                console.log(item,'itemmmmm');
+                item.connector = {
+                  name: 'jumpover',
+                  args: {
+                    type: 'gap',
+                  },
+                }
+            
                 item.router =  {
                   name: 'manhattan',
                   args: {
@@ -619,13 +645,14 @@ const data = [
                 cells.push(this.graph.createEdge(item))
               } else {
                 if(item.shape === 'lane-rect') {
+                  item.shape = 'text-block'
+                  item.text = item.label
                   item.attrs = {
                     body: {
-                      // stroke: '#8f8f8f',
-                      strokeWidth: 1,
-                      // fill: '#fff',
-                      rx: 6,
-                      ry: 6,
+                      fill: 'aliceblue',
+                      stroke: '#1793ff',
+                      rx: 4,
+                      ry: 4,
                     },
                   }
                 }
@@ -656,14 +683,6 @@ const data = [
               }
             })
            
-            //  this.graph.on('edge:mouseleave', ({ e, node, view }) => {
-            //   this.toggleTooltip(false);
-            //  })
-        
-            this.graph.on('edge:click', ({ e, edge, view }) => {
-              console.log(this.graph, e, edge, view,'边');
-              console.log(this.graph, 'okko')
-             })
         },
         
         findValueInArray(arr, projectId) {

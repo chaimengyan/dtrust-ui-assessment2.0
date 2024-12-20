@@ -341,6 +341,7 @@ export default {
     数据处理活动类型: 'Types of Data Processing Activities',
     数据处理活动描述: 'Description of Data Processing Activities',
     数据量级: 'Data Scale',
+    资产信息: 'Asset Information',
   },
   evaluationRecord: {
     查看详情: 'View Details',
