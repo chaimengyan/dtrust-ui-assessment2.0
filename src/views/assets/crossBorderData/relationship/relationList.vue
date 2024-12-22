@@ -51,7 +51,7 @@
                         <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                         <el-button 
                             v-if="item.projectId&&'projectInfo' in item && Object.keys(item.projectInfo).length !== 0&&'transferAttributes' in item && item.transferAttributes.length !== 0"
-                            @click="showAct()">{{!isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
+                            @click="showAct(item)">{{!item.isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
                         <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
 
                     </div>
@@ -83,7 +83,7 @@
                         </el-collapse>
                     </div>
 
-                    <div v-if="isShowAct" class="assets-card" >
+                    <div v-if="item.isShowAct" class="assets-card" >
                         <div style="display: flex">
                             <div style="flex: 1;">
                                 <el-form-item 
@@ -228,7 +228,6 @@ export default {
         ],
         currentLevel: {},
         isFirstLevel: false,
-        isShowAct: false,
       }
     },
     watch: {
@@ -307,7 +306,7 @@ export default {
             item.dataScale = ''
             item.dataActivityDescription = ''
             item.dataActivityType = ''
-            this.isShowAct = false
+            item.isShowAct = false
             if (item.transferRelevanceList) {
                 item.transferRelevanceList.forEach(item => {
                     this.onSelectChange(item)
@@ -350,14 +349,16 @@ export default {
                 projectId: '',
                 dataActivityType: null,
                 dataScale: '',
+                isShowAct: false,
                 dataActivityDescription: '',
                 transferRelevanceList: [],
                 projectInfo: {},
                 transferAttributes: [],
             }
         },
-        showAct() {
-            this.isShowAct = !this.isShowAct
+        showAct(item) {
+            item.isShowAct = !item.isShowAct;
+            this.change([...this.value])
         },
         handleAdd(record) {
             const index = this.value.findIndex(item => item.id === record.id)

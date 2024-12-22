@@ -95,6 +95,7 @@ export default {
                 projectId: '',
                 dataActivityType: null,
                 dataScale: '',
+                isShowAct: false,
                 dataActivityDescription: '',
                 transferRelevanceList: [],
                 projectInfo: {},
