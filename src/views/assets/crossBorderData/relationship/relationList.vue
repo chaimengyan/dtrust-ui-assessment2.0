@@ -136,7 +136,7 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                    <relation-list v-model="item.transferRelevanceList" :parentData="item" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
+                    <relation-list ref="childRelation" v-model="item.transferRelevanceList" :parentData="item" :filterAttrs="filterAttrs" :index="newIndex(i)" :assetsList="assetsList" @input="onFlush" />
 
                 </div>
             </el-form>
@@ -249,6 +249,9 @@ export default {
         validate() {
             return new Promise((resolve, reject) => {
                 const list = this.$refs.formRef.map(item => item.validate())
+                const listChild = this.$refs.childRelation.map(item => item.validate())
+
+                list.concat(listChild)
                 Promise.all(list).then(resolve, reject)
             })
           
