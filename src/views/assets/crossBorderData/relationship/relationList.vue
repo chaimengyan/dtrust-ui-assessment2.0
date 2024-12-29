@@ -88,6 +88,7 @@
                             <div style="flex: 1;">
                                 <el-form-item 
                                     :label="$t('crossBorderData.数据处理活动类型')"
+                                    prop="dataActivityType"
                                     :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`, trigger: 'change' }"  >
                                     <el-select
                                         class="mr-12"
@@ -113,6 +114,7 @@
 
                         <el-form-item 
                             :label="$t('crossBorderData.数据处理活动描述')"
+                            prop="dataActivityDescription"
                             :rules="{ required: true, message: `${$t('crudCommon.请填写')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
                             <el-input
                                 v-model="item.dataActivityDescription"
@@ -121,6 +123,7 @@
                         </el-form-item>
                         <el-form-item 
                             :label="$t('crossBorderData.数据量级')"
+                            prop="dataScale"
                             :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
                             <el-select
                                 v-model="item.dataScale"
