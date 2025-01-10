@@ -51,7 +51,7 @@
               v-if="permissions.assets_assetsManagement_batchDel"
               type="primary"
               plain
-              icon="el-icon-delete"
+              icon="el-icon-s-check"
               @click="confirmBtn(false)"
               >{{$t('crudCommon.批量确认')}} 
             </el-button>
@@ -78,6 +78,7 @@
               <el-button
                 v-if="permissions.assets_assetsManagement_edit"
                 type="text"
+                style="color: red;"
                 icon="el-icon-circle-close"
                 @click="handleUpdate(scope.row, 2)"
                 /> 

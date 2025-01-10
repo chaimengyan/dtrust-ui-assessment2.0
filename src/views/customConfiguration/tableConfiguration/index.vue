@@ -46,6 +46,7 @@
                 v-if="permissions.field_dataClassification_del"
                 :disabled="scope.row.createBy === 'admin'||!handleDataPermissions('delete', scope.row)"
                 type="text"
+                style="color: red;"
                 icon="el-icon-delete"
                 @click="deleteBtn(scope.row, scope.index)"
                 />

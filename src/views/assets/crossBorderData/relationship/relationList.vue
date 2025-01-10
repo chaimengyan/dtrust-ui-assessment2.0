@@ -88,6 +88,7 @@
                             <div style="flex: 1;">
                                 <el-form-item 
                                     :label="$t('crossBorderData.数据处理活动类型')"
+                                    prop="dataActivityType"
                                     :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据处理活动类型')}`, trigger: 'change' }"  >
                                     <el-select
                                         class="mr-12"
@@ -113,7 +114,8 @@
 
                         <el-form-item 
                             :label="$t('crossBorderData.数据处理活动描述')"
-                            :rules="{ required: true, message: `${$t('crudCommon.请填写')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
+                            prop="dataActivityDescription"
+                            :rules="{ required: true, message: `${$t('crudCommon.请输入')}${$t('crossBorderData.数据处理活动描述')}`, trigger: 'blur' }" >
                             <el-input
                                 v-model="item.dataActivityDescription"
                                 :placeholder="activitiesDiscPlaceholder[item.dataActivityType]"
@@ -121,6 +123,7 @@
                         </el-form-item>
                         <el-form-item 
                             :label="$t('crossBorderData.数据量级')"
+                            prop="dataScale"
                             :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('crossBorderData.数据量级')}`, trigger: 'change' }" >
                             <el-select
                                 v-model="item.dataScale"
@@ -236,11 +239,12 @@ export default {
         }
     },
     mounted() {
+        this.handleOption(this.parentData)
     },
     methods: {
         handleOption(parentData) {
             if(parentData && parentData.dataScale) {
-                this.dataScaleOptionsCopy = this.dataScaleOptions.filter(a => a.value > parentData.dataScale||a.value == parentData.dataScale)
+                this.dataScaleOptionsCopy = this.dataScaleOptions.filter(a => a.value < parentData.dataScale||a.value == parentData.dataScale)
             }else {
                 this.dataScaleOptionsCopy = this.dataScaleOptions
             }

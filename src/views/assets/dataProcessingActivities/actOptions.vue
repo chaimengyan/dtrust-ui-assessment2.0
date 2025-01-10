@@ -19,7 +19,7 @@
                         :rules="answersRules.label">
                         <el-input v-model="item.label" />
                         <el-form-item class="spacing" v-show="optionsForm.answers.length > 2">
-                            <el-link type="primary" :disabled="viewStatus === 'view'" icon="el-icon-delete" @click="delAnswer(index)"></el-link>
+                            <el-link type="primary" style="color: red;" :disabled="viewStatus === 'view'" icon="el-icon-delete" @click="delAnswer(index)"></el-link>
                         </el-form-item>
                     </el-form-item>
                     <el-form-item>

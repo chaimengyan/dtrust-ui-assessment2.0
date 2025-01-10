@@ -32,7 +32,7 @@
             </el-button>
             <el-button
               v-if="permissions.assets_crossBorderData_batchDel"
-              type="primary"
+              type="danger"
               plain
               icon="el-icon-delete"
               @click="deleteBtn(false)"
@@ -62,6 +62,7 @@
                 <el-button
                 v-if="permissions.assets_crossBorderData_del"
                 :disabled="!handleDataPermissions('delete', scope.row)"
+                style="color: red;"
                 type="text"
                 icon="el-icon-delete"
                 @click="deleteBtn(scope.row, scope.index)"

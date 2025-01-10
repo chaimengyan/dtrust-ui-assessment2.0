@@ -29,7 +29,7 @@
                   </el-button>
                   <el-button
                     v-if="permissions.assets_dataProcessingActivities_batchDel"
-                    type="primary"
+                    type="danger"
                     plain
                     icon="el-icon-delete"
                     @click="delBtn(false)"
@@ -54,6 +54,7 @@
                             :disabled="!handleDataPermissions('delete', scope.row)"
                             type="text"
                             size="small"
+                            style="color: red;"
                             icon="el-icon-delete"
                             @click="delBtn(scope.row,scope.index)"
                             />
