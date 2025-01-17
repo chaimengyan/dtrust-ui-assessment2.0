@@ -115,7 +115,7 @@
             },
             getTenantInfo(tenantId) {
                 request({
-                    url:`/admin/tenant/getTenantById?id=${tenantId}`,
+                    url:`/admin/tenant/getTenantById?tenantId=${tenantId}`,
                     method: 'get',
                 }).then(res => {
                     this.userInfoForm.tenantName = res.data.data.tenantName
