@@ -29,6 +29,10 @@
         </el-dialog>
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
             <el-form ref="formRef" :model="item">
+                <el-alert
+                    title="使用步骤：1.选择资产，2.配置资产信息，3.展开数据处理活动，4.选择数据处理活动类型，5.添加目标资产"
+                    type="info">
+                </el-alert>
 
                 <div class="evaluation-item" >
                     <div class="evaluation-item-content">
@@ -253,9 +257,8 @@ export default {
             return new Promise((resolve, reject) => {
                 const list = this.$refs.formRef.map(item => item.validate())
                 const listChild = this.$refs.childRelation.map(item => item.validate())
-
-                list.concat(listChild)
-                Promise.all(list).then(resolve, reject)
+                const validList = list.concat(listChild)
+                Promise.all(validList).then(resolve, reject)
             })
           
         },

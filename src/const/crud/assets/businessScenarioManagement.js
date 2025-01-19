@@ -574,7 +574,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         prop:'mainBodyName',
         searchLabelWidth: 130,
         sortable:true,
-        search: true,
+        // search: true,
         overHidden: isOverHidden,
 
       }, {
