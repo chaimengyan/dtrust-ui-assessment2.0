@@ -54,7 +54,7 @@
                             :disabled="!handleDataPermissions('delete', scope.row)"
                             type="text"
                             size="small"
-                            style="color: red;"
+                            :style="!handleDataPermissions('delete', scope.row)?'': 'color: red;'"
                             icon="el-icon-delete"
                             @click="delBtn(scope.row,scope.index)"
                             />

@@ -78,7 +78,7 @@
               v-if="permissions.assets_dataProcessingActivities_del"
               :disabled="!handleDataPermissions('delete', scope.row)"
               type="text"
-              style="color: red;"
+              :style="!handleDataPermissions('delete', scope.row)?'': 'color: red;'"
               icon="el-icon-delete"
               @click="deleteBtn(scope.row, scope.index)"
               />

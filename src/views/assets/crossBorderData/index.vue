@@ -62,7 +62,7 @@
                 <el-button
                 v-if="permissions.assets_crossBorderData_del"
                 :disabled="!handleDataPermissions('delete', scope.row)"
-                style="color: red;"
+                :style="!handleDataPermissions('delete', scope.row)?'': 'color: red;'"
                 type="text"
                 icon="el-icon-delete"
                 @click="deleteBtn(scope.row, scope.index)"
@@ -132,6 +132,10 @@
               </el-collapse-item>
             </el-collapse>
           </div>
+          <el-alert
+            title="注：点击下图中的资产名可查看资产位置，点击线条或线条上的文字可查看字段类别及处理活动"
+            type="info">
+          </el-alert>
           <Swimlane ref="swimlaneRef" />
         </el-dialog>
       </basic-container>

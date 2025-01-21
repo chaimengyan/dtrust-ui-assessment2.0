@@ -42,10 +42,10 @@
               </div>
           </el-link>
         </el-tooltip> -->
-        <el-tooltip effect="dark" :content="$t('navbar.工作流')">
+        <el-tooltip effect="dark" :content="$t('navbar.首页')">
           <el-link style="margin-left: 20px;margin-top: 10px;" target="_blank" :underline="false" :href="workFlowUrl">
             <el-button style="height: 32px;">
-              <svg-icon icon-class="icon-trust" class="quick-list-icon"></svg-icon>{{$t('navbar.工作流')}}
+              <svg-icon icon-class="icon-trust" class="quick-list-icon"></svg-icon>{{$t('navbar.首页')}}
             </el-button>
           </el-link>
         </el-tooltip>
