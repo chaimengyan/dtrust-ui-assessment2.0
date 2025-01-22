@@ -411,6 +411,20 @@ export const fieldRelationOption = (_this, isView, isOverHidden) => {
         overHidden: isOverHidden,
       },
       {
+        width: 150,
+        label:_this.$t('fieldManagement.字段类别'),
+        prop:'categoryName',
+        sortable:true,
+        overHidden: isOverHidden,
+      },
+      {
+        width: 150,
+        label:_this.$t('fieldManagement.数据类型名称'),
+        prop:'typeName',
+        sortable:true,
+        overHidden: isOverHidden,
+      },
+      {
         label:_this.$t('assetsManagement.字段来源'),
         prop:'sourceName',
         type: 'select',

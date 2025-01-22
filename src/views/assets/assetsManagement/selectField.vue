@@ -119,6 +119,7 @@ export default {
             const allAttrs = this.getAllAttrs();
             // 获取所有选中attr的ids
             const allCheckedIds = this.getAllCheckedIds()
+            console.log(allAttrs, allCheckedIds,'????LLLLL');
             return allAttrs.filter(item => allCheckedIds.includes(item._id))
         },
         getEchoAttr(item) {

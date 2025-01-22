@@ -512,18 +512,31 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
         {
         width: 120,
         searchLabelWidth:90,
-        searchSpan: 4,
+        searchSpan: 6,
         label:_this.$t('assetsManagement.字段名'),
         prop:'attributesName',
         sortable:true,
         search: true,
         overHidden: isOverHidden,
 
-      }, 
+      }, {
+        width: 150,
+        label:_this.$t('fieldManagement.字段类别'),
+        prop:'categoryName',
+        sortable:true,
+        overHidden: isOverHidden,
+      },
+      {
+        width: 150,
+        label:_this.$t('fieldManagement.数据类型名称'),
+        prop:'typeName',
+        sortable:true,
+        overHidden: isOverHidden,
+      },
       {
         width: 100,
         searchLabelWidth:70,
-        searchSpan: 4,
+        searchSpan: 6,
         label:_this.$t('assetsManagement.类型'),
         prop:'type',
         sortable:true,
@@ -551,7 +564,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
       },{
         width: 100,
         searchLabelWidth:60,
-        searchSpan: 4,
+        searchSpan: 6,
         label:_this.$t('businessScenarioManagement.资产'),
         prop:'projectName',
         sortable:true,
@@ -641,7 +654,7 @@ export const actRelationOption = (_this, isView, isOverHidden) => {
       // },
       {
         searchLabelWidth:80,
-        searchSpan: 4,
+        searchSpan: 6,
         label:_this.$t('crudCommon.关键字'),
         prop:'keyword',
         search: true,

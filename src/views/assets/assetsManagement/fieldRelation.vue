@@ -147,6 +147,7 @@ export default {
     },
     methods: {
         init(data) {
+          console.log(data,'dataaaaalll');
             this.attrs = data;
             this.onLoad(this.page, this.attrs)
             this.$refs.crud.toggleSelection()

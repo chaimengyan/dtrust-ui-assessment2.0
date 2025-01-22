@@ -257,8 +257,10 @@ export default {
             return new Promise((resolve, reject) => {
                 const list = this.$refs.formRef.map(item => item.validate())
                 const listChild = this.$refs.childRelation.map(item => item.validate())
-                const validList = list.concat(listChild)
-                Promise.all(validList).then(resolve, reject)
+                // const validList = list.concat(listChild)
+                // Promise.all(validList).then(resolve, reject)
+                list.concat(listChild)
+                Promise.all(list).then(resolve, reject)
             })
           
         },
