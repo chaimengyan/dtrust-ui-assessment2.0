@@ -38,7 +38,7 @@
                     :isView="true"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('assetsManagement.历史记录')">
+            <el-tab-pane v-if="permissions.assets_businessScenario_history" :label="$t('assetsManagement.历史记录')">
                 <BusHistory
                     :sceneId="sceneId"
                 />
@@ -51,6 +51,7 @@
 import  ActRelation from "@/views/assets/businessScenarioManagement/actRelation";
 import BusHistory from "@/views/assets/businessScenarioManagement/busHistory";
 import {dateFormat} from "@/util/date"
+import { mapGetters } from "vuex";
 export default {
     name: "Details",
     components: {
@@ -79,6 +80,9 @@ export default {
         return {
 
         }
+    },
+    computed: {
+        ...mapGetters(["permissions"]),
     },
     watch: {
         fieldList() {

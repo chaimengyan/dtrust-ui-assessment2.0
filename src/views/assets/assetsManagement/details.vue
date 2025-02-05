@@ -39,7 +39,7 @@
                     :fieldList="fieldList"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('assetsManagement.历史记录')">
+            <el-tab-pane v-if="permissions.assets_assetsManagement_history" :label="$t('assetsManagement.历史记录')">
                 <History
                     :projectId="projectId"
                     />
@@ -58,6 +58,8 @@ import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
 import History from "@/views/assets/assetsManagement/history";
 import {dateFormat} from "@/util/date"
 import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
+import { mapGetters } from "vuex";
+
 export default {
     name: "Details",
     components: {
@@ -87,6 +89,9 @@ export default {
         return {
 
         }
+    },
+    computed: {
+        ...mapGetters(["permissions"]),
     },
     watch: {
       fieldList() {
