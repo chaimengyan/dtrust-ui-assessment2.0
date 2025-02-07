@@ -45,7 +45,9 @@
         <el-tooltip effect="dark" :content="$t('navbar.首页')">
           <el-link style="margin-left: 20px;margin-top: 10px;" target="_blank" :underline="false" :href="workFlowUrl">
             <el-button style="height: 32px;">
-              <svg-icon icon-class="icon-trust" class="quick-list-icon"></svg-icon>{{$t('navbar.首页')}}
+              <!-- <svg-icon icon-class="icon-trust" class="quick-list-icon"></svg-icon> -->
+              <i class="el-icon-s-home"></i>
+              {{$t('navbar.首页')}}
             </el-button>
           </el-link>
         </el-tooltip>
