@@ -27,7 +27,7 @@ export default {
     自动化数据发现: 'Automated Data Discovery',
     数据处理活动流图: 'Data Processing Activity Flow Diagram',
     中英文: 'Language',
-    首页: 'Dashboard',
+    首页: 'Home',
     个人信息: 'Personal Info',
     访问控制: 'Access Control',
     退出系统: 'Log Out',
@@ -43,7 +43,7 @@ export default {
     关闭所有: 'Close All'
   },
   menu: {
-    首页: 'Home page',
+    首页: 'Home',
     个人信息: 'Personal Information',
     权限管理: 'Permission Management',
     用户管理: 'User Management',
@@ -94,7 +94,7 @@ export default {
     字段主数据: 'Field Master Data',
     数据发现及映射: 'Data Discovery and Mapping',
     资产管理: 'Asset Management',
-    业务活动管理: 'Business Activity Management',
+    业务活动管理: 'Business Management',
     属性管理: 'Attribute Management',
     数据处理活动: 'Data Processing Activities',
     数据跨境: 'Cross Border Data',
