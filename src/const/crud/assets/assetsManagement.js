@@ -5,6 +5,8 @@ import {
   checkProjectName
 } from "@/api/assets/assetsManagement";
 import city from "@/const/json/city"
+import { getStore } from '@/util/store'
+
 
 // item.dicUrl 调接口
 function getSelectOption(item, tenantId) {
@@ -26,7 +28,7 @@ const validateProjectName = (rule, value, callback) => {
 }
 
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
-
+  const fieldName = getStore({ name: 'language' }) == 'zh-cn' ? 'name_cn' : 'name_en'
   option.rowKey = 'projectId'
   option.column.forEach((item, index) => {
     item.overHidden = isOverHidden
@@ -40,16 +42,16 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     }
     if(item.type === 'cascader') {
       item.props = {
-        label: 'name_cn',
-        value: 'name_cn',
+        label: fieldName,
+        value: fieldName,
         children: 'cities',
       }
       item.dicData = city
     }
     if(item.type === 'addressSelect') {
       item.props = {
-        label: 'name_cn',
-        value: 'name_cn',
+        label: fieldName,
+        value: fieldName,
       }
       item.dicData = city
       item.type = 'select'
