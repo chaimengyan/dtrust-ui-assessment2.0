@@ -2,63 +2,63 @@
    <div>
     <el-form
       ref="ruleFormRef"
-      label-width="140px"
+      label-width="220px"
       label-suffix=" :"
       :rules="rules"
       :model="releaseForm"
     >
-      <el-form-item label="评估名称" prop="name">
-        <el-input v-model="releaseForm.name" placeholder="请填写评估名称" clearable></el-input>
+      <el-form-item :label="$t('evaluationRecord.评估名称')" prop="name">
+        <el-input v-model="releaseForm.name" :placeholder="`${$t('crudCommon.请输入')}${$t('evaluationRecord.评估名称')}`" clearable></el-input>
       </el-form-item>
-      <el-form-item label="问卷" prop="qnId">
-        <el-select  @change="qnChange" v-model="releaseForm.qnId" placeholder="请选择问卷" clearable>
+      <el-form-item :label="$t('evaluationRecord.问卷')" prop="qnId">
+        <el-select  @change="qnChange" v-model="releaseForm.qnId" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.问卷')}`" clearable>
           <el-option v-for="item in qnOptions" :key="item.id" :label="item.qnName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="评估指派方式">
+      <el-form-item :label="$t('evaluationRecord.评估指派方式')">
         <el-switch
           v-model="releaseForm.mode"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: #46aee7; --el-switch-off-color: #13ce66"
-          active-text="按章节"
-          inactive-text="按问卷"
+          :active-text="$t('evaluationRecord.按章节')"
+          :inactive-text="$t('evaluationRecord.按问卷')"
           :active-value="2"
           :inactive-value="1"
           @change="changeMode('mode')"
         />
       </el-form-item>
-      <el-form-item v-if="releaseForm.mode === 2" label="被评估人" prop="evaluators">
+      <el-form-item v-if="releaseForm.mode === 2" :label="$t('evaluationRecord.被评估人')" prop="evaluators">
         <el-cascader
-          placeholder="请选择被评估人"
+          :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`"
           v-model="releaseForm.evaluators"
           @visible-change="getChapterByQnId"
           :options="options"
           :props="{ multiple: true }"
           clearable />
       </el-form-item>
-      <el-form-item v-else label="被评估人" prop="userIds">
-        <el-select v-model="releaseForm.userIds" placeholder="请选择被评估人" clearable multiple>
+      <el-form-item v-else :label="$t('evaluationRecord.被评估人')" prop="userIds">
+        <el-select v-model="releaseForm.userIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`" clearable multiple>
           <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="审核指派方式">
+      <el-form-item :label="$t('evaluationRecord.审核指派方式')">
         <el-switch
           v-model="releaseForm.auditType"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: #46aee7; --el-switch-off-color: #13ce66"
-          active-text="按章节"
-          inactive-text="按问卷"
+          :active-text="$t('evaluationRecord.按章节')"
+          :inactive-text="$t('evaluationRecord.按问卷')"
           :active-value="1"
           :inactive-value="0"
           @change="changeMode('auditType')"
         />
       </el-form-item>
-      <el-form-item v-if="releaseForm.auditType === 1" label="章节审核人" prop="chapterAuditors">
+      <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人')" prop="chapterAuditors">
         <el-cascader 
-          placeholder="请选择章节审核人"
+          :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.章节审核人')}`"
           v-model="releaseForm.chapterAuditors"
           @visible-change="getChapterByQnId" 
           :options="options" 
@@ -66,30 +66,30 @@
           clearable />
       </el-form-item>
 
-      <el-form-item label="最终审核人" prop="superAuditorIds">
-        <el-select v-model="releaseForm.superAuditorIds" placeholder="请选择最终审核人" clearable multiple>
+      <el-form-item :label="$t('evaluationRecord.最终审核人')" prop="superAuditorIds">
+        <el-select v-model="releaseForm.superAuditorIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.最终审核人')}`" clearable multiple>
           <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
         </el-select>
       </el-form-item>
-      <el-form-item label="最终审核方式">
+      <el-form-item :label="$t('evaluationRecord.最终审核方式')">
         <el-switch
           v-model="releaseForm.sign"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: #46aee7; --el-switch-off-color: #13ce66"
-          active-text="或签"
-          inactive-text="并签"
+          :active-text="$t('evaluationRecord.或签')"
+          :inactive-text="$t('evaluationRecord.并签')"
           :active-value="0"
           :inactive-value="1"
         />
       </el-form-item>
-      <el-form-item label="有效时间" prop="time">
+      <el-form-item :label="$t('evaluationRecord.有效时间')" prop="time">
           <el-date-picker
               v-model="releaseForm.time"
               type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
+              :range-separator="$t('evaluationRecord.至')"
+              :start-placeholder="$t('evaluationRecord.开始日期')"
+              :end-placeholder="$t('evaluationRecord.结束日期')"
               value-format="yyyy-MM-dd HH:mm:ss"
 
           />
@@ -140,13 +140,13 @@ export default {
             evaluationList: [],
             options: [],
             rules: {
-                name: [{ required: true, message: "请填写评估名称" }],
-                qnId: [{ required: true, message: "请选择问卷" }],
-                userIds: [{ required: true, message: "请选择被评估人" }],
-                superAuditorIds: [{ required: true, message: "请选择最终审核人" }],
-                time: [{ required: true, message: "请选择有效时间" }],
-                evaluators: [{ required: true, message: "请选择被评估人" }],
-                chapterAuditors: [{ required: true, message: "请选择章节审核人" }],
+                name: [{ required: true, message: `${this.$t('crudCommon.请输入')}${this.$t('evaluationRecord.评估名称')}` }],
+                qnId: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.问卷')}` }],
+                userIds: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.被评估人')}` }],
+                superAuditorIds: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.最终审核人')}` }],
+                time: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.有效时间')}` }],
+                evaluators: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.被评估人')}` }],
+                chapterAuditors: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.章节审核人')}` }],
             },
         };
     },

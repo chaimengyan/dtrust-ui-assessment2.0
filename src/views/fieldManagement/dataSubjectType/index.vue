@@ -192,6 +192,11 @@ export default {
       if(this.calculationData.length === 0) {
         return this.calculationDialog = false
       }
+      const cellEditStatus = this.$refs.calculationCrud.cellForm.list.map(x => x.$cellEdit)
+      console.log(cellEditStatus,'cellEditStatus');
+      if(!cellEditStatus.every(c => c === false)) {
+        return this.$message.warning(this.$t('fieldManagement.请先保存行编辑')) 
+      }
       putCalculationObj({
           mainBodyId: this.mainBodyId,
           mainBodyNum: this.mainBodySum,
@@ -221,7 +226,7 @@ export default {
     // 去重行编辑保存
     addUpdate(form,index,done,loading){
       if(form.mainBodyNum < form.repeatNum) {
-        this.$message.error(this.$t('fieldManagement.去重数不能大于主体数量')) 
+        this.$message.warning(this.$t('fieldManagement.去重数不能大于主体数量')) 
         loading()
         return 
       }

@@ -197,7 +197,7 @@
     </el-drawer>
     <el-dialog
       :title="$t('assetsManagement.启动评估')"
-      width="35%"
+      width="45%"
       v-if="assessmentDialog"
       :close-on-click-modal="false"
       :visible.sync="assessmentDialog"

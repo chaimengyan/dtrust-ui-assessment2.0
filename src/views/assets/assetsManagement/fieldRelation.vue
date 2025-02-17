@@ -115,16 +115,16 @@ export default {
         rowIndex: '',
         sourceForm: {},
         sourceOptions: [{
-          label: '直接来自个人',
+          label: this.$t('assetsManagement.直接来自个人'),
           value: '0'
         }, {
-          label: '内部系统',
+          label: this.$t('assetsManagement.内部系统'),
           value: '1'
         }, {
-          label: '第三方系统',
+          label: this.$t('assetsManagement.第三方系统'),
           value: '2'
         }, {
-          label: '离线导入',
+          label: this.$t('assetsManagement.离线导入'),
           value: '3'
         }, ],
         identificationList: [],

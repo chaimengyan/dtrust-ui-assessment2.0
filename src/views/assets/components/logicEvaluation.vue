@@ -8,7 +8,7 @@
                     :title="qnList.find(x=> x.id===item.nextQnId).qnName" 
                     :name="item.id">
                     <el-form label-width="100px" label-suffix=" :" ref="ruleFormChildRefs" :model="item" :rules="rules">
-                        <el-form-item label="评估名称" prop="evaluationName">
+                        <el-form-item :label="$t('evaluationRecord.评估名称')" prop="evaluationName">
                             <el-input v-model="item.evaluationName" placeholder="请填写评估名称" clearable></el-input>
                         </el-form-item>
                         <el-form-item label="指派方式">
@@ -17,8 +17,8 @@
                             class="ml-2"
                             inline-prompt
                             style="--el-switch-on-color: #46aee7; --el-switch-off-color: #13ce66"
-                            active-text="按章节"
-                            inactive-text="按问卷"
+                            :active-text="$t('evaluationRecord.按章节')"
+                            :inactive-text="$t('evaluationRecord.按问卷')"
                             :active-value="2"
                             :inactive-value="1"
                             @change="changeMode(item)"
@@ -27,17 +27,17 @@
                         <el-form-item label="问卷有效期" prop="validTime">
                             <el-input-number v-model="item.validTime" placeholder="请填写问卷有效期(小时)"></el-input-number>小时
                         </el-form-item>
-                        <el-form-item v-if="item.mode === 2" label="被评估人" prop="evaluators">
+                        <el-form-item v-if="item.mode === 2" :label="$t('evaluationRecord.被评估人')" prop="evaluators">
                             <el-cascader 
-                            placeholder="请选择被评估人"
+                            :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`"
                             v-model="item.evaluators"
                             :options="options" 
                             :props="{ multiple: true }" 
                             @visible-change="getChapterByQnId(item.nextQnId)" 
                             clearable />
                         </el-form-item>
-                        <el-form-item v-else label="被评估人" prop="evaluators">
-                            <el-select v-model="item.evaluators" placeholder="请选择被评估人" clearable multiple>
+                        <el-form-item v-else :label="$t('evaluationRecord.被评估人')" prop="evaluators">
+                            <el-select v-model="item.evaluators" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`" clearable multiple>
                                 <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
                             </el-select>
                         </el-form-item>
@@ -52,8 +52,8 @@
                                 class="ml-2"
                                 inline-prompt
                                 style="--el-switch-on-color: #46aee7; --el-switch-off-color: #13ce66"
-                                active-text="或签"
-                                inactive-text="并签"
+                                :active-text="$t('evaluationRecord.或签')"
+                                :inactive-text="$t('evaluationRecord.并签')"
                                 :active-value="0"
                                 :inactive-value="1"
                                 />

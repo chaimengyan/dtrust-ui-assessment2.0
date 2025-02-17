@@ -96,16 +96,16 @@ export default {
             fieldOptions: [],
             assetsTypeOptions: [
                 {
-                    label: '内部资产',
+                    label: this.$t('crossBorderData.内部资产'),
                     value: 0
                 },{
-                    label: '境外内部资产',
+                    label: this.$t('crossBorderData.境外内部资产'),
                     value: 1
                 },{
-                    label: '第三方资产',
+                    label: this.$t('crossBorderData.第三方资产'),
                     value: 2
                 },{
-                    label: '境外第三方资产',
+                    label: this.$t('crossBorderData.境外第三方资产'),
                     value: 3
                 },
             ],

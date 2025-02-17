@@ -112,7 +112,7 @@
             </div>
           </div> 
           <div>
-            <div>描述：{{CBData.description}} </div>
+            <div>{{$t('crudCommon.描述')}}：{{CBData.description}} </div>
             <el-collapse>
               <el-collapse-item :title="$t('crossBorderData.字段信息')" name="1">
                 <div 
@@ -133,7 +133,7 @@
             </el-collapse>
           </div>
           <el-alert
-            title="注：点击下图中的资产名可查看资产位置，点击线条或线条上的文字可查看字段类别及处理活动"
+            :title="$t('crossBorderData.注')"
             type="info">
           </el-alert>
           <Swimlane ref="swimlaneRef" />

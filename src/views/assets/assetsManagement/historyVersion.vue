@@ -74,7 +74,7 @@
     </el-dialog>
     <el-dialog
       :title="$t('assetsManagement.启动评估')"
-      width="35%"
+      width="45%"
       v-if="assessmentDialog"
       :visible.sync="assessmentDialog"
       :close-on-click-modal="false"

@@ -30,7 +30,7 @@
         <div v-for="(item, i) in value" :key="item.id" class="evaluation-content">
             <el-form ref="formRef" :model="item">
                 <el-alert
-                    title="使用步骤：1.选择资产，2.配置资产信息，3.展开数据处理活动，4.选择数据处理活动类型，5.添加目标资产"
+                    :title="$t('crossBorderData.使用步骤')"
                     type="info">
                 </el-alert>
 
@@ -40,9 +40,9 @@
                             <el-form-item 
                                 prop="projectId"
                                 style="margin-bottom:0;" 
-                                :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === parentData.dataActivityType).label:'涉及'}的资产：`"
-                                :rules="{ required: true, message: '请选择资产', trigger: 'change' }" >
-                                <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" placeholder="请选择涉及的资产" clearable filterable class="mr-12">
+                                :label="`${newIndex(i)}.${index ? activitiesTypeOptions.find(a=>a.value === parentData.dataActivityType).label:$t('crossBorderData.涉及')}${$t('crossBorderData.的资产')}`"
+                                :rules="{ required: true, message: `${$t('crudCommon.请选择')}${$t('businessScenarioManagement.资产')}`, trigger: 'change' }" >
+                                <el-select v-model="item.projectId" @input="onSelectChange(item)" :disabled="false" :placeholder="`${$t('crudCommon.请选择')}${$t('crossBorderData.涉及的资产')}`" clearable filterable class="mr-12">
                                     <el-option
                                         v-for="a in assetsList"
                                         :key="a.projectId"
@@ -55,7 +55,7 @@
                         <el-button v-if="item.projectId" icon="el-icon-edit" @click="editAssets(item)" circle></el-button>
                         <el-button 
                             v-if="item.projectId&&'projectInfo' in item && Object.keys(item.projectInfo).length !== 0&&'transferAttributes' in item && item.transferAttributes.length !== 0"
-                            @click="showAct(item)">{{!item.isShowAct?'展开处理活动':'收起处理活动'}}</el-button>
+                            @click="showAct(item)">{{!item.isShowAct?$t('crossBorderData.展开处理活动'):$t('crossBorderData.收起处理活动')}}</el-button>
                         <el-button type="danger" icon="el-icon-delete" circle @click="handleDel(item)"></el-button>
 
                     </div>
@@ -190,18 +190,18 @@ export default {
         editAssetsDialog: false,
         fullscreenLoading: false,
         activitiesDiscPlaceholder: {
-            0: '请说明传输的方式，如系统直连或是批量等；传输的目的，如涉及跨境或第三方处理；请说明合法性、正当性、必要性',
-            1: '请说明存储的期限，存储的方式，如是否加密等',
-            2: '请说明使用的方式是否涉及自动化决策等'
+            0: this.$t('crossBorderData.请说明传输的方式'),
+            1: this.$t('crossBorderData.请说明存储的期限'),
+            2: this.$t('crossBorderData.请说明使用的方式')
         },
         activitiesTypeOptions: [{
-            label: '传输至',
+            label: this.$t('crossBorderData.传输至'),
             value: 0
         },{
-            label: '存储于',
+            label: this.$t('crossBorderData.存储于'),
             value: 1
         },{
-            label: '使用于',
+            label: this.$t('crossBorderData.使用于'),
             value: 2
         }],
         dataScaleOptions: [{
@@ -220,16 +220,16 @@ export default {
         dataScaleOptionsCopy: [],
         assetsTypeOptions: [
             {
-                label: '内部资产',
+                label: this.$t('crossBorderData.内部资产'),
                 value: 0
             },{
-                label: '境外内部资产',
+                label: this.$t('crossBorderData.境外内部资产'),
                 value: 1
             },{
-                label: '第三方资产',
+                label: this.$t('crossBorderData.第三方资产'),
                 value: 2
             },{
-                label: '境外第三方资产',
+                label: this.$t('crossBorderData.境外第三方资产'),
                 value: 3
             },
         ],
@@ -326,7 +326,7 @@ export default {
         async saveOrUpdate() {
             const data = await this.$refs.assetsInfoRef.assetsResult()
             if(data.transferAttributes.length === 0) {
-                return this.$message.error('请选择字段！')
+                return this.$message.error(this.$t('crossBorderData.请选择字段'))
             }
             this.currentLevel.projectInfo = data.projectInfo
             this.currentLevel.transferAttributes = data.transferAttributes || []
