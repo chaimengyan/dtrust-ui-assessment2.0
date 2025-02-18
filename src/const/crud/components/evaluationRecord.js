@@ -96,7 +96,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
     }, {
         width: 150,
-        label: _this.$t('evaluationRecord.填写时间'),
+        label: _this.$t('evaluationRecord.提交时间'),
         prop: 'completedTime',
         slot: true,
         sortable:true,

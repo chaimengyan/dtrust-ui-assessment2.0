@@ -112,34 +112,35 @@ export const tableOption = (_this, isOverHidden) => {
     menuWidth:120,
     height: 400, 
     dialogWidth: '35%',
-    column: [ {
-      width: 150,
-      label: _this.$t('evaluationRecord.评估名称'),
-      prop: 'evaluationName',
-      span: 24,
-      overHidden: isOverHidden,
-    },{
-      label: _this.$t('assetsManagement.资产名称'),
-      prop: 'assetsName',
-      span: 24,
-      overHidden: isOverHidden,
-    }, {
-      label: _this.$t('businessScenarioManagement.业务活动名称'),
-      prop: 'sceneName',
-      span: 24,
-      overHidden: isOverHidden,
-    }, {
-      label: _this.$t('crudCommon.创建人'),
-      prop: 'createBy',
+    column: [ 
+    //   {
+    //   width: 150,
+    //   label: _this.$t('evaluationRecord.评估名称'),
+    //   prop: 'evaluationName',
+    //   span: 24,
+    //   overHidden: isOverHidden,
+    // },{
+    //   label: _this.$t('assetsManagement.资产名称'),
+    //   prop: 'assetsName',
+    //   span: 24,
+    //   overHidden: isOverHidden,
+    // }, {
+    //   label: _this.$t('businessScenarioManagement.业务活动名称'),
+    //   prop: 'sceneName',
+    //   span: 24,
+    //   overHidden: isOverHidden,
+    // }, 
+    {
+      label: _this.$t('exportTemplate.导出人'),
+      prop: 'exportBy',
       span: 24,
       editDisplay: false,
       addDisplay: false,
       display: false,
       overHidden: isOverHidden,
     }, {
-      width: 150,
-      label: _this.$t('crudCommon.创建时间'),
-      prop: 'createTime',
+      label: _this.$t('exportTemplate.导出时间'),
+      prop: 'exportTime',
       type: 'datetime',
       addDisplay: false,
       editDisabled: true,
@@ -147,27 +148,6 @@ export const tableOption = (_this, isOverHidden) => {
       valueFormat: 'yyyy-MM-dd HH:mm',
       span: 24,
       overHidden: isOverHidden,
-    }, {
-      label: _this.$t('crudCommon.修改人'),
-      prop: 'updateBy',
-      span: 24,
-      editDisplay: false,
-      addDisplay: false,
-      display: false,
-      overHidden: isOverHidden,
-    }, {
-      width: 120,
-      label: _this.$t('crudCommon.修改时间'),
-      hide: true,
-      prop: 'updateTime',
-      type: 'datetime',
-      format: 'yyyy-MM-dd HH:mm',
-      editDisabled: false,
-      editDisplay: false,
-      addDisplay: false,
-      display: false,
-      span: 24,
-      overHidden: isOverHidden,
-    },]
+    }, ]
   }
   }

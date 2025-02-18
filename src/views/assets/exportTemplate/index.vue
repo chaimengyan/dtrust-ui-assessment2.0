@@ -87,7 +87,7 @@
             </avue-crud>
         </basic-container>
         <el-drawer
-            size="70%"
+            size="50%"
             v-if="exportRecordDrawer"
             :visible.sync="exportRecordDrawer"
             :title="ExportRecordTitle"

@@ -1,5 +1,6 @@
 import iconList from "@/const/iconList";
 import city from "@/const/json/city"
+import { getStore } from '@/util/store'
 import {
   getDeptTreeByTenantId,
 } from "@/api/assets/assetsManagement";
@@ -26,6 +27,7 @@ const validateSceneName = (rule, value, callback) => {
 }
 
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
+  const fieldName = getStore({ name: 'language' }) == 'zh-cn' ? 'name_cn' : 'name_en'
   option.rowKey = 'sceneId'
 
   option.column.forEach((item, index) => {
@@ -49,16 +51,16 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     if(item.type === 'cascader'||['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
       // if(['dataSubjectsRegion','locationsOfPartiesAccessUse','countriesUtilizingProcess'].includes(item.prop)) {
       item.props = {
-        label: 'name_cn',
-        value: 'name_cn',
+        label: fieldName,
+        value: fieldName,
         children: 'cities',
       }
       item.dicData = city
     }
     if(item.type === 'addressSelect') {
       item.props = {
-        label: 'name_cn',
-        value: 'name_cn',
+        label: fieldName,
+        value: fieldName,
       }
       item.dicData = city
       item.type = 'select'

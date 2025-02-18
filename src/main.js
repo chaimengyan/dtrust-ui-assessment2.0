@@ -31,7 +31,7 @@ import CookieUtil from '@/util/cookie'
 
 import './icons' // icon
 const token  = CookieUtil.get('access_token')
-const socket = new WebSocket("ws://192.168.0.116:39999/message/ws",[`${token}`])
+const socket = new WebSocket("ws://116.205.172.167:39999/message/ws",[`${token}`])
 Vue.prototype.$socket = socket;
 socket.addEventListener('open',(event)=>{
   // console.log(CookieUtil.get('access_token'),"CookieUtil.get('access_token')");

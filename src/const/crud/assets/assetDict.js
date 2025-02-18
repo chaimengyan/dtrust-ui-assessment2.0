@@ -19,24 +19,24 @@ export const tableOption = (_this, isOverHidden) => {
   height: 500, 
   dialogWidth: '35%',
   column: [{
-    label: _this.$t('tableConfiguration.字段label'),
+    label: _this.$t('tableConfiguration.字段名'),
     prop: 'label',
     tip: _this.$t('tableConfiguration.列标题'),
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段label')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段名')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
   }, {
-    label: _this.$t('tableConfiguration.字段value'),
+    label: _this.$t('tableConfiguration.字段值'),
     prop: 'prop',
     tip: _this.$t('tableConfiguration.列标题的内容属性名称'),
     span: 24,
     rules: [{
       required: true,
-      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段value')}`,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段值')}`,
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
