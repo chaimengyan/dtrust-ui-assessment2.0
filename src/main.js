@@ -30,15 +30,16 @@ import CookieUtil from '@/util/cookie'
 // import DictTag from '@/components/DictTag'
 
 import './icons' // icon
-const token  = CookieUtil.get('access_token')
-const socket = new WebSocket("ws://116.205.172.167:39999/message/ws",[`${token}`])
-Vue.prototype.$socket = socket;
-socket.addEventListener('open',(event)=>{
-  // console.log(CookieUtil.get('access_token'),"CookieUtil.get('access_token')");
-})
-socket.addEventListener('message',(event)=> {
-  console.log('1222', event);
-})
+// const token  = CookieUtil.get('access_token')
+// const socket = new WebSocket("ws://116.205.172.167:39999/message/ws",[`${token}`])
+// Vue.prototype.$socket = socket;
+// socket.addEventListener('open',(event)=>{
+//   console.log(process.env,'process.env.BASE_URL');
+//   // console.log(CookieUtil.get('access_token'),"CookieUtil.get('access_token')");
+// })
+// socket.addEventListener('message',(event)=> {
+//   console.log('1222', event);
+// })
 // 挂载常用全局方法，import 引入
 Vue.prototype.validatenull = validatenull;
 Vue.prototype.downBlobFile = downBlobFile;
