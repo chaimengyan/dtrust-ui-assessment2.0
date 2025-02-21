@@ -113,13 +113,14 @@ export const tableOption = (_this, isOverHidden) => {
     height: 400, 
     dialogWidth: '35%',
     column: [ 
-    //   {
-    //   width: 150,
-    //   label: _this.$t('evaluationRecord.评估名称'),
-    //   prop: 'evaluationName',
-    //   span: 24,
-    //   overHidden: isOverHidden,
-    // },{
+      {
+      width: 150,
+      label: _this.$t('evaluationRecord.评估名称'),
+      prop: 'evaluationName',
+      span: 24,
+      overHidden: isOverHidden,
+    },
+    // {
     //   label: _this.$t('assetsManagement.资产名称'),
     //   prop: 'assetsName',
     //   span: 24,

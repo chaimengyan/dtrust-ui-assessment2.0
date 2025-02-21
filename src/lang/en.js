@@ -119,8 +119,7 @@ export default {
     响应时限: 'Response Time Limit',
     请求响应规则: 'Request Response Rules',
     响应清单: 'Response List',
-    政策条款模板: 'Policy Terms Template',
-    政策条款: 'Policy Terms',
+    隐私政策模板: 'Privacy Policy Template',
   },
   crudCommon: {
     序号: 'Items',
