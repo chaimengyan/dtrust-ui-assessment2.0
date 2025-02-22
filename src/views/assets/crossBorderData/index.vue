@@ -247,14 +247,15 @@
         this.fullscreenLoading = true
         this.$refs.relationshipRef.getData().then(data => {
           const a = data.transferRelevanceList.map(t=>t.transferRelevanceList)
+          console.log(a,data.transferRelevanceList,'data.transferRelevanceList');
           if(a.filter(x=>x.length === 0).length !== 0){
             this.fullscreenLoading = false
-            return this.$message.warning('请添加目标资产！')
+            return this.$message.warning(this.$t('crossBorderData.请添加目标资产'))
           }
           saveOrUpdateObj(data).then(res => {
             if(res.data.status === 200) {
               this.relationshipDialog = false
-              this.$message.success('保存成功！');
+              this.$message.success(this.$t('assetsManagement.保存成功'));
               this.fullscreenLoading = false
               this.$refs.crud.searchReset();
 
@@ -332,7 +333,7 @@
             if(res.data.status == 200) {
                 this.$refs.crud.searchReset();
                 done();
-                this.$message.success('保存成功！');
+                this.$message.success(this.$t('assetsManagement.保存成功'));
             } else {
                 loading();
             }

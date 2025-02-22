@@ -109,7 +109,7 @@
                                 </el-form-item>
                             </div>
                             <div v-if="item.dataActivityType !== null && item.dataActivityType !==''">
-                                <el-tooltip effect="dark" :content="$t('添加目标资产')" placement="top">
+                                <el-tooltip effect="dark" :content="$t('crossBorderData.添加目标资产')" placement="top">
                                     <el-button type="primary" icon="el-icon-plus" circle @click="handleAdd(item)"></el-button>
                                 </el-tooltip>
                             </div>

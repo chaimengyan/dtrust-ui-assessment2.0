@@ -119,7 +119,7 @@ export default {
     响应时限: 'Response Time Limit',
     请求响应规则: 'Request Response Rules',
     响应清单: 'Response List',
-    隐私政策模板: 'Privacy Policy Template',
+    模板管理: 'Template Management',
   },
   crudCommon: {
     序号: 'Items',
@@ -362,7 +362,9 @@ export default {
     境外内部资产: 'Overseas Internal Assets',
     第三方资产: 'Third-Party Assets',
     境外第三方资产: 'Overseas Third-Party Assets',
-    字段: 'Please select a field!',
+    请选择字段: 'Please select a field!',
+    添加目标资产: 'Add Target Assets',
+    请添加目标资产: 'Please Add Target Assets!',
     注: 'Note: Click on the asset name in the diagram below to view the asset location. Click on the lines or the text on the lines to view the field categories and processing activities.',
   },
   evaluationRecord: {

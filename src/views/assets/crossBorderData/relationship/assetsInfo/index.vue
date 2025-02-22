@@ -8,7 +8,8 @@
                 <el-select
                     v-model="assetsForm.category"
                     :placeholder="`${$t('crudCommon.请选择')}${$t('assetsManagement.资产类别')}`"
-                    filterable>
+                    filterable
+                    clearable>
                     <el-option
                         v-for="d in assetsTypeOptions"
                         :key="d.value"

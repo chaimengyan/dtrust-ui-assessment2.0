@@ -2,6 +2,7 @@ import iconList from "@/const/iconList";
 
 export const tableOption = (_this, isOverHidden) => {
   return {
+    // labelPosition: 'top',
   border: false,
   labelWidth: 150,
   index: true,
