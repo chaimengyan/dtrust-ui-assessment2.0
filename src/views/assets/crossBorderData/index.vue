@@ -248,6 +248,7 @@
         this.$refs.relationshipRef.getData().then(data => {
           const a = data.transferRelevanceList.map(t=>t.transferRelevanceList)
           console.log(a,data.transferRelevanceList,'data.transferRelevanceList');
+          return this.fullscreenLoading = false
           if(a.filter(x=>x.length === 0).length !== 0){
             this.fullscreenLoading = false
             return this.$message.warning(this.$t('crossBorderData.请添加目标资产'))

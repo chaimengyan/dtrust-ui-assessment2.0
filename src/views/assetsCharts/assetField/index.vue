@@ -43,7 +43,8 @@
             :style="{'background-color': asset.assetsProject.projectColor}"
             class="project-block icon-block"
           >
-            <i style="pointer-events: none;font-size: 18px;" :class="asset.assetsProject.projectIcon"></i>
+            <!-- <i style="pointer-events: none;font-size: 18px;" :class="asset.assetsProject.projectIcon"></i> -->
+            <div style="font-size:12px;">{{asset.assetsProject.projectName.substring(0, 2)}}</div>
           </div>
         </el-tooltip>
       </span>
