@@ -4,27 +4,27 @@
       <el-menu-item v-if="validatenull(item[childrenKey]) && vaildRoles(item)"
                     :index="item[pathKey]"
                     @click="open(item)"
-                    :key="$t(`menu.${item[labelKey]}`)">
+                    :key="item[nameKey]">
         <i :class="item[iconKey]"></i>
         <span slot="title"
-              :alt="item[pathKey]">{{$t(`menu.${item[labelKey]}`)}}</span>
+              :alt="item[pathKey]">{{item[labelKey]}}</span>
       </el-menu-item>
       <el-submenu v-else-if="!validatenull(item[childrenKey])&&vaildRoles(item)"
                   :index="item[pathKey]"
-                  :key="$t(`menu.${item[labelKey]}`)">
+                  :key="item[nameKey]">
         <template slot="title">
           <i :class="item[iconKey]"></i>
           <span slot="title"
-                :class="{'el-menu--display':collapse && first}">{{$t(`menu.${item[labelKey]}`)}}</span>
+                :class="{'el-menu--display':collapse && first}">{{item[labelKey]}}</span>
         </template> 
         <template v-for="(child,cindex) in item[childrenKey]">
           <el-menu-item :index="child[pathKey]"
                         style="font-size: 13px;"
                         @click="open(child)"
                         v-if="validatenull(child[childrenKey])"
-                        :key="$t(`menu.${child[labelKey]}`)">
+                        :key="child[nameKey]">
             <i :class="child[iconKey]"></i>
-            <span slot="title">{{$t(`menu.${child[labelKey]}`)}}</span>
+            <span slot="title">{{child[labelKey]}}</span>
           </el-menu-item>
           <sidebar-item v-else
                         :menu="[child]"
@@ -41,6 +41,7 @@
 import { mapGetters } from "vuex";
 import { validatenull } from "@/util/validate";
 import config from "./config.js";
+import { getStore } from '@/util/store'
 export default {
   name: "sidebarItem",
   data() {
@@ -74,6 +75,10 @@ export default {
   computed: {
     ...mapGetters(["roles"]),
     labelKey() {
+      const menuName = getStore({ name: 'language' }) == 'zh-cn' ? this.props.label : this.props.enName
+      return menuName || this.config.propsDefault.label;
+    },
+    nameKey() {
       return this.props.label || this.config.propsDefault.label;
     },
     pathKey() {
@@ -102,7 +107,7 @@ export default {
       this.$router.$avueRouter.group = item.group;
       this.$router.push({
         path: this.$router.$avueRouter.getPath({
-          name: item[this.labelKey],
+          name: item[this.nameKey],
           src: item[this.pathKey]
         }),
         query: item.query

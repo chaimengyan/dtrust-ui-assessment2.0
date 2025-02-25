@@ -11,6 +11,7 @@ function addPath(ele, first) {
     const propsConfig = menu.props
     const propsDefault = {
         label: propsConfig.label || 'name',
+        enName: propsConfig.enName || 'enName',
         path: propsConfig.path || 'path',
         icon: propsConfig.icon || 'icon',
         children: propsConfig.children || 'children'

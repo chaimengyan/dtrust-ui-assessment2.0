@@ -24,6 +24,7 @@ export default {
   menu: {
     props: {
       label: "label",
+      enName: "enName",
       path: "path",
       icon: "icon",
       children: "children"

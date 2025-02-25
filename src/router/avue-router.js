@@ -76,6 +76,7 @@ RouterPlugin.install = function(router, store) {
       const propsConfig = this.$website.menu.props
       const propsDefault = {
         label: propsConfig.label || 'label',
+        enName: propsConfig.enName || 'enName',
         path: propsConfig.path || 'path',
         icon: propsConfig.icon || 'icon',
         children: propsConfig.children || 'children',

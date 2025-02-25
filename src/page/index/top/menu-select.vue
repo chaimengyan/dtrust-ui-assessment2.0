@@ -8,7 +8,7 @@
                     :underline="false"
                     :href="getPath(item)">
                     <div style="font-size: 12px; min-width: 200px">
-                        {{$t(`menu.${item.label}`)}}
+                        {{labelKey(item)}}
                     </div>
                 </el-link>
                 <el-link
@@ -17,11 +17,11 @@
                     :underline="false"
                     :href="item.moduleHost">
                     <div style="font-size: 14px; min-width: 200px">
-                        {{$t(`menu.${item.label}`)}}
+                        {{labelKey(item)}}
                     </div>
                 </el-link>
                 <template v-else>
-                    {{$t(`menu.${item.label}`)}}
+                    {{labelKey(item)}}
                 </template>
             </template>
             
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { getStore } from '@/util/store'
 export default {
     name: 'menu-select',
 
@@ -42,6 +43,10 @@ export default {
     },
 
     methods: {
+        labelKey(item) {
+            const menuName = getStore({ name: 'language' }) == 'zh-cn' ? item.label : item.enName
+            return menuName
+        },
         getPath(item) {
             return `${item.moduleHost}/#${item.path}`
         },

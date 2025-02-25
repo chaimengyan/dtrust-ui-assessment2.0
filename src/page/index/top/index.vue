@@ -366,6 +366,7 @@
           {
               id: 1,
               label: '评估及风险治理',
+              enName: 'Assessment & RM',
               path: '/assessment',
               moduleHost: this.estimateUrl
               // moduleHost: 'http://116.205.172.167:38080'
@@ -373,6 +374,7 @@
           {
               id: 2,
               label: '数据发现及映射',
+              enName: 'Data Discovery and Mapping',
               path: '/assets',
               moduleHost: this.assetsUrl
               // moduleHost: 'http://116.205.172.167:38082'
@@ -380,6 +382,7 @@
           {
               id: 3,
               label: '告知同意及主体权利',
+              enName: 'Notice Consent & DSR',
               path: '/inform',
               moduleHost: this.powerUrl
               // moduleHost: 'http://116.205.172.167:38083'
