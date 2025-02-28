@@ -52,6 +52,7 @@
               type="primary"
               plain
               icon="el-icon-s-check"
+              :disabled="ids.length === 0"
               @click="confirmBtn(false)"
               >{{$t('crudCommon.批量确认')}} 
             </el-button>

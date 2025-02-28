@@ -81,28 +81,49 @@
           </el-button>
 
           <el-button
-            v-if="permissions.assets_assetsManagement_batchDel"
+            v-if="permissions.assets_assetsManagement_del"
             type="danger"
             plain
             icon="el-icon-delete"
+            :disabled="ids.length === 0"
             @click="deleteBtn(false)"
             >{{$t('crudCommon.批量删除')}}
           </el-button>
           <el-button
-            v-if="permissions.assets_assetsManagement_batchDel"
+            v-if="permissions.assets_assetsManagement_del"
             type="primary"
             plain
             icon="el-icon-document-copy"
+            :disabled="ids.length === 0"
             @click="copyBtn(false)"
             >{{$t('crudCommon.批量复制')}}
           </el-button>
           <el-button
-            v-if="permissions.assets_assetsManagement_batchDel"
+            v-if="permissions.assets_assetsManagement_del"
             type="primary"
             plain
             icon="el-icon-download"
+            :disabled="ids.length === 0"
             @click="exportMode(false)"
             >{{$t('crudCommon.批量导出清单')}}
+          </el-button>
+          <el-button
+            v-if="permissions.assets_assetsManagement_audit" 
+            type="primary"
+            plain
+            icon="el-icon-user"
+            :disabled="ids.length === 0"
+            @click="openAssessment('批量发起个人信息审计', 44)"
+            >{{$t('assetsManagement.批量发起个人信息审计')}}
+          </el-button>
+          <el-button
+            v-if="permissions.assets_assetsManagement_inventory"
+            type="primary" 
+            plain
+            icon="el-icon-document-checked"
+            :disabled="ids.length === 0"
+            @click="inventoryBtn('batchInventory')"
+            >{{$t('assetsManagement.批量盘点')}}
           </el-button>
         </template>
         <template slot="menu" slot-scope="scope">
@@ -137,9 +158,31 @@
               v-if="permissions.assets_assetsManagement_assessment"
               :disabled="!handleDataPermissions('update', scope.row)"
               class="filter-item"
-              @click="openAssessment(scope.row)"
+              @click="openAssessment(scope.row, 1)"
               type="text"
               icon="el-icon-message"
+              >
+            </el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.盘点')" placement="top">
+            <el-button
+              v-if="permissions.assets_assetsManagement_inventory"
+              :disabled="!handleDataPermissions('update', scope.row)"
+              class="filter-item"
+              @click="inventoryBtn(scope.row)"
+              type="text"
+              icon="el-icon-document-checked"
+              >
+            </el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.确认盘点')" placement="top">
+            <el-button
+              v-if="permissions.assets_assetsManagement_inventory&&scope.row.checkStatus === '待盘点'"
+              :disabled="!handleDataPermissions('update', scope.row)"
+              class="filter-item"
+              @click="confirmInventory(scope.row)"
+              type="text"
+              icon="el-icon-check"
               >
             </el-button>
           </el-tooltip>
@@ -188,7 +231,7 @@
       :visible.sync="detailsDialog"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetsManagement.查看资产详情')}}</span>
+        <span class="dialog-header-title">{{$t('assetsManagement.查看资产详情')}}-{{ rowData.projectName }}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
@@ -209,15 +252,23 @@
       :close-on-click-modal="false"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{$t('assetsManagement.启动评估')}}</span>
+        <span class="dialog-header-title">{{isAudit ? $t('assetsManagement.批量发起个人信息审计') : $t('assetsManagement.启动评估')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
       <ReleaseForm
-        ref="releaseForm"
-          :typeIds="1"
+          v-if="!isAudit"
+          ref="releaseForm"
+          :typeIds="typeId"
           :evaluationItem="{assetsId: projectId}"
+          @closeAssessmentDialog="closeAssessmentDialog"
+        />
+      <AuditReleaseForm
+          v-else
+          ref="auditReleaseForm"
+          :typeIds="typeId"
+          :evaluationItem="{projectIds: ids}"
           @closeAssessmentDialog="closeAssessmentDialog"
         />
       <div slot="footer" class="dialog-footer">
@@ -334,6 +385,36 @@
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="saveLatlng">{{$t('assetsManagement.保存')}}</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      :title="inventoryTitle"
+      width="35%"
+      :visible.sync="inventoryDialog"
+      v-if="inventoryDialog"
+      :close-on-click-modal="false"
+      :fullscreen="isFullscreen">
+      <div class="dialog-header" slot="title">
+        <span class="dialog-header-title">{{inventoryTitle}}</span>
+        <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
+          <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
+        </div>
+      </div>
+      <el-form :model="inventoryForm" ref="inventoryForm" label-width="100px">
+        <el-form-item :label="$t('assetsManagement.盘点时间')" prop="checkTime" :rules="{required: true, message: `${$t('crudCommon.请选择')}${$t('assetsManagement.盘点时间')}`, trigger: 'change' }">
+          <el-date-picker
+            v-model="inventoryForm.checkTime"
+            type="datetime"
+            :placeholder="`${$t('crudCommon.请选择')}${$t('assetsManagement.盘点时间')}`"
+            :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            default-time="09:00:00">
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="submitInventory">{{$t('crudCommon.确定')}}</el-button>
+        <el-button @click="inventoryDialog = false">{{$t('crudCommon.取消')}}</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -345,7 +426,9 @@ import {
   getAssetsProjectByPage,
   getAssetsProjectAttributesListByProjectId,
   putObj,
-  copyObj
+  copyObj,
+  batchInventoryApi,
+  checkInventoryStatusApi
 } from "@/api/assets/assetsManagement";
 import {
   getAllAssetsBusinessScene
@@ -362,6 +445,7 @@ import  Details from "@/views/assets/assetsManagement/details";
 import  FindStart from "@/views/assets/components/findStart";
 import  EvaluationRecord from "@/views/assets/components/evaluationRecord";
 import ReleaseForm from "@/views/assets/components/releaseForm";
+import AuditReleaseForm from "@/views/assets/components/auditReleaseForm";
 import { tableOption } from "@/const/crud/assets/assetsManagement";
 import { mapGetters } from "vuex";
 
@@ -376,6 +460,7 @@ export default {
                 EvaluationRecord,
                 ReleaseForm,
                 FindStart,
+                AuditReleaseForm
                 },
   data() {
     return {
@@ -408,7 +493,7 @@ export default {
       // 启动评估弹窗
       assessmentDialog: false,
       saveBtnText: this.$t('assetsManagement.保存'),
-
+      isAudit: false,
       // 资产id
       projectId: 0,
       // 查看详情配置项
@@ -448,6 +533,19 @@ export default {
       option2: {},
       // 当前版本号
       curVersion: 0,
+      typeId: 1,
+      inventoryDialog: false,
+      inventoryTitle: '',
+      inventoryForm: {
+        checkTime: '',
+        projectIds: []
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7; // 禁用今天以前的日期
+        }
+      },
+      btnLoading: false
     };
   },
   computed: {
@@ -616,6 +714,9 @@ export default {
         if(Array.isArray(this.form[key])) {
           this.form[key] = this.form[key].join()
         }
+        if(this.form[key] === '') {
+          this.form[key] = null
+        }
         if(key.substr(0, 1) !== '$') {
           formReduce[key] = this.form[key]
         }
@@ -643,6 +744,9 @@ export default {
         if(Array.isArray(this.form[key])) {
           this.form[key] = this.form[key].join()
         }
+        if(this.form[key] === '') {
+          this.form[key] = null
+        } 
         if(key.substr(0, 1) !== '$') {
           formReduce[key] = this.form[key]
         }
@@ -674,6 +778,7 @@ export default {
       })
         .then(() => {
           this.assessmentDialog = true
+          this.isAudit = false
           this.projectId = projectId
         })
     },
@@ -756,14 +861,21 @@ export default {
     },
 
     // 打开评估弹窗
-    openAssessment(row) {
+    openAssessment(row, typeId) {
+      if(row === '批量发起个人信息审计') {
+       this.isAudit = true
+      } else {
+        this.isAudit = false
         this.projectId = row.projectId
-        this.assessmentDialog = true
+      }
+      this.assessmentDialog = true
+      this.typeId = typeId
     },
     // 提交评估表单
     assessmentFormSubmit() {
       this.fullscreenLoading = true
-      this.$refs.releaseForm.releaseSave()
+
+      this.$refs[this.isAudit ? 'auditReleaseForm' : 'releaseForm'].releaseSave()
     },
     // 关闭评估弹窗
     closeAssessmentDialog(status) {
@@ -844,9 +956,6 @@ export default {
           });
         })
     },
-    exportBtn() {
-
-    },
     sizeChange(pageSize) {
       this.page.pageSize = pageSize;
       this.getList(this.page, this.query);
@@ -876,6 +985,57 @@ export default {
     handleUpdate(row, index) {
       this.$refs.crud.rowEdit(row, index);
     },
+
+    inventoryBtn(row) {
+      this.inventoryForm = {
+        checkTime: '',
+        projectIds: []
+      }
+      if(row === 'batchInventory') {
+        this.inventoryForm.projectIds = this.ids
+        this.inventoryTitle = this.$t('assetsManagement.批量盘点')
+      } else {
+        this.inventoryForm.projectIds = [row.projectId]
+        this.inventoryTitle = this.$t('assetsManagement.盘点') + ' ' + row.projectName
+      }
+      this.inventoryDialog = true;
+    },
+    
+    submitInventory() {
+      this.$refs.inventoryForm.validate((valid) => {
+        if (valid) {
+          this.btnLoading = true
+          this.inventoryForm.checkTime = this.inventoryForm.checkTime.toString()
+          batchInventoryApi(this.inventoryForm).then(res => {
+            if(res.data.status === 200) {
+              this.$message.success(res.data.message);
+              this.inventoryDialog = false;
+              this.getList(this.page)
+            } else {
+              this.$message.error(res.data.message);
+            }
+          }).finally(() => {
+            this.btnLoading = false
+          })
+        }
+      })
+    },
+    confirmInventory(row) {
+      this.$confirm(this.$t('assetsManagement.是否确认盘点'), this.$t('crudCommon.提示'), {
+        confirmButtonText: this.$t('crudCommon.确定'),
+        cancelButtonText: this.$t('crudCommon.取消'),
+        type: "warning",
+      })
+      .then(() => {
+        this.btnLoading = true
+        checkInventoryStatusApi(row.projectId).then(res => {
+          this.$message.success(res.data.message);
+          this.getList(this.page)
+        }).finally(() => {
+          this.btnLoading = false
+        })
+      })
+    }
   },
 };
 </script>

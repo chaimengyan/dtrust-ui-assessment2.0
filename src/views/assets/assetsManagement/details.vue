@@ -49,6 +49,11 @@
                     :projectId="projectId"
                     />
             </el-tab-pane>
+            <el-tab-pane :label="$t('assetsManagement.盘点记录')">
+                <Inventory
+                    :projectId="projectId"
+                    />
+            </el-tab-pane>
         </el-tabs>
     </basic-container>
 </template>
@@ -59,6 +64,7 @@ import History from "@/views/assets/assetsManagement/history";
 import {dateFormat} from "@/util/date"
 import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
 import { mapGetters } from "vuex";
+import Inventory from "@/views/assets/assetsManagement/inventory";
 
 export default {
     name: "Details",
@@ -66,6 +72,7 @@ export default {
         FieldRelation,
         History,
         HistoryVersion,
+        Inventory
     },
     props: {
         fieldList: {

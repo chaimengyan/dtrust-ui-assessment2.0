@@ -173,3 +173,28 @@ export function delVirtualAssetObj(id) {
         method: 'delete',
     })
 }
+
+// 盘点资产
+export function batchInventoryApi (obj) {
+    return request({
+        url: `/assets/assetsProject/batchInventory?projectIds=${obj.projectIds}&checkTime=${obj.checkTime}`,
+        method: 'put',
+    })
+}
+
+// 确认盘点
+export function checkInventoryStatusApi (projectId) {
+    return request({
+        url: `/assets/assetsProject/checkInventoryStatus?projectId=${projectId}`,
+        method: 'put',
+    })
+}
+
+// 盘点记录分页查询
+export function getInventoryRecordByPage(query) {
+    return request({
+      url: '/assets/checkHistory/page',
+      method: 'get',
+      params: query
+    })
+  }

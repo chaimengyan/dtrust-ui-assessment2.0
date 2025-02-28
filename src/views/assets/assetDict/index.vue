@@ -226,6 +226,11 @@
 
       // 新增字典
       handleSave(row, done, loading) {
+        for(let key in row) {
+          if(row[key] === '') {
+            row[key] = null
+          }
+        }
         addAssetsField(row).then(res => {
             if(res.data.status == 200) {
                 this.$refs.crud.searchReset();

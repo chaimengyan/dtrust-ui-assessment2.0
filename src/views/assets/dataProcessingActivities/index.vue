@@ -33,6 +33,7 @@
             type="danger"
             plain
             icon="el-icon-delete"
+            :disabled="ids.length === 0"
             @click="deleteBtn(false)"
             >{{$t('crudCommon.批量删除')}} 
           </el-button>

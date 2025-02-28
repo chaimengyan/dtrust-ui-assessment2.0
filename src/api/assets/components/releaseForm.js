@@ -41,3 +41,12 @@ export function startEvaluationApi (data) {
         data,
     });
 }
+
+// 发起审计评估
+export function startForAssets (data) {
+    return request({
+        url: `/assessment/evaluation/startForAssets`,
+        method: 'post',
+        data,
+    });
+}

@@ -28,9 +28,12 @@ const validateSceneName = (rule, value, callback) => {
 
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
   const fieldName = getStore({ name: 'language' }) == 'zh-cn' ? 'name_cn' : 'name_en'
+
   option.rowKey = 'sceneId'
 
   option.column.forEach((item, index) => {
+    item.label = getStore({ name: 'language' }) == 'zh-cn' ? item.label : item.labelEn
+
     item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
 

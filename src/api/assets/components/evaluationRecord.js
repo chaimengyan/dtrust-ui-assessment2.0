@@ -63,3 +63,12 @@ export function exportAssetsPDF (query, infoId) {
         responseType: 'blob'
     })
 }
+
+// 分页获取审计评估
+export function getAssetsAuditByPage (query) {
+    return request({
+        url: '/assessment/assetsAudit/page',
+        method: 'get',
+        params: query
+    })
+}

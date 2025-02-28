@@ -30,6 +30,17 @@ export const tableOption = (_this, isOverHidden) => {
       trigger: 'blur'
     }],
     overHidden: isOverHidden,
+  },{
+    label: _this.$t('tableConfiguration.字段英文名'),
+    prop: 'labelEn',
+    tip: _this.$t('tableConfiguration.列标题'),
+    span: 24,
+    rules: [{
+      required: true,
+      message: `${_this.$t('crudCommon.请输入')}${_this.$t('tableConfiguration.字段英文名')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
   }, {
     label: _this.$t('tableConfiguration.字段值'),
     prop: 'prop',
@@ -328,6 +339,7 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             display: false,
+            value: null,
           },
           checkStrictly: {
             display: true,
@@ -351,6 +363,7 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             display: false,
+            value: null,
           },
           checkStrictly: {
             display: true,
@@ -374,6 +387,7 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             display: false,
+            value: null,
           },
           checkStrictly: {
             display: false,
@@ -396,6 +410,7 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             display: false,
+            value: null,
           },
           checkStrictly: {
             display: false,
@@ -414,32 +429,11 @@ export const tableOption = (_this, isOverHidden) => {
             display: false,
           }
         }
-      }else if(val === 'date') {
+      }else if(['date', 'datetime', 'time'].includes(val)) {
         return {
           value: {
             display: false,
-          },
-          checkStrictly: {
-            display: false,
-          },
-          multiple: {
-            display: false,
-          },
-          estimate: {
-            display: false,
-            value: false,
-          },
-          format: {
-            display: true,
-          },
-          valueFormat: {
-            display: true,
-          }
-        }
-      }else if(val === 'time') {
-        return {
-          value: {
-            display: false,
+            value: null,
           },
           checkStrictly: {
             display: false,
@@ -462,6 +456,7 @@ export const tableOption = (_this, isOverHidden) => {
         return {
           value: {
             display: false,
+            value: null,
           },
           checkStrictly: {
             display: false,
@@ -486,6 +481,7 @@ export const tableOption = (_this, isOverHidden) => {
   {
     label: _this.$t('crudCommon.默认值'),
     prop: 'value',
+    value: null,
     type: 'icon',
     iconList: iconList,
     display: false,
