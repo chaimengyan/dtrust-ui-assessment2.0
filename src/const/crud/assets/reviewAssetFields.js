@@ -41,17 +41,18 @@ return {
       }],
       overHidden: isOverHidden,
     },
-    {
-      label: _this.$t('crudCommon.图标'),
-      prop: 'projectIcon',
-      type: 'icon',
-      iconList: iconList,
-      rules: [{
-        required: true,
-        message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.图标')}`,
-        trigger: 'change'
-      }]
-    }, {
+    // {
+    //   label: _this.$t('crudCommon.图标'),
+    //   prop: 'projectIcon',
+    //   type: 'icon',
+    //   iconList: iconList,
+    //   rules: [{
+    //     required: true,
+    //     message: `${_this.$t('crudCommon.请选择')}${_this.$t('crudCommon.图标')}`,
+    //     trigger: 'change'
+    //   }]
+    // },
+     {
       label: _this.$t('crudCommon.颜色'),
       prop: 'projectColor',
       type: 'color',
