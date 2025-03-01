@@ -44,16 +44,17 @@
                     :projectId="projectId"
                     />
             </el-tab-pane>
-            <el-tab-pane :label="$t('assetsManagement.版本记录')">
-                <HistoryVersion
-                    :projectId="projectId"
-                    />
-            </el-tab-pane>
             <el-tab-pane :label="$t('assetsManagement.盘点记录')">
                 <Inventory
                     :projectId="projectId"
                     />
             </el-tab-pane>
+            <el-tab-pane :label="$t('assetsManagement.版本记录')">
+                <HistoryVersion
+                    :projectId="projectId"
+                    />
+            </el-tab-pane>
+            
         </el-tabs>
     </basic-container>
 </template>
