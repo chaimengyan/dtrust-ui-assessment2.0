@@ -39,7 +39,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
     }, {
         width: 120,
-        label: _this.$t('evaluationRecord.评估名称'),
+        label: _this.$t('evaluationRecord.审计名称'),
         prop: 'name',
         sortable:true,
         span: 24,
@@ -53,7 +53,7 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
     }, {
         width: 120,
-        label: _this.$t('evaluationRecord.被评估人'),
+        label: _this.$t('evaluationRecord.被审计人'),
         prop: 'evaluators',
         sortable:true,
         slot: true,
@@ -67,9 +67,37 @@ export const tableOption = (_this, isOverHidden) => {
         prop: 'auditors',
         span: 24,
         overHidden: isOverHidden,
+    },  {
+        width: 100,
+        label: _this.$t('evaluationRecord.风险等级'),
+        prop: 'level',
+        sortable:true,
+        span: 24,
+        type: 'select',
+        dicData: [
+            {
+                label: _this.$t('crudCommon.低'),
+                value: '低'
+            },
+            {
+                label: _this.$t('crudCommon.中'),
+                value: '中'
+            },
+            {
+                label: _this.$t('crudCommon.高'),
+                value: '高'
+            },
+            {
+                label: _this.$t('crudCommon.极高'),
+                value: '极高'
+            },
+        ],
+        search: true,
+        slot: true,
+        overHidden: isOverHidden,
     }, {
         width: 130,
-        label: _this.$t('evaluationRecord.评估状态'),
+        label: _this.$t('evaluationRecord.审计状态'),
         sortable:true,
         prop: 'status',
         slot: true,
@@ -161,34 +189,6 @@ export const tableOption = (_this, isOverHidden) => {
         sortable:true,
         slot: true,
         span: 24,
-        overHidden: isOverHidden,
-    }, {
-        width: 100,
-        label: _this.$t('evaluationRecord.风险等级'),
-        prop: 'level',
-        sortable:true,
-        span: 24,
-        type: 'select',
-        dicData: [
-            {
-                label: _this.$t('crudCommon.低'),
-                value: '低'
-            },
-            {
-                label: _this.$t('crudCommon.中'),
-                value: '中'
-            },
-            {
-                label: _this.$t('crudCommon.高'),
-                value: '高'
-            },
-            {
-                label: _this.$t('crudCommon.极高'),
-                value: '极高'
-            },
-        ],
-        search: true,
-        slot: true,
         overHidden: isOverHidden,
     }, {
         fixed: false,

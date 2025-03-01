@@ -23,6 +23,8 @@ export default {
   },
   created () { },
   mounted () { 
+    console.log(this.userInfo,"this.userInfo");
+    
     const l = this.userInfo.language === 'ZH_CN' ? 'zh-cn' : 'en'
     this.$i18n.locale = l
     this.$store.commit("SET_LANGUAGE", l);

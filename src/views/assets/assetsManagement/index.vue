@@ -113,8 +113,8 @@
             plain
             icon="el-icon-user"
             :disabled="ids.length === 0"
-            @click="openAssessment('批量发起个人信息审计', 44)"
-            >{{$t('assetsManagement.批量发起个人信息审计')}}
+            @click="openAssessment('批量发起资产审计', 44)"
+            >{{$t('assetsManagement.批量发起资产审计')}}
           </el-button>
           <el-button
             v-if="permissions.assets_assetsManagement_inventory"
@@ -252,7 +252,7 @@
       :close-on-click-modal="false"
       :fullscreen="isFullscreen">
       <div class="dialog-header" slot="title">
-        <span class="dialog-header-title">{{isAudit ? $t('assetsManagement.批量发起个人信息审计') : $t('assetsManagement.启动评估')}}</span>
+        <span class="dialog-header-title">{{isAudit ? $t('assetsManagement.批量发起资产审计') : $t('assetsManagement.启动评估')}}</span>
         <div class="dialog-header-screen" @click="() => isFullscreen = !isFullscreen">
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
@@ -862,7 +862,7 @@ export default {
 
     // 打开评估弹窗
     openAssessment(row, typeId) {
-      if(row === '批量发起个人信息审计') {
+      if(row === '批量发起资产审计') {
        this.isAudit = true
       } else {
         this.isAudit = false

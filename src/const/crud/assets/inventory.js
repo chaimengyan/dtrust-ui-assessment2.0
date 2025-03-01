@@ -15,18 +15,7 @@ export const tableOption = (_this, isOverHidden) => {
     // height: 500, 
     menuWidth: 120,
     column: [ 
-    {
-        width: 120,
-        label: _this.$t('assetsManagement.发起盘点时间'),
-        prop: 'initiateTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        editDisabled: false,
-        addDisplay: false,
-        editDisplay: false,
-        span: 24
-    }, {
-        width: 150,
+   {
         label: _this.$t('assetsManagement.发起人'),
         prop: 'initiatorName',
         span: 24,
@@ -34,17 +23,6 @@ export const tableOption = (_this, isOverHidden) => {
         addDisplay: false,
         overHidden: isOverHidden,
     },{
-        width: 120,
-        label: _this.$t('assetsManagement.盘点时间'),
-        prop: 'checkTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        editDisabled: false,
-        addDisplay: false,
-        editDisplay: false,
-        span: 24
-    },{
-        width: 150,
         label: _this.$t('assetsManagement.盘点人'),
         prop: 'checkerName',
         span: 24,
@@ -53,7 +31,6 @@ export const tableOption = (_this, isOverHidden) => {
         overHidden: isOverHidden,
     },
     {
-        width: 150,
         label: _this.$t('assetsManagement.盘点状态'),
         prop: 'status',
         type: 'select',
@@ -71,6 +48,28 @@ export const tableOption = (_this, isOverHidden) => {
         editDisplay: false,
         addDisplay: false,
         overHidden: isOverHidden,
+    },
+    {
+        width: 120,
+        label: _this.$t('assetsManagement.发起时间'),
+        prop: 'initiateTime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        editDisabled: false,
+        addDisplay: false,
+        editDisplay: false,
+        span: 24
+    }, 
+    {
+        width: 120,
+        label: _this.$t('assetsManagement.盘点时间'),
+        prop: 'checkTime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        editDisabled: false,
+        addDisplay: false,
+        editDisplay: false,
+        span: 24
     },
     {
         label: _this.$t('crudCommon.关键字'),

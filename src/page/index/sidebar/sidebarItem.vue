@@ -75,6 +75,7 @@ export default {
   computed: {
     ...mapGetters(["roles"]),
     labelKey() {
+      console.log(getStore({ name: 'language' }),"getStore({ name: 'language' })")
       const menuName = getStore({ name: 'language' }) == 'zh-cn' ? this.props.label : this.props.enName
       return menuName || this.config.propsDefault.label;
     },

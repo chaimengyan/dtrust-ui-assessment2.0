@@ -200,7 +200,7 @@
         // if(!row.canUpdate){
         if(row.createBy === 'admin'){
           this.$refs.crud.option.column.map(x => {
-            x.editDisabled = ['label'].includes(x.prop) ? false : true
+            x.editDisabled = ['label','labelEn'].includes(x.prop) ? false : true
           })
         }else {
           this.$refs.crud.option.column.map(x => {
