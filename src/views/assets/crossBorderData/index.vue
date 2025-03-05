@@ -154,6 +154,7 @@
   import Relationship from '@/views/assets/crossBorderData/relationship/index'
   import { mapGetters } from "vuex";
   import Swimlane from "@/views/assetsCharts/swimlane/index"
+  import { validatenull } from "@/util/validate";
   export default {
     name: "crossBorderData",
     components: { Relationship,Swimlane },
@@ -249,9 +250,41 @@
         this.$refs.relationshipRef.getData().then(data => {
           const a = data.transferRelevanceList.map(t=>t.transferRelevanceList)
           console.log(a,data.transferRelevanceList,'data.transferRelevanceList');
+          
           if(a.filter(x=>x.length === 0).length !== 0){
             this.fullscreenLoading = false
             return this.$message.warning(this.$t('crossBorderData.请添加目标资产'))
+          }
+          // 条件函数，检查值是否符合条件
+          const condition = (item) => {
+            if(validatenull(item.projectInfo)){
+              return true
+            }else if(item.projectInfo.category === null){
+              return true
+            }else {
+              return false
+            }
+          }
+
+          // 递归函数，找到树中最后一个子级
+          function findLastChild(node) {
+              if (node.transferRelevanceList && node.transferRelevanceList.length > 0) {
+                  // 递归查找最后一个子级
+                  return findLastChild(node.transferRelevanceList[node.transferRelevanceList.length - 1]);
+              }
+              // 如果没有子级，返回当前节点
+              return node;
+          }
+
+          // 检查树中最后一个子级是否符合条件
+          const lastChildMatchesCondition = data.transferRelevanceList.some(parent => {
+              const lastChild = findLastChild(parent); // 找到最后一个子级
+              console.log(lastChild,'lastChild');
+              return condition(lastChild); // 检查是否符合条件
+          });
+          if(lastChildMatchesCondition) {
+            this.$message.error(`${this.$t('crudCommon.请选择')}${this.$t('assetsManagement.资产类别')}`);
+            return this.fullscreenLoading = false
           }
           saveOrUpdateObj(data).then(res => {
             if(res.data.status === 200) {

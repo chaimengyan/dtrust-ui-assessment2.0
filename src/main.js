@@ -24,6 +24,15 @@ import "./styles/common.scss";
 import basicContainer from "./components/basic-container/main";
 import CookieUtil from '@/util/cookie'
 
+// 打包部署后清除浏览器 localStorage 缓存
+const VUE_APP_VERSION = require('../package.json').version
+const vers = window.localStorage.getItem('appVersion')
+if(VUE_APP_VERSION != vers){
+  localStorage.clear()
+  window.localStorage.setItem('appVersion', VUE_APP_VERSION)
+  location.reload()
+}
+
 // 字典数据组件
 // import DictResolver from '@/components/DictResolver'
 // 字典标签组件

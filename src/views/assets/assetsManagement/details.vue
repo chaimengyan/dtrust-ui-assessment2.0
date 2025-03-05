@@ -108,12 +108,13 @@ export default {
     },
     methods: {
         handelData(obj, key) {
+            console.log(obj, key,'obj, key')
             if(key === "managingOrganization") {
                 return obj.$managingOrganization
-            } else if(['updateTime', 'createTime'].includes(key) ) {
+            } else if(['updateTime', 'createTime', 'checkTime'].includes(key) ) {
                 return dateFormat(obj[key])
             } else {
-                return obj[key]
+                return obj[`$${key}`] || obj[key]
             }
             
             

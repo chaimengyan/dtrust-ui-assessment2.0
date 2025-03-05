@@ -558,7 +558,7 @@ export default {
     时间: 'Time',
     树形: 'Tree',
     日期时间: 'Datetime',
-
+    搜索项为范围搜索: 'Search term is a range search',
   },
   enum: {
     收集: 'Collect',

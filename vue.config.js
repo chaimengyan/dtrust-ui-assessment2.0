@@ -14,6 +14,7 @@ const url = process.env.BASE_URL
 
 
 const path = require('path');
+const timeStamp= new Date().getTime()
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -38,7 +39,19 @@ module.exports = {
       '@': resolve('src')
      }
     },
+    output: {
+      filename: `js/[name].js?v=${timeStamp}`,
+      chunkFilename: `js/[name].js?v=${timeStamp}`,
+    },
+   
    },
+   css: {
+    // 输出重构 打包编译后的css文件名称，添加时间戳
+    extract: {
+      filename: `css/[name].${timeStamp}.css`,
+      chunkFilename: `css/[name].${timeStamp}.css`,
+    },
+  },
   chainWebpack: config => {
     const entry = config.entry('app')
     entry

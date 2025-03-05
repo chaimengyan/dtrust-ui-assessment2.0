@@ -177,7 +177,7 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" :content="$t('assetsManagement.确认盘点')" placement="top">
             <el-button
-              v-if="permissions.assets_assetsManagement_inventory&&scope.row.checkStatus === '待盘点'"
+              v-if="scope.row.checkStatus === '待盘点'"
               :disabled="!handleDataPermissions('update', scope.row)"
               class="filter-item"
               @click="confirmInventory(scope.row)"

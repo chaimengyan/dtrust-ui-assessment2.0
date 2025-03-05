@@ -17,8 +17,15 @@ export const tableOption = (_this, isOverHidden) => {
     column: [ 
    {
         label: _this.$t('assetsManagement.发起人'),
-        prop: 'initiatorName',
+        prop: 'initiator',
+        type: 'select',
         span: 24,
+        search: true,
+        dicUrl: '/admin/user/getList',
+        props: {
+            label: 'nickName',
+            value: 'userId',
+        },
         editDisplay: false,
         addDisplay: false,
         overHidden: isOverHidden,
@@ -34,6 +41,7 @@ export const tableOption = (_this, isOverHidden) => {
         label: _this.$t('assetsManagement.盘点状态'),
         prop: 'status',
         type: 'select',
+        search: true,
         dicData: [
             {
                 label: _this.$t('assetsManagement.待盘点'),
@@ -71,13 +79,13 @@ export const tableOption = (_this, isOverHidden) => {
         editDisplay: false,
         span: 24
     },
-    {
-        label: _this.$t('crudCommon.关键字'),
-        hide: true,
-        prop: 'keyword',
-        search: true,
-        display: false,
-    }
+    // {
+    //     label: _this.$t('crudCommon.关键字'),
+    //     hide: true,
+    //     prop: 'keyword',
+    //     search: true,
+    //     display: false,
+    // }
    ]
   }
   }

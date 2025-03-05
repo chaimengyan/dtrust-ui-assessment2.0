@@ -7,6 +7,7 @@
         :data="tableData"
         :permission="permissionList"
         :table-loading="tableLoading"
+        :before-open="handleBeforeOpen"
         :option="tableOption"
         @row-update="handleUpdate"
         @row-save="handleSave"
@@ -64,7 +65,7 @@
           :data="tableDictItemData"
           v-model="form"
           :table-loading="tableLoading"
-          :before-open="handleBeforeOpen"
+          :before-open="handleBeforeItemOpen"
           :option="tableDictItemOption"
           @size-change="itemSizeChange"
           @current-change="itemCurrentChange"
@@ -196,14 +197,43 @@
         }).catch(function () {
         })
       },
-      editBtn(row) {
-        // if(!row.canUpdate){
-        if(row.createBy === 'admin'){
+      handleBeforeOpen(done) {
+        if(this.userInfo.username === 'dtrust-admin'){
           this.$refs.crud.option.column.map(x => {
-            x.editDisabled = ['label','labelEn'].includes(x.prop) ? false : true
+            if(x.prop === 'search'){
+              x.display = true
+            }
           })
         }else {
           this.$refs.crud.option.column.map(x => {
+            if(x.prop === 'search'){
+              x.display = false
+            }
+          })
+        } 
+        done()
+      },
+      editBtn(row) {
+        // if(!row.canUpdate){
+        if(row.createBy === 'admin'){// 普通用户只能编辑超管维护的字段的部分属性
+          this.$refs.crud.option.column.map(x => {
+            if(x.prop === 'search'){
+              x.display = true
+            }
+            x.editDisabled = ['label','labelEn'].includes(x.prop) ? false : true
+          })
+        }else if(row.createBy === 'dtrust-admin'){// 超管可以编辑所有字段，并且定义字段能否搜索（需要跟后端确认）
+          this.$refs.crud.option.column.map(x => {
+            if(x.prop === 'search'){
+              x.display = true
+            }
+            x.editDisabled =  false
+          })
+        } else {//普通用户维护的字段可以自由编辑
+          this.$refs.crud.option.column.map(x => {
+            if(x.prop === 'search'){
+              x.display = false
+            }
             x.editDisabled =  false
           })
         }
@@ -285,7 +315,7 @@
           this.tableLoading = false
         })
       },
-      handleBeforeOpen(done) {
+      handleBeforeItemOpen(done) {
         this.form.type = this.dictType
         this.form.fieldId = this.fieldId
         done()

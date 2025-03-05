@@ -281,7 +281,7 @@ export default {
     margin-left: 10px;
     font-size: inherit;
     color: white;
-    font-family: fangsong;
+    /* font-family: fangsong; */
     /* font-weight: 600; */
     margin-top: 5px;
 
