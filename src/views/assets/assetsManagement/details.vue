@@ -54,6 +54,11 @@
                     :projectId="projectId"
                     />
             </el-tab-pane>
+            <el-tab-pane :label="$t('exportTemplate.导出记录')">
+                <ExportRecord
+                    :projectId="projectId"
+                    />
+            </el-tab-pane>
             
         </el-tabs>
     </basic-container>
@@ -64,6 +69,7 @@ import  FieldRelation from "@/views/assets/assetsManagement/fieldRelation";
 import History from "@/views/assets/assetsManagement/history";
 import {dateFormat} from "@/util/date"
 import  HistoryVersion from "@/views/assets/assetsManagement/historyVersion";
+import  ExportRecord from "@/views/assets/assetsManagement/exportRecord";
 import { mapGetters } from "vuex";
 import Inventory from "@/views/assets/assetsManagement/inventory";
 
@@ -73,7 +79,8 @@ export default {
         FieldRelation,
         History,
         HistoryVersion,
-        Inventory
+        Inventory,
+        ExportRecord
     },
     props: {
         fieldList: {

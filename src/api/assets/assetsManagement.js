@@ -198,3 +198,12 @@ export function getInventoryRecordByPage(query) {
       params: query
     })
   }
+
+  // 导出记录分页查询
+export function getExportRecordByPage(query) {
+    return request({
+      url: '/assets/exportLog/page',
+      method: 'get',
+      params: query
+    })
+  }

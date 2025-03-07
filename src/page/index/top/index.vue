@@ -64,18 +64,20 @@
 
       <!-- 快捷应用 -->
       <div class="quick-list" v-for="item,index in quickList" :key="index">
-        <el-tooltip effect="dark" :content="item.label">
-          <el-link style="font-size: 12px" target="_blank" :underline="false" :href="item.href">
-            <el-button circle v-if="item.value === 3">
-              <div class="PIPL">
-                PIPL
-              </div>
-            </el-button>
-            <el-button circle v-else>
-              <svg-icon :icon-class="item.icon" class="quick-list-icon"></svg-icon>
-            </el-button>
-          </el-link>
-        </el-tooltip>
+        <template v-if="permissions[item.permissions]||item.permissions==='true'">
+          <el-tooltip effect="dark" :content="item.label">
+            <el-link style="font-size: 12px" target="_blank" :underline="false" :href="item.href">
+              <el-button circle v-if="item.value === 3">
+                <div class="PIPL">
+                  PIPL
+                </div>
+              </el-button>
+              <el-button circle v-else>
+                <svg-icon :icon-class="item.icon" class="quick-list-icon"></svg-icon>
+              </el-button>
+            </el-link>
+          </el-tooltip>
+        </template>
       </div>
 
       <!-- <el-tooltip effect="dark" :content="$t('crudCommon.添加')">
@@ -238,6 +240,7 @@
       this.quickList = [{
             label: 'DPIA',
             value: 0,
+            permissions: 'assess_evaluation_start',
             icon: 'icon-dpia',
             href: `${this.estimateUrl}/#/assessment/questionnaireStart/index?typeIds=${25}`,
             // href: `http://116.205.172.167:38080/#/assessment/questionnaireStart/index?typeIds=${29}`,
@@ -245,6 +248,7 @@
           {
             label: this.$t('navbar.出境风险评估'),
             value: 1,
+            permissions: 'assess_evaluation_start',
             icon: 'icon-cjfxpg',
             href: `${this.estimateUrl}/#/assessment/questionnaireStart/index?typeIds=${26}`,
             // href: `http://116.205.172.167:38080/#/assessment/questionnaireStart/index?typeIds=${30}`,
@@ -252,6 +256,7 @@
           {
             label: this.$t('navbar.PIPL'),
             value: 3,
+            permissions: 'assess_evaluation_start',
             icon: '',
             href: `${this.estimateUrl}/#/assessment/questionnaireStart/index?typeIds=${7}`,
             // href: `http://116.205.172.167:38080/#/assessment/questionnaireStart/index?typeIds=${26}`,
@@ -259,6 +264,7 @@
           {
             label: this.$t('navbar.数据跨境地图'),
             value: 2,
+            permissions: 'true',
             icon: 'icon-map',
             href: `${this.assetsUrl}/#/assetsCharts/earth/index`,
             // href: `http://116.205.172.167:38082/#/assetsCharts/earth/index`,
@@ -267,6 +273,7 @@
           {
             label: this.$t('navbar.网站APP小程序SDK合规评估'),
             value: 4,
+            permissions: 'true',
             icon: 'icon-code',
             href: `${this.workFlowUrl}/#/workflow/index`,
             // href: 'http://116.205.172.167:38888/#/wel/index',
@@ -274,12 +281,14 @@
           {
             label: this.$t('navbar.自动化数据发现'),
             value: 5,
+            permissions: 'true',
             icon: 'icon-compass',
             href: `${this.workFlowUrl}/#/wel/index`,
           },
           {
             label: this.$t('navbar.数据处理活动流图'),
             value: 6,
+            permissions: 'true',
             icon: 'icon-category',
             href: `${this.assetsUrl}/#/assetsCharts/assetbusin/index`,
             // href: `http://116.205.172.167:38082/#/assetsCharts/assetbusin/index`,
@@ -305,7 +314,8 @@
         "isCollapse",
         "tag",
         "logsLen",
-        "logsFlag"
+        "logsFlag",
+        "permissions"
       ])
     },
     methods: {
