@@ -1,7 +1,7 @@
 <template>
 <div class="earth-page">
   <iframe 
-    src="/earth.html"
+    :src="`${earthSrc}earth.html`"
     scrolling="no"
     frameborder="0"
     :style="{width:'100%',height:GetWindowHeight}"
@@ -25,7 +25,8 @@ export default {
   },
   created() {
       this.GetWindowHeight = window.innerHeight + 'px';
-      this.earthSrc = `${window.location.protocol}//${window.location.hostname}:38084/`
+      // this.earthSrc = `${window.location.protocol}//${window.location.hostname}:38084/`
+      this.earthSrc = `${window.location.pathname}`
   },
   mounted() {
   },

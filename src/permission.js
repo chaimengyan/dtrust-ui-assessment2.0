@@ -8,11 +8,10 @@ import { validatenull } from "@/util/validate";
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css"; // progress bar style
 import { blankRoute } from '@/router/page'
-import { isDev, isTest } from '@/util/env'
+import { workFlowUrl } from '@/util/env'
 
 NProgress.configure({ showSpinner: false });
 
-const workFlowUrl = !isDev() ? !isTest() ? `https://console.idatatrust.com` : 'http://116.205.172.167:38888' : `http://${window.location.hostname}:38888` 
 /**
  * 导航守卫，相关内容可以参考:
  * https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
@@ -25,7 +24,8 @@ function replaceLoginPage() {
     // }else {
     //     locationUrl = `${window.location.protocol}//${window.location.hostname}:38888/#/login`
     // }
-    window.name = `${window.location.origin}/#${path}`
+    // window.name = `${window.location.origin}/#${path}`
+    window.name = window.location.href
     window.location.href = locationUrl
 }
 

@@ -142,9 +142,7 @@
     import {getUserList} from "@/api/assets/components/releaseForm";
     import {assessStatusList} from "@/util/enum";
     import * as echarts from 'echarts';
-    import { isDev, isTest } from '@/util/env'
-
-    const estimateUrl = !isDev() ? !isTest() ? `https://assess.idatatrust.com` : 'http://116.205.172.167:38080' : `http://${window.location.hostname}:38080` 
+    import { estimateUrl } from '@/util/env'
 
     export default {
         name: "evaluationRecord",

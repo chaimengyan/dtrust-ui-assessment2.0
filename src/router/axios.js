@@ -6,6 +6,10 @@ import { Message, MessageBox } from "element-ui";
 import "nprogress/nprogress.css";
 import qs from "qs";
 import store from "@/store"; // progress bar style
+import { isDev } from '@/util/env'
+
+axios.defaults.baseURL = isDev() ? '/' : process.env.VUE_APP_BASE_URL
+
 axios.defaults.timeout = 30000000;
 
 const successStatus = [200, 201]

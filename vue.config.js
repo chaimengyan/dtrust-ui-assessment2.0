@@ -9,9 +9,7 @@
 // const url = 'http://116.205.172.167:39999' //2.0线上
 // 基础路径，发布前修改这里,当前配置打包出来的资源都是相对路径
 let publicPath = './'
-
-const url = process.env.BASE_URL
-
+const url = process.env.VUE_APP_BASE_URL
 
 const path = require('path');
 const timeStamp= new Date().getTime()

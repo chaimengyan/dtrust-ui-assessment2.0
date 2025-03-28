@@ -84,12 +84,13 @@ const user = {
             getUserLogo().then((res) => {
                 const {data} = res.data
                 if (!data) return commit('SET_USER_INFO', {...state.userInfo, logo: null})
-                getFileFromUrl(data, 'logo').then((response)=>{
-                    commit('SET_USER_INFO', {...state.userInfo, logo: URL.createObjectURL(response)})
-                    })
-                    .catch((e)=>{
-                        console.error(e)
-                    });
+                commit('SET_USER_INFO', {...state.userInfo, logo: data})
+                // getFileFromUrl(data, 'logo').then((response)=>{
+                //     commit('SET_USER_INFO', {...state.userInfo, logo: URL.createObjectURL(response)})
+                //     })
+                //     .catch((e)=>{
+                //         console.error(e)
+                //     });
             })
         },
         
