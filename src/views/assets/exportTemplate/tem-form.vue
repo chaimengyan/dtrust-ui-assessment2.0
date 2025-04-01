@@ -23,21 +23,21 @@
                 <el-form-item :label="$t('exportTemplate.是否展示评估基本信息')" prop="assessmentSimple">
                     <el-switch v-model="temForm.assessmentSimple" />
                 </el-form-item>
-                <el-form-item   el-form-item v-if='temForm.assessmentSimple' :label="$t('exportTemplate.评估基本信息排序')" prop="assessmentSimpleSort">
+                <!-- <el-form-item v-if='temForm.assessmentSimple' :label="$t('exportTemplate.评估基本信息排序')" prop="assessmentSimpleSort">
                     <el-input-number v-model="temForm.assessmentSimpleSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示评估内容')" prop="assessmentInfo">
                     <el-switch v-model="temForm.assessmentInfo" />
                 </el-form-item>
-                <el-form-item v-if='temForm.assessmentInfo' :label="$t('exportTemplate.评估内容排序')" prop="assessmentInfoSort">
+                <!-- <el-form-item v-if='temForm.assessmentInfo' :label="$t('exportTemplate.评估内容排序')" prop="assessmentInfoSort">
                     <el-input-number v-model="temForm.assessmentInfoSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示评估统计图')" prop="riskChart">
                     <el-switch v-model="temForm.riskChart" />
                 </el-form-item>
-                <el-form-item v-if='temForm.riskChart' :label="$t('exportTemplate.评估统计图排序')" prop="riskChartSort">
+                <!-- <el-form-item v-if='temForm.riskChart' :label="$t('exportTemplate.评估统计图排序')" prop="riskChartSort">
                     <el-input-number v-model="temForm.riskChartSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示风险治理列表')" prop="riskList">
                     <el-switch v-model="temForm.riskList" />
                 </el-form-item>
@@ -66,51 +66,51 @@
                 <el-form-item :label="$t('exportTemplate.是否展示业务活动的基本信息')" prop="sceneSimple">
                     <el-switch v-model="temForm.sceneSimple" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneSimple' :label="$t('exportTemplate.业务活动的基本信息排序')" prop="sceneSimpleSort">
+                <!-- <el-form-item v-if='temForm.sceneSimple' :label="$t('exportTemplate.业务活动的基本信息排序')" prop="sceneSimpleSort">
                     <el-input-number v-model="temForm.sceneSimpleSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示业务活动统计图')" prop="sceneChart">
                     <el-switch v-model="temForm.sceneChart" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneChart' :label="$t('exportTemplate.业务活动统计图排序')" prop="sceneChartSort">
+                <!-- <el-form-item v-if='temForm.sceneChart' :label="$t('exportTemplate.业务活动统计图排序')" prop="sceneChartSort">
                     <el-input-number v-model="temForm.sceneChartSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示业务活动字段列表')" prop="sceneAttribute">
                     <el-switch v-model="temForm.sceneAttribute" />
                 </el-form-item>
-                <el-form-item v-if='temForm.sceneAttribute' :label="$t('exportTemplate.业务活动字段列表排序')" prop="sceneAttributeSort">
+                <!-- <el-form-item v-if='temForm.sceneAttribute' :label="$t('exportTemplate.业务活动字段列表排序')" prop="sceneAttributeSort">
                     <el-input-number v-model="temForm.sceneAttributeSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
             </template>
 
             <template v-if='[1,3,4].includes(temForm.type)'>
                 <el-form-item :label="$t('exportTemplate.是否展示资产的基本信息')" prop="assetsSimple">
                     <el-switch v-model="temForm.assetsSimple" />
                 </el-form-item>
-                <el-form-item v-if='temForm.assetsSimple' :label="$t('exportTemplate.资产的基本信息排序')" prop="assetsSimpleSort">
+                <!-- <el-form-item v-if='temForm.assetsSimple' :label="$t('exportTemplate.资产的基本信息排序')" prop="assetsSimpleSort">
                     <el-input-number v-model="temForm.assetsSimpleSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示资产统计图')" prop="assetsChart">
                     <el-switch v-model="temForm.assetsChart" />
                 </el-form-item>
-                <el-form-item v-if='temForm.assetsChart' :label="$t('exportTemplate.资产统计图排序')" prop="assetsChartSort">
+                <!-- <el-form-item v-if='temForm.assetsChart' :label="$t('exportTemplate.资产统计图排序')" prop="assetsChartSort">
                     <el-input-number v-model="temForm.assetsChartSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label="$t('exportTemplate.是否展示资产字段列表')" prop="assetsAttribute">
                     <el-switch v-model="temForm.assetsAttribute" />
                 </el-form-item>
-                <el-form-item v-if='temForm.assetsAttribute' :label="$t('exportTemplate.资产字段列表排序')" prop="assetsAttributeSort">
+                <!-- <el-form-item v-if='temForm.assetsAttribute' :label="$t('exportTemplate.资产字段列表排序')" prop="assetsAttributeSort">
                     <el-input-number v-model="temForm.assetsAttributeSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
             </template>
 
             <template v-if='temForm.type === 6'>
                 <el-form-item :label="$t('exportTemplate.是否展示主体权利图表')" prop="rightChart">
                     <el-switch v-model="temForm.rightChart" />
                 </el-form-item>
-                <el-form-item v-if='temForm.rightChart' :label="$t('exportTemplate.主体权利图表排序')" prop="rightChartSort">
+                <!-- <el-form-item v-if='temForm.rightChart' :label="$t('exportTemplate.主体权利图表排序')" prop="rightChartSort">
                     <el-input-number v-model="temForm.rightChartSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
             </template>
             <!-- <el-form-item label="是否展示隐私条款" prop="privacyPolicy">
                 <el-switch v-model="temForm.privacyPolicy" />
