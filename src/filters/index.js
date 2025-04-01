@@ -1,3 +1,4 @@
+import { validatenull } from "@/util/validate";
 function pluralize (time, label) {
   if (time === 1) {
     return time + label
@@ -9,6 +10,7 @@ function pluralize (time, label) {
  * 日期格式化
  */
 export function dateFormat (date) {
+  if(validatenull(date)) return '';
   date = date instanceof Date ? date : new Date(date)
   let format = 'yyyy-MM-dd hh:mm:ss'
   if (date != 'Invalid Date') {

@@ -1,3 +1,4 @@
+import { validatenull } from "@/util/validate";
 export const calcDate = (date1, date2) => {
   var date3 = date2 - date1
 
@@ -26,6 +27,7 @@ export const calcDate = (date1, date2) => {
  * 日期格式化
  */
 export function dateFormat(date) {
+  if(validatenull(date)) return '';
   date = date instanceof Date ? date : new Date(date)
   let format = 'yyyy-MM-dd hh:mm';
   if (date != 'Invalid Date') {
