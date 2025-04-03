@@ -63,22 +63,25 @@
     <div class="top-bar__right">
 
       <!-- 快捷应用 -->
-      <div class="quick-list" v-for="item,index in quickList" :key="index">
+      <template v-for="item,index in quickList" >
         <template v-if="permissions[item.permissions]||item.permissions==='true'">
-          <el-tooltip effect="dark" :content="item.label">
-            <el-link style="font-size: 12px" target="_blank" :underline="false" :href="item.href">
-              <el-button circle v-if="item.value === 3">
-                <div class="PIPL">
-                  PIPL
-                </div>
-              </el-button>
-              <el-button circle v-else>
-                <svg-icon :icon-class="item.icon" class="quick-list-icon"></svg-icon>
-              </el-button>
-            </el-link>
-          </el-tooltip>
+          <div class="quick-list" :key="index">
+            <el-tooltip effect="dark" :content="item.label">
+              <el-link style="font-size: 12px" target="_blank" :underline="false" :href="item.href">
+                <el-button circle v-if="item.value === 3">
+                  <div class="PIPL">
+                    PIPL
+                  </div>
+                </el-button>
+                <el-button circle v-else>
+                  <svg-icon :icon-class="item.icon" class="quick-list-icon"></svg-icon>
+                </el-button>
+              </el-link>
+            </el-tooltip>
+          </div>
         </template>
-      </div>
+      </template>
+      
 
       <!-- <el-tooltip effect="dark" :content="$t('crudCommon.添加')">
         <el-button circle style="margin-right: 10px;">

@@ -51,15 +51,15 @@
                         <el-option v-for="item in riskListResultOptions" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if='temForm.riskListResult !== null' :label="$t('exportTemplate.风险治理列表处理结果')" prop="riskListSort">
+                <!-- <el-form-item v-if='temForm.riskListResult !== null' :label="$t('exportTemplate.风险治理列表处理结果排序')" prop="riskListSort">
                     <el-input-number v-model="temForm.riskListSort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item v-if='[1,2,3].includes(temForm.type)' :label="$t('exportTemplate.是否展示评估记录')" prop="evaluationHistory">
                     <el-switch v-model="temForm.evaluationHistory" />
                 </el-form-item>
-                <el-form-item v-if='temForm.evaluationHistory' :label="$t('exportTemplate.是否展示评估记录')" prop="evaluationHistorySort">
+                <!-- <el-form-item v-if='temForm.evaluationHistory' :label="$t('exportTemplate.评估记录排序')" prop="evaluationHistorySort">
                     <el-input-number v-model="temForm.evaluationHistorySort" controls-position="right" />
-                </el-form-item>
+                </el-form-item> -->
             </template>
             
             <template v-if='[2,3,5].includes(temForm.type)'>
