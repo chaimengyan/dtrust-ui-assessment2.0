@@ -398,7 +398,7 @@
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-      <el-form :model="inventoryForm" ref="inventoryForm" label-width="100px">
+      <el-form :model="inventoryForm" ref="inventoryForm" label-width="100px" :label-position="isZH ? 'right' : 'top'">
         <el-form-item :label="$t('assetsManagement.盘点时间')" prop="checkTime" :rules="{required: true, message: `${$t('crudCommon.请选择')}${$t('assetsManagement.盘点时间')}`, trigger: 'change' }">
           <el-date-picker
             v-model="inventoryForm.checkTime"
@@ -448,7 +448,9 @@ import ReleaseForm from "@/views/assets/components/releaseForm";
 import AuditReleaseForm from "@/views/assets/components/auditReleaseForm";
 import { tableOption } from "@/const/crud/assets/assetsManagement";
 import { mapGetters } from "vuex";
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
   name: "assetsManagement",
   components: {
@@ -545,7 +547,8 @@ export default {
           return time.getTime() < Date.now() - 8.64e7; // 禁用今天以前的日期
         }
       },
-      btnLoading: false
+      btnLoading: false,
+      isZH,
     };
   },
   computed: {

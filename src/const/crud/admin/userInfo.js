@@ -38,6 +38,7 @@ const checkPhone = (rule, value, callback) => {
   viewBtn: false,
   emptyBtn:false,
   submitBtn:false,
+  labelWidth: 150,
   dialogWidth: '35%',
   column: [{
     fixed: true,

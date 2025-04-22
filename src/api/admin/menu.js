@@ -58,3 +58,19 @@ export function changeLanguage(language) {
     method: 'put',
   })
 }
+
+// 获取部门信息
+export function getDeptTree() {
+  return request({
+    url: `admin/dept/tree`,
+    method: 'get',
+  })
+}
+
+// 获取多个部门下所有用户
+export function getUserListByDeptIdsApi(deptIds) {
+  return request({
+    url: `/admin/user/getUserListByDeptIds?deptIds=${deptIds}`,
+    method: 'get',
+  })
+}

@@ -1,7 +1,11 @@
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const tableOption = (_this, isOverHidden) => { 
     return {
         // selection: true,
         // reserveSelection:true,
+        labelPosition: isZH ? 'right' : 'top',
         border: false,
         index: true,
         indexLabel: '#',

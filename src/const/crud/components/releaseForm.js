@@ -1,5 +1,9 @@
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const releaseFormOption = (_this) => {
     return {
+        labelPosition: isZH ? 'right' : 'top',
     submitBtn: false,
     emptyBtn: false,
     labelWidth: 90,

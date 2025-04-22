@@ -1,10 +1,12 @@
 import iconList from "@/const/iconList";
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const tableOption = (_this, isOverHidden) => {
   return {
-    // labelPosition: 'top',
+  labelPosition: isZH ? 'right' : 'top',
   border: false,
-  labelWidth: 150,
+  labelWidth: 180,
   index: true,
   indexLabel: '#',
   stripe: true,

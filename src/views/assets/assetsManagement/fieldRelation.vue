@@ -49,7 +49,7 @@
               <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
             </div>
           </div>
-          <el-form ref="sourceForm" :model="sourceForm" label-width="100px" style="width:50%">
+          <el-form ref="sourceForm" :model="sourceForm" label-width="100px" :label-position="isZH ? 'right' : 'top'" style="width:50%">
             <el-form-item :label="$t('assetsManagement.字段来源')">
               <el-select v-model="sourceForm.sourceName" filterable>
                 <el-option
@@ -86,6 +86,9 @@ import {
 } from "@/api/assets/assetsManagement";
 import {deepClone} from '@/util/util'
 import {fieldRelationOption} from "@/const/crud/assets/assetsManagement"
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
     name: "FieldRelation",
     props: {
@@ -135,7 +138,8 @@ export default {
         sourceTitle: this.$t('assetsManagement.配置'),
         isFullscreen: false,
         isOverHidden: true,
-          attrs: []
+        attrs: [],
+        isZH
       };
     },
     computed: {

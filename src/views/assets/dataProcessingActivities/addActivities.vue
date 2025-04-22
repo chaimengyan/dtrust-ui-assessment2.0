@@ -5,7 +5,8 @@
             ref="activitiesForm"
             :model="activitiesForm"
             :rules="activitiesFormRules"
-            label-width="150px">
+            label-width="150px"
+            :label-position="isZH ? 'right' : 'top'">
             <el-form-item prop="activitiesCategory" :label="$t('dataProcessingActivities.处理活动类别')" >
                 <el-select v-model="activitiesForm.activitiesCategory" >
                     <el-option
@@ -53,6 +54,9 @@ import {
 import ActOptions from '@/views/assets/dataProcessingActivities/actOptions'
 import { activitiesCategoryOptions } from "@/util/enum"
 import {deepClone} from '@/util/util'
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
     name: "AddActivities",
     components: {
@@ -100,7 +104,7 @@ export default {
                 {required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('dataProcessingActivities.选项类型')}`, trigger: 'change'}
             ],
         },
-        
+        isZH
       };
     },
     watch: {

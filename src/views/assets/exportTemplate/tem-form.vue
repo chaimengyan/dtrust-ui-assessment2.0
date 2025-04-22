@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form ref="temForm" :model="temForm" label-width="200px"   >
+        <el-form ref="temForm" :model="temForm" label-width="200px"  :label-position="isZH ? 'right' : 'top'" >
             
             <el-form-item :label="$t('exportTemplate.模板名称')" prop="templateName">
                 <el-input v-model="temForm.templateName" clearable></el-input>
@@ -139,7 +139,9 @@
   
   <script>
     import {mapGetters} from 'vuex'
-  
+    import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
     export default {
       name: 'tem-form',
       props: {
@@ -278,7 +280,8 @@
                 watermarkInfo: '',
                 encrypt: false,
                 encryptKey: ''
-            }
+            },
+            isZH
         }
       },
       computed: {

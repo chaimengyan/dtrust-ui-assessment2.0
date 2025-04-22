@@ -313,6 +313,7 @@ export default {
     盘点人: 'Inventory Person',
     待盘点: 'Pending Inventory',
     已盘点: 'Completed Inventory',
+    位置信息: 'Location Information',
   },
  
   businessScenarioManagement: {
@@ -427,6 +428,11 @@ export default {
     审计名称: 'Audit Name',
     被审计人: 'Auditee',
     审计状态: 'Audit Status',
+    审核人部门: 'Reviewers Department',
+    被评估人部门: 'Appraisee Department',
+    最终审核人部门: 'Final Reviewers Department',
+    章节审核人部门: 'Chapter Reviewers Department',
+
   },
   findList: {
     任务名称: 'Task Name',

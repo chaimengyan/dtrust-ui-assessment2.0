@@ -2,8 +2,9 @@
    <div>
     <el-form
       ref="ruleFormRef"
-      label-width="220px"
+      label-width="120px"
       label-suffix=" :"
+      :label-position="isZH ? 'right' : 'top'"
       :rules="rules"
       :model="releaseForm"
     >
@@ -28,18 +29,41 @@
           @change="changeMode('mode')"
         />
       </el-form-item>
+      <el-form-item :label="$t('evaluationRecord.被评估人部门')" prop="evaluatorDeptIds">
+          <el-cascader
+            clearable
+            v-model="releaseForm.evaluatorDeptIds"
+            :options="deptList"
+            :props="deptProps"
+            @change="handleChangeEvaluator" />
+      </el-form-item>
       <el-form-item v-if="releaseForm.mode === 2" :label="$t('evaluationRecord.被评估人')" prop="evaluators">
         <el-cascader
+            :disabled="validatenull(releaseForm.qnId)"
           :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`"
           v-model="releaseForm.evaluators"
-          @visible-change="getChapterByQnId"
-          :options="options"
+          @visible-change="getEvaluatorsOption"
+          :options="evaluatorsOptions"
           :props="{ multiple: true }"
-          clearable />
+          clearable  >
+            <template slot-scope="{ node, data }">
+                <span>{{ data.label }}</span>
+                <span v-if="'deptName' in data" class="dept-name"> {{ data.deptName }}</span>
+            </template>
+        </el-cascader>
       </el-form-item>
       <el-form-item v-else :label="$t('evaluationRecord.被评估人')" prop="userIds">
-        <el-select v-model="releaseForm.userIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`" clearable multiple>
-          <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
+        <el-select 
+            :disabled="validatenull(releaseForm.qnId)"
+             v-model="releaseForm.userIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.被评估人')}`" clearable multiple>
+            <el-option 
+                v-for="item in evaluatorsUserList" 
+                :key="item.userId" 
+                :label="item.nickName" 
+                :value="item.userId"  >
+                <span >{{ item.nickName }}</span>
+                <span class="dept-name">{{ item.deptName }}</span>
+            </el-option>
         </el-select>
       </el-form-item>
 
@@ -56,19 +80,48 @@
           @change="changeMode('auditType')"
         />
       </el-form-item>
+      <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人部门')" prop="chapterADeptIds">
+          <el-cascader
+            clearable
+            v-model="releaseForm.chapterADeptIds"
+            :options="deptList"
+            :props="deptProps"
+            @change="handleChangeChapterA" />
+      </el-form-item>
       <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人')" prop="chapterAuditors">
         <el-cascader 
+            :disabled="validatenull(releaseForm.qnId)"
           :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.章节审核人')}`"
           v-model="releaseForm.chapterAuditors"
-          @visible-change="getChapterByQnId" 
-          :options="options" 
+          @visible-change="getChapterAOptions" 
+          :options="chapterAOptions" 
           :props="{ multiple: true }" 
-          clearable />
+          clearable >
+            <template slot-scope="{ node, data }">
+                <span>{{ data.label }}</span>
+                <span v-if="'deptName' in data" class="dept-name"> {{ data.deptName }}</span>
+            </template>
+        </el-cascader>
+      </el-form-item>
+
+      <el-form-item :label="$t('evaluationRecord.最终审核人部门')" prop="auditorDeptIds">
+        <el-cascader
+          clearable
+          v-model="releaseForm.auditorDeptIds"
+          :options="deptList"
+          :props="deptProps"
+          @change="handleChangeAuditor" />
       </el-form-item>
 
       <el-form-item :label="$t('evaluationRecord.最终审核人')" prop="superAuditorIds">
-        <el-select v-model="releaseForm.superAuditorIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.最终审核人')}`" clearable multiple>
-          <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
+        <el-select 
+            :disabled="validatenull(releaseForm.qnId)"
+            v-model="releaseForm.superAuditorIds" 
+            :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.最终审核人')}`" clearable multiple>
+          <el-option v-for="item in auditorUserList" :key="item.userId" :label="item.nickName" :value="item.userId" >
+                <span >{{ item.nickName }}</span>
+                <span class="dept-name">{{ item.deptName }}</span>
+            </el-option>
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('evaluationRecord.最终审核方式')">
@@ -91,7 +144,7 @@
               :start-placeholder="$t('evaluationRecord.开始日期')"
               :end-placeholder="$t('evaluationRecord.结束日期')"
               value-format="yyyy-MM-dd HH:mm:ss"
-
+              :picker-options="pickerOptions"
           />
       </el-form-item>
 
@@ -110,9 +163,13 @@ import {
     startEvaluationApi,
     getUserList
 } from "@/api/assets/components/releaseForm";
+import {getDeptTree, getUserListByDeptIdsApi} from "@/api/admin/menu"
 import LogicEvaluation from "@/views/assets/components/logicEvaluation";
 import {mapGetters} from "vuex";
+import { validatenull } from "@/util/validate";
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
     name: "ReleaseForm",
     components: {
@@ -138,7 +195,6 @@ export default {
             userList: [],
             chapterOptions: [],
             evaluationList: [],
-            options: [],
             rules: {
                 name: [{ required: true, message: `${this.$t('crudCommon.请输入')}${this.$t('evaluationRecord.评估名称')}` }],
                 qnId: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.问卷')}` }],
@@ -148,6 +204,26 @@ export default {
                 evaluators: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.被评估人')}` }],
                 chapterAuditors: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.章节审核人')}` }],
             },
+            pickerOptions: {
+            // 禁用选择今日及其之前的日期
+              disabledDate(time) {
+                return time.getTime() < Date.now() - 8.64e7; // 8.64e7 毫秒数代表一天
+              },
+            },
+            deptProps: {
+                label: 'name',
+                value: 'id',
+                multiple: true,
+                checkStrictly: true,
+                emitPath: false,
+            },
+            deptList: [],
+            evaluatorsUserList: [],
+            auditorUserList: [],
+            chapterAUserList: [],
+            evaluatorsOptions: [],
+            chapterAOptions: [],
+            isZH,
         };
     },
     watch: {
@@ -159,6 +235,7 @@ export default {
         this.initReleaseForm()
         this.getQnList(this.typeIds)
         this.getUserList()
+        this.getParentsDept()
     },
     methods: {
         initReleaseForm() {
@@ -168,7 +245,7 @@ export default {
                 // 所选问卷
                 qnId: '',
                 // 被评估人
-                userIds: [],
+                userIds: [this.userInfo.userId],
                 // 最终审核人
                 superAuditorIds: [],
                 // 问卷截止时间
@@ -177,12 +254,76 @@ export default {
                 evaluators: [],
                 prefabricates: [],
                 chapterAuditors: [],
+                evaluatorDeptIds: [],
+                chapterADeptIds: [],
+                auditorDeptIds: [],
             }
+        },
+        // 获取所有部门
+        getParentsDept() {
+            getDeptTree().then(res => {
+                this.deptList = res.data.data
+            })
+        },
+        handleChangeEvaluator(val) {
+            if(validatenull(this.releaseForm.evaluatorDeptIds)){
+                this.releaseForm.evaluatorsUserList = [...this.userList]
+            }else {
+                this.getUserListByDeptIds(this.releaseForm.evaluatorDeptIds)
+            }
+        },
+         // 根据部门id查询被评估人
+         getUserListByDeptIds(deptIds) {
+            getUserListByDeptIdsApi(deptIds).then(res => {
+                this.evaluatorsUserList = res.data.data
+                if(this.releaseForm.mode === 2) {
+                    this.releaseForm.evaluators = []
+                }else {
+                    this.releaseForm.userIds = this.releaseForm.userIds.filter(u=>{
+                    return this.evaluatorsUserList.find(x=>x.userId === u)
+                })
+                }
+            
+            })
+        },
+        handleChangeAuditor(val) {
+            if(validatenull(this.releaseForm.auditorDeptIds)){
+                this.auditorUserList = [...this.userList]
+            }else {
+                this.getUserListByDeptIdAuditor(this.releaseForm.auditorDeptIds)
+            }
+        },
+        // 根据部门id查询最终审核人
+        getUserListByDeptIdAuditor(deptIds) {
+            getUserListByDeptIdsApi(deptIds).then(res => {
+                this.auditorUserList = res.data.data
+                this.releaseForm.superAuditorIds = this.releaseForm.superAuditorIds.filter(u=>{
+                    return this.auditorUserList.find(x=>x.userId === u)
+                })
+            })
+        },
+        handleChangeChapterA(val) {
+            if(validatenull(this.releaseForm.chapterADeptIds)){
+                this.chapterAUserList = [...this.userList]
+            }else {
+                this.getUserListByDeptIdChapterA(this.releaseForm.chapterADeptIds)
+            }
+        },
+
+        // 根据部门id查询章节审核人
+        getUserListByDeptIdChapterA(deptIds) {
+            getUserListByDeptIdsApi(deptIds).then(res => {
+                this.chapterAUserList.value = res.data.data
+                this.releaseForm.chapterAuditors = []
+            })
         },
         // 获取全部用户
         getUserList() {
             getUserList().then(res => {
                 this.userList = res.data.data
+                this.chapterAUserList = [...this.userList]
+                this.auditorUserList = [...this.userList]
+                this.evaluatorsUserList = [...this.userList]
             })
         },
         // 下拉获取问卷名称列表
@@ -198,6 +339,7 @@ export default {
         qnChange(qnId) {
             getByQuestionnaireApi(qnId).then(res => {
                 this.evaluationList = res.data.data.filter(x => x.nextQnId)
+                this.getChapterByQnId()
             })
         },
         changeMode(type) {
@@ -208,17 +350,33 @@ export default {
                 this.releaseForm.chapterAuditors = []
             }
         },
+        getEvaluatorsOption() {
+            const map = this.evaluatorsUserList.map(item => ({ label: item.nickName, value: item.userId, deptName: item.deptName }))
+            this.evaluatorsOptions = this.chapterOptions.map((item) =>{
+                return {
+                    label: item.title,
+                    value: item.id,
+                    children: map,
+                }
+            });
+        },
+
+        getChapterAOptions() {
+            const map = this.chapterAUserList.map(item => ({ label: item.nickName, value: item.userId, deptName: item.deptName }))
+            this.chapterAOptions = this.chapterOptions.map((item) =>{
+                return {
+                    label: item.title,
+                    value: item.id,
+                    children: map,
+                }
+            });
+        },
+
         getChapterByQnId() {
             getChapterByQnIdApi(this.releaseForm.qnId|| '').then(res => {
                 this.chapterOptions = res.data.data
-                const map = this.userList.map(item => ({ label: item.nickName, value: item.userId }))
-                this.options = this.chapterOptions.map((item) =>{
-                    return {
-                        label: item.title,
-                        value: item.id,
-                        children: map,
-                    }
-                });
+                this.getEvaluatorsOption()
+                this.getChapterAOptions()
             })
         },
         logicBtn() {
@@ -275,3 +433,10 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.dept-name {
+  font-size: 12px;
+  color: darkgray;
+  margin-left: 10px;
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-form ref="assetsFormRef" :model="assetsForm" :rules="assetsFormRules" label-width="120px">
+        <el-form ref="assetsFormRef" :model="assetsForm" :rules="assetsFormRules" label-width="120px" :label-position="isZH ? 'right' : 'top'">
             <el-form-item :label="$t('assetsManagement.托管位置')" prop="hostingLocation">
-                <el-input v-model="assetsForm.hostingLocation" @focus="openMap" placeholder="请选择位置信息" />
+                <el-input v-model="assetsForm.hostingLocation" @focus="openMap" :placeholder="`${$t('crudCommon.请选择')}${$t('assetsManagement.位置信息')}`" />
             </el-form-item>
             <el-form-item :label="$t('assetsManagement.资产类别')" prop="category">
                 <el-select
@@ -57,7 +57,9 @@ import {
   getAssetsProjectAttributesListByProjectId,
 } from "@/api/assets/assetsManagement";
 import { cloneDeep } from "lodash";
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
     name: "AssetsInfo",
     components: {
@@ -115,7 +117,8 @@ export default {
             assetsFormRules: {
                 hostingLocation: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('assetsManagement.托管位置')}`, trigger: 'change'}],
                 category: [{required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('assetsManagement.资产类别')}`, trigger: 'change'}],
-            }
+            },
+            isZH
         }
     },
     computed: {

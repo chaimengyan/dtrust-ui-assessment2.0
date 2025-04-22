@@ -1,6 +1,6 @@
 <template>
     <div class="evaluation">
-        <el-form ref="relationshipFormRef" :model="relationshipForm" :rules="relationshipFormRule" label-width="140px">
+        <el-form ref="relationshipFormRef" :model="relationshipForm" :rules="relationshipFormRule" label-width="140px" :label-position="isZH ? 'right' : 'top'">
             <el-form-item :label="$t('businessScenarioManagement.业务活动名称')" prop="name">
                 <el-input v-model="relationshipForm.name" :placeholder="`${$t('crudCommon.请输入')}${$t('businessScenarioManagement.业务活动名称')}`" />
             </el-form-item>
@@ -17,7 +17,9 @@
 <script>
 import { getAllAssetsProject } from "@/api/assets/assetsManagement";
 import RelationList from '@/views/assets/crossBorderData/relationship/relationList.vue'
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
     name: "relationship",
     components: { RelationList },
@@ -51,7 +53,8 @@ export default {
             name: [{required: true, message: `${this.$t('crudCommon.请输入')}${this.$t('businessScenarioManagement.业务活动名称')}`, trigger: 'blur'}],
             description: [{required: true, message: `${this.$t('crudCommon.请输入')}${this.$t('businessScenarioManagement.业务活动描述')}`, trigger: 'blur'}],
             
-        }
+        },
+        isZH
       }
     },
     mounted() {

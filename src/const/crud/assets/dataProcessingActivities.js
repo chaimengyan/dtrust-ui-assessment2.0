@@ -1,7 +1,11 @@
 
 import { activitiesCategoryOptions } from "@/util/enum"
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const tableOption = (_this, isOverHidden) => {
   return {
+    labelPosition: isZH ? 'right' : 'top',
     selection: true,
     reserveSelection:true,
     rowKey: 'activitiesId',

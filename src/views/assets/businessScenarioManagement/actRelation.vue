@@ -77,7 +77,7 @@
             <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
           </div>
         </div>
-        <el-form ref="sourceForm" :model="sourceForm" label-width="140px" style="width:80%">
+        <el-form ref="sourceForm" :model="sourceForm" label-width="140px" style="width:80%" :label-position="isZH ? 'right' : 'top'">
           <el-form-item :label="$t('assetsManagement.数据主体数量')" >
             <el-input-number v-model="sourceForm.volumeOfDataSubjects" :min="1" />
           </el-form-item>
@@ -127,7 +127,9 @@ import ActAnswers from "@/views/assets/businessScenarioManagement/actAnswers";
 import {deepClone} from '@/util/util'
 import {actRelationOption} from "@/const/crud/assets/businessScenarioManagement"
 import { isArray } from 'lodash'
+import { getStore } from '@/util/store'
 
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export default {
   name: "actRelation",
   components: {
@@ -176,8 +178,8 @@ export default {
         attrs: [],
         rowList: [],
         cloneTreeList: [],
-      keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList']
-    };
+      keys: ['gatherActivitiesList', 'storageActivitiesList', 'useActivitiesList', 'transmitActivitiesList', 'delActivitiesList'],
+      isZH,};
   },
   computed: {
     option() {

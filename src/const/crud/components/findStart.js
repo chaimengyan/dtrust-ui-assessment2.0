@@ -1,5 +1,9 @@
+import { getStore } from '@/util/store'
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const findStartOption = (_this) => {
     return {
+        labelPosition: isZH ? 'right' : 'top',
     submitBtn: false,
     emptyBtn: false,
     labelWidth: 120,

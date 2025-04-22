@@ -26,7 +26,7 @@
                             :model="passwordForm"
                             :rules="passwordFormRules"
                             ref="passwordForm"
-                            label-width="100px"
+                            label-width="140px"
                             class="demo-ruleForm">
                             <el-form-item :label="$t('userinfo.原密码')"
                                           prop="password">

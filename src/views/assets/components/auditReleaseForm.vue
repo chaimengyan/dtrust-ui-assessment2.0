@@ -2,7 +2,8 @@
     <div>
      <el-form
        ref="ruleFormRef"
-       label-width="220px"
+       label-width="120px"
+       :label-position="isZH ? 'right' : 'top'"
        label-suffix=" :"
        :rules="rules"
        :model="releaseForm"
@@ -27,21 +28,50 @@
            @change="changeMode('auditType')"
          />
        </el-form-item>
-       <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人')" prop="chapterAuditors">
-         <el-cascader 
-           :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.章节审核人')}`"
-           v-model="releaseForm.chapterAuditors"
-           @visible-change="getChapterByQnId" 
-           :options="options" 
-           :props="{ multiple: true }" 
-           clearable />
-       </el-form-item>
+       <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人部门')" prop="chapterADeptIds">
+          <el-cascader
+            clearable
+            v-model="releaseForm.chapterADeptIds"
+            :options="deptList"
+            :props="deptProps"
+            @change="handleChangeChapterA" />
+      </el-form-item>
+      <el-form-item v-if="releaseForm.auditType === 1" :label="$t('evaluationRecord.章节审核人')" prop="chapterAuditors">
+        <el-cascader 
+            :disabled="validatenull(releaseForm.qnId)"
+          :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.章节审核人')}`"
+          v-model="releaseForm.chapterAuditors"
+          @visible-change="getChapterAOptions" 
+          :options="chapterAOptions" 
+          :props="{ multiple: true }" 
+          clearable >
+            <template slot-scope="{ node, data }">
+                <span>{{ data.label }}</span>
+                <span v-if="'deptName' in data" class="dept-name"> {{ data.deptName }}</span>
+            </template>
+        </el-cascader>
+      </el-form-item>
+
+      <el-form-item :label="$t('evaluationRecord.最终审核人部门')" prop="auditorDeptIds">
+        <el-cascader
+          clearable
+          v-model="releaseForm.auditorDeptIds"
+          :options="deptList"
+          :props="deptProps"
+          @change="handleChangeAuditor" />
+      </el-form-item>
  
        <el-form-item :label="$t('evaluationRecord.最终审核人')" prop="superAuditorIds">
-         <el-select v-model="releaseForm.superAuditorIds" :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.最终审核人')}`" clearable multiple>
-           <el-option v-for="item in userList" :key="item.userId" :label="item.nickName" :value="item.userId" />
-         </el-select>
-       </el-form-item>
+        <el-select 
+            :disabled="validatenull(releaseForm.qnId)"
+            v-model="releaseForm.superAuditorIds" 
+            :placeholder="`${$t('crudCommon.请选择')}${$t('evaluationRecord.最终审核人')}`" clearable multiple>
+          <el-option v-for="item in auditorUserList" :key="item.userId" :label="item.nickName" :value="item.userId" >
+                <span >{{ item.nickName }}</span>
+                <span class="dept-name">{{ item.deptName }}</span>
+            </el-option>
+        </el-select>
+      </el-form-item>
        <el-form-item :label="$t('evaluationRecord.最终审核方式')">
          <el-switch
            v-model="releaseForm.sign"
@@ -62,7 +92,7 @@
                :start-placeholder="$t('evaluationRecord.开始日期')"
                :end-placeholder="$t('evaluationRecord.结束日期')"
                value-format="yyyy-MM-dd HH:mm:ss"
- 
+               :picker-options="pickerOptions"
            />
        </el-form-item>
  
@@ -82,8 +112,12 @@
      getUserList
  } from "@/api/assets/components/releaseForm";
  import LogicEvaluation from "@/views/assets/components/logicEvaluation";
+import {getDeptTree, getUserListByDeptIdsApi} from "@/api/admin/menu"
  import {mapGetters} from "vuex";
- 
+ import { getStore } from '@/util/store'
+ import { validatenull } from "@/util/validate";
+
+const isZH = getStore({ name: 'language' }) === 'zh-cn'
  export default {
      name: "ReleaseForm",
      components: {
@@ -116,6 +150,24 @@
                  time: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.有效时间')}` }],
                  chapterAuditors: [{ required: true, message: `${this.$t('crudCommon.请选择')}${this.$t('evaluationRecord.章节审核人')}` }],
              },
+             pickerOptions: {
+            // 禁用选择今日及其之前的日期
+              disabledDate(time) {
+                return time.getTime() < Date.now() - 8.64e7; // 8.64e7 毫秒数代表一天
+              },
+            },
+            deptProps: {
+                label: 'name',
+                value: 'id',
+                multiple: true,
+                checkStrictly: true,
+                emitPath: false,
+            },
+            deptList: [],
+            auditorUserList: [],
+            chapterAUserList: [],
+            chapterAOptions: [],
+             isZH,
          };
      },
      watch: {
@@ -127,6 +179,7 @@
          this.initReleaseForm()
          this.getQnList(this.typeIds)
          this.getUserList()
+         this.getParentsDept()
      },
      methods: {
          initReleaseForm() {
@@ -143,14 +196,56 @@
                  time: '',
                  prefabricates: [],
                  chapterAuditors: [],
+                chapterADeptIds: [],
+                auditorDeptIds: [],
              }
          },
-         // 获取全部用户
-         getUserList() {
-             getUserList().then(res => {
-                 this.userList = res.data.data
-             })
-         },
+
+         // 获取所有部门
+        getParentsDept() {
+            getDeptTree().then(res => {
+                this.deptList = res.data.data
+            })
+        },
+        handleChangeAuditor(val) {
+            if(validatenull(this.releaseForm.auditorDeptIds)){
+                this.auditorUserList = [...this.userList]
+            }else {
+                this.getUserListByDeptIdAuditor(this.releaseForm.auditorDeptIds)
+            }
+        },
+        // 根据部门id查询最终审核人
+        getUserListByDeptIdAuditor(deptIds) {
+            getUserListByDeptIdsApi(deptIds).then(res => {
+                this.auditorUserList = res.data.data
+                this.releaseForm.superAuditorIds = this.releaseForm.superAuditorIds.filter(u=>{
+                    return this.auditorUserList.find(x=>x.userId === u)
+                })
+            })
+        },
+        handleChangeChapterA(val) {
+            if(validatenull(this.releaseForm.chapterADeptIds)){
+                this.chapterAUserList = [...this.userList]
+            }else {
+                this.getUserListByDeptIdChapterA(this.releaseForm.chapterADeptIds)
+            }
+        },
+
+        // 根据部门id查询章节审核人
+        getUserListByDeptIdChapterA(deptIds) {
+            getUserListByDeptIdsApi(deptIds).then(res => {
+                this.chapterAUserList.value = res.data.data
+                this.releaseForm.chapterAuditors = []
+            })
+        },
+        // 获取全部用户
+        getUserList() {
+            getUserList().then(res => {
+                this.userList = res.data.data
+                this.chapterAUserList = [...this.userList]
+                this.auditorUserList = [...this.userList]
+            })
+        },
          // 下拉获取问卷名称列表
          getQnList(typeIds) {
              getQnListApi({categoryIds:typeIds}).then(res => {
@@ -164,6 +259,7 @@
          qnChange(qnId) {
              getByQuestionnaireApi(qnId).then(res => {
                  this.evaluationList = res.data.data.filter(x => x.nextQnId)
+                 this.getChapterByQnId()
              })
          },
          changeMode(type) {
@@ -172,19 +268,24 @@
                  this.releaseForm.chapterAuditors = []
              }
          },
-         getChapterByQnId() {
-             getChapterByQnIdApi(this.releaseForm.qnId|| '').then(res => {
-                 this.chapterOptions = res.data.data
-                 const map = this.userList.map(item => ({ label: item.nickName, value: item.userId }))
-                 this.options = this.chapterOptions.map((item) =>{
-                     return {
-                         label: item.title,
-                         value: item.id,
-                         children: map,
-                     }
-                 });
-             })
-         },
+
+        getChapterAOptions() {
+            const map = this.chapterAUserList.map(item => ({ label: item.nickName, value: item.userId, deptName: item.deptName }))
+            this.chapterAOptions = this.chapterOptions.map((item) =>{
+                return {
+                    label: item.title,
+                    value: item.id,
+                    children: map,
+                }
+            });
+        },
+
+        getChapterByQnId() {
+            getChapterByQnIdApi(this.releaseForm.qnId|| '').then(res => {
+                this.chapterOptions = res.data.data
+                this.getChapterAOptions()
+            })
+        },
          logicBtn() {
              this.$refs.logicEvaluationRef.setVisible(true)
          },
@@ -236,4 +337,10 @@
      }
  }
  </script>
- 
+ <style lang="scss" scoped>
+ .dept-name {
+   font-size: 12px;
+   color: darkgray;
+   margin-left: 10px;
+ }
+ </style>

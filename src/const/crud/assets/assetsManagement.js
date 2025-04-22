@@ -35,6 +35,7 @@ const validateProjectName = (rule, value, callback) => {
 export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) => {
   const fieldName = getStore({ name: 'language' }) == 'zh-cn' ? 'name_cn' : 'name_en'
   option.rowKey = 'projectId'
+  option.labelPosition = getStore({ name: 'language' }) == 'zh-cn' ? 'right' : 'top',
   option.column.forEach((item, index) => {
     item.label = getStore({ name: 'language' }) == 'zh-cn' ? item.label : item.labelEn
     item.overHidden = isOverHidden
