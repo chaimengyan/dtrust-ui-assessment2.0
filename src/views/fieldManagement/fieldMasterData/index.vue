@@ -21,6 +21,13 @@
           <el-button  icon="el-icon-notebook-2" circle :size="size" @click="changeArray"></el-button>
         </template>
 
+        <template slot="attributesNameForm" slot-scope="{scope}">
+          <el-input placeholder="请输入内容" v-model="form.attributesName">
+            <template slot="append" >
+              <div class="advice-btn" @click="adviceForAttributeLevel">AI填充</div>
+            </template>
+          </el-input>
+        </template>
         <template slot="menuLeft">
           <el-button
             v-if="permissions.field_fieldMasterData_add"
@@ -158,7 +165,8 @@ import {
   putObj,
   delObj,
   getAttributesByPage,
-  updateMainBodies
+  updateMainBodies,
+  adviceForAttributeLevel
 } from "@/api/fieldManagement/fieldMasterData";
 import { tableOption } from "@/const/crud/fieldManagement/fieldMasterData";
 import { mapGetters } from "vuex";
@@ -205,6 +213,11 @@ export default {
     this.getList(this.page);
   },
   methods: {
+    adviceForAttributeLevel() {
+      adviceForAttributeLevel(this.form.attributesName).then(res => {
+        this.form.typeId = this.$refs.crud.DIC.typeId.find(t => t.typeName === res.data.data).typeId
+      })
+    },
     changeArray() {
       this.isOverHidden = !this.isOverHidden
       tableOption(this, this.isOverHidden)
@@ -396,5 +409,11 @@ export default {
 <style lang="scss" scoped>
 ::v-deep  .avue-icon i {
   font-size: 16px !important;
+}
+.advice-btn {
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

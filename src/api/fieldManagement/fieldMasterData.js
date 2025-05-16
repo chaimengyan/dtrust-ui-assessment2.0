@@ -59,3 +59,11 @@ export function updateMainBodies (obj) {
         data: obj
     })
 }
+
+// 根据字段推荐其数据分级
+export function adviceForAttributeLevel (attributeName) {
+    return request({
+      url: `/intelligence/intelligenceAsset/adviceForAttributeLevel?attributeName=${attributeName}`,
+      method: 'get',
+    })
+  }

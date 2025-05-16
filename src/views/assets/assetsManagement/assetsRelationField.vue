@@ -63,7 +63,8 @@
 <script>
 import {
   getAssetsProjectAttributesListByProjectId,
-  getProjectAttributesListByProjectId
+  getProjectAttributesListByProjectId,
+  adviceForAssetAttributes
 } from "@/api/assets/assetsManagement";
 import  DataSubject from "@/views/assets/assetsManagement/dataSubject";
 import  SelectField from "@/views/assets/assetsManagement/selectField";
@@ -76,6 +77,7 @@ export default {
     provide() {
       return {
           echoCheckedDataSubjectList: () => this.echoCheckedDataSubjectList,
+          aiHighlightFields: () => this.aiHighlightFields,
           checkedMainBody: () => this.checkedMainBody,
       }
     },
@@ -91,7 +93,8 @@ export default {
         echoCheckedDataSubjectList: [],
         // 选中的主体信息
         checkedMainBody: [],
-
+        // ai建议高亮字段
+        aiHighlightFields: [],
       active: 0,
       // 关联字段弹窗
       relationDialog: false,
@@ -118,6 +121,7 @@ export default {
         if(this.checkedMainBody.length === 0) {
           return this.$message.error('请至少选择一个数据主体！')
         }
+          this.adviceForAssetAttributes(this.projectId, this.checkedMainBody.map(item => item.mainBodyIdReal))
           this.active = 1
           this.$refs.selectField.mounted()
           this.$refs.selectField.setValue()
@@ -141,6 +145,18 @@ export default {
     // 上一步
     previousStep() {
       this.active--
+    },
+    adviceForAssetAttributes(projectId, mainBodyIds) {
+      adviceForAssetAttributes(projectId, mainBodyIds).then(res => {
+        this.aiHighlightFields = res.data.data.map(item => ({
+              ...item,
+              attributes: item.attributes.map(item => ({
+                  ...item,
+                  _id: `${item.projectId}.${item.mainBodyId}.${item.categoryId}.${item.attributesId}`
+              })),
+              mainBodyId: `${this.projectId}.${item.mainBodyId}`
+          }))
+      })
     },
       // 选中主体保存option到父组件
       onDataSubject(checkedDataSubjectOptions) {

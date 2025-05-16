@@ -55,10 +55,13 @@ export default {
     components: {
         CheckBox,
     },
-    inject: ['echoCheckedDataSubjectList', 'checkedMainBody'],
+    inject: ['echoCheckedDataSubjectList', 'checkedMainBody', 'aiHighlightFields'],
     computed: {
         echo() {
             return this.echoCheckedDataSubjectList()
+        },
+        highlightFields() {
+            return this.aiHighlightFields()
         },
         checkedMain() {
             return this.checkedMainBody()

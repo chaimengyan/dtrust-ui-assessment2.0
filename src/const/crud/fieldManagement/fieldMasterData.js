@@ -1,6 +1,5 @@
 import iconList from "@/const/iconList";
 import { getStore } from '@/util/store'
-
 const isZH = getStore({ name: 'language' }) === 'zh-cn'
 export const tableOption = (_this, isOverHidden) => {
   return {
@@ -29,6 +28,7 @@ export const tableOption = (_this, isOverHidden) => {
       span: 24,
       search: true,
       searchLabelWidth:80,
+      formslot: true,
       searchSpan: 5,
       size:'mini',
       rules: [{

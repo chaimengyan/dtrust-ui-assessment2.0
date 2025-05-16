@@ -207,3 +207,11 @@ export function getExportRecordByPage(query) {
       params: query
     })
   }
+  
+// 根据资产以及主体推荐字段
+  export function adviceForAssetAttributes(projectId, mainBodyIds) {
+    return request({
+        url: `/intelligence/intelligenceAsset/adviceForAssetAttributes?projectId=${projectId}&mainBodyIds=${mainBodyIds}`,
+        method: 'get',
+    })
+}

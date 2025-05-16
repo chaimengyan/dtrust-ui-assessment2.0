@@ -121,7 +121,7 @@ export default {
         align-items: flex-start;
         width: 50%;
         flex-shrink: 0;
-
+        color: #59d919;
         .checkbox-group-child {
             margin-top: 10px;
             display: flex;

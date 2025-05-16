@@ -63,7 +63,8 @@ export default {
             getMainBodList().then(res => {
                 this.dataSubjectList = res.data.data.map(item => ({
                     ...item,
-                    mainBodyId: `${this.projectId}.${item.mainBodyId}`
+                    mainBodyId: `${this.projectId}.${item.mainBodyId}`,
+                    mainBodyIdReal: item.mainBodyId
                 }))
                 this.setDefaultValue()
             })
