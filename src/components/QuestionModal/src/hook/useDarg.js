@@ -1,8 +1,5 @@
-import { onMounted, ref, onBeforeUnmount, nextTick } from 'vue'
-
-
 export function useDarg(el, containerEl, cb, interceptor, onDown) {
-  let dom = '';
+  let dom = { value: '' };
   let isDarg = false;
   let rect = {
     left: 0,
@@ -15,19 +12,22 @@ export function useDarg(el, containerEl, cb, interceptor, onDown) {
     targetH: 0
   }
 
+  mounted();
 
-  onMounted(() => {
-    dom.value = document.querySelector(el)
-    if (!dom.value) {
-      return
-    }
-    nextTick(init)
-  })
+  function mounted() {
+    setTimeout(() => {
+      dom.value = document.querySelector(el)
+      if (!dom.value) {
+        return
+      }
+      setTimeout(init);
+    })
+  }
 
-  onBeforeUnmount(() => {
+  function unMount() {
     mouseup();
     dom.value.removeEventListener('mousedown', mousedown)
-  })
+  }
 
   function init() {
     const { width, height } = document.documentElement.getBoundingClientRect()
@@ -79,6 +79,8 @@ export function useDarg(el, containerEl, cb, interceptor, onDown) {
   }
 
   return {
-    init
+    init,
+    mounted,
+    unMount
   }
 }
