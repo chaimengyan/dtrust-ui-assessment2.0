@@ -6,11 +6,19 @@
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
           </div>
       </div>
-      <el-steps style="width: 60%;margin: 0 auto;" simple  :active="active" finish-status="success">
+      <div class="header">
+        <el-steps style="width: 60%;margin: 0 auto;" simple  :active="active" finish-status="success">
           <el-step :title="$t('assetsManagement.选择数据主体')"></el-step>
           <el-step :title="$t('assetsManagement.选择字段')"></el-step>
           <el-step v-if="isAssets" :title="$t('assetsManagement.字段配置')"></el-step>
-      </el-steps>
+        </el-steps>
+        <div class="ai-button" @click="openAI">
+            <img src="/img/MaxKB.gif" height="22px" width="22px">
+            小信助手
+        </div>
+      </div>
+           
+    
       <template v-if="isShow">
         <DataSubject
           v-show="active === 0"
@@ -115,13 +123,22 @@ export default {
     };
   },
   methods: {
+    openAI() {
+      adviceForAssetAttributes(this.projectId, this.checkedMainBody.map(item => item.mainBodyIdReal)).then(res => {
+          // 这个就是chat组件实例，可以直接调用chat组件里的方法
+          const chatRef = this.$store.state.common.chat
+          console.log(chatRef,'chatRef');
+          chatRef.start()
+          chatRef.setAicontent(res.data.data, 'generateForPrivacyPolicy', this.projectId)
+          chatRef.send('rightData')
+      })
+    },
     // 下一步
     nextStep() {
       if(this.active === 0 ) {
         if(this.checkedMainBody.length === 0) {
           return this.$message.error('请至少选择一个数据主体！')
         }
-          this.adviceForAssetAttributes(this.projectId, this.checkedMainBody.map(item => item.mainBodyIdReal))
           this.active = 1
           this.$refs.selectField.mounted()
           this.$refs.selectField.setValue()
@@ -238,4 +255,24 @@ export default {
 ::v-deep  .avue-icon i {
   font-size: 16px !important;
 }
+
+
+.header {
+  display: flex;
+  align-items: center;
+
+
+  .ai-button {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 30px;
+
+    &:hover {
+      color: #01aea9;
+    }
+  }
+}
+
 </style>

@@ -22,13 +22,14 @@ export const streamChatMixin = {
       this.streamController = new AbortController()
 
       try {
-        await fetchEventSource(`/dtrust-api/intelligence/chatting/dialogue?chatId=${prompt.chatId}&message=${encodeURIComponent(prompt.message)}`, {
-          method: 'GET',
+        await fetchEventSource(`/intelligence/chatting/dialogue`, {
+          method: 'POST',
           headers: {
             'Accept': 'text/event-stream',
             'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'text/event-stream'
+            'Content-Type': 'application/json'
           },
+          body: JSON.stringify(prompt),
           signal: this.streamController.signal,
           
           onopen: async (response) => {

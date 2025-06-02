@@ -2,7 +2,6 @@
   <div class="avue-top">
     <div class="top-bar__left">
       <!-- logo -->
-       <button @click="handleOpen">chat</button>
       <a href="/" target="_blank" class="logo">
         <img v-if="userInfo.logo" :src="userInfo.logo" alt="logo">
         <img v-else src="@/images/logo.png" alt="logo">
@@ -194,7 +193,6 @@
 			  <ExportTemplate />
       </el-drawer>
     </div>
-      <Chat ref="chat" />
   </div>
 </template>
 <script>
@@ -209,11 +207,9 @@
   import ExportTemplate from '@/views/assets/exportTemplate/index'
   import MessageReminder from './message-reminder.vue'
   import { workFlowUrl, adminUrl, assetsUrl, estimateUrl, powerUrl } from '@/util/env'
-  import Chat from '@/components/chat/Chat.vue'
   
   export default {
     components: {
-      Chat,
       topMenu,
       MenuSelect,
       DeptsSelect,
@@ -321,9 +317,6 @@
       ])
     },
     methods: {
-      handleOpen() {
-        this.$refs.chat.start();
-      },
       // 导出使用手册
       openUserManual() {
         this.$confirm(this.$t('crudCommon.是否导出本条数据'), this.$t('crudCommon.提示'), {

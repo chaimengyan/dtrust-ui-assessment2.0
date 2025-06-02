@@ -29,6 +29,9 @@
     </div>
     <div class="avue-shade"
          @click="showCollapse"></div>
+            <Chat ref="chat" />
+
+            <Xiaoxin />
   </div>
 </template>
 
@@ -39,9 +42,12 @@ import top from './top/'
 import sidebar from './sidebar/'
 import admin from '@/util/admin'
 import {checkToken} from '@/api/login'
-
+import Chat from '@/components/chat/Chat'
+import Xiaoxin from './xiaoxin.vue'
 export default {
   components: {
+    Xiaoxin,
+    Chat,
     top,
     tags,
     sidebar
@@ -64,6 +70,8 @@ export default {
   },
   mounted() {
     this.init()
+        // 可以直接把chat组件实力保存下来
+    this.$store.commit('SET_CHAT_METHOD', this.$refs.chat)
   },
   computed: mapGetters(['userInfo', 'isLock', 'isCollapse', 'website']),
   props: [],
@@ -92,5 +100,11 @@ export default {
 .seizeSeat {
   height: 64px;
   width: 100%;
+}
+
+.chat-button {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
 }
 </style>

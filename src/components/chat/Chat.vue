@@ -1,18 +1,33 @@
 <template>
-    <QuestionModal ref="qm">
+    <QuestionModal ref="qm" :chatTitle="chatTitle">
         <div class="chat-container">
             <div class="chat-slider">
                 <div class="conversation-list">
-                    <div v-for="(item, index) in chatList" :key="index" class="conversation-item">
+                    <div v-for="(item, index) in chatList" :key="index"
+                        class="conversation-item"
+                        :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
                         <div @click="checkMsg(item)">{{ item.title }}</div>
                     </div>
+                    <div v-if="chatList === null" class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <!-- <div v-if="chatList.length === 0" style="text-align: center;">
+                        暂无数据
+                    </div> -->
                 </div>
             </div>
             <div class="chat">
                 <div ref="chatContainer" class="chat-content">
-                    <div v-for="(item, i) in messageList" :key="i" class="message-item" :class="{ [`msg-${item.type}`]: true }">
-                        <span class="avatar" :class="{ [`avatar-${item.type}`]: true }">
-                            <img v-if="!item.type" src="/img/aiAvatar.svg" height="32px" width="32px">
+                    <div v-if="messageList.length === 0" class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div v-for="(item, i) in messageList" :key="i" class="message-item" :class="{ [`msg-${item.role}`]: true }">
+                        <span class="avatar" :class="{ [`avatar-${item.role}`]: true }">
+                            <img v-if="!item.role" src="/img/aiAvatar.svg" height="32px" width="32px">
                             <i v-else class="el-icon-user"></i>
                         </span>
                         <div v-if="item.content === ''" class="typing-dots">
@@ -24,13 +39,22 @@
                         <template v-else>
                             <span 
                                 class="msg-content" 
-                                :style=" item.type ? 'background-color: rgb(0 99 255 / 8%)':'background-color:rgba(0, 0, 0, 0.08)'" 
-                                v-html="item.type ? renderMarkdown(item.content) : renderMarkdown(item.content.content)"
+                                :style=" item.role ? 'background-color: rgb(0 99 255 / 8%)':'background-color:rgba(0, 0, 0, 0.08)'" 
+                                v-html="renderMarkdown(item.content)"
                             ></span>
-                            <el-button 
-                                v-if="!item.type && i!==0 && messageType !== ''" 
-                                type="text" size="small" 
-                                @click="handleReplace(item, i)">一键代入</el-button>
+                            <el-popconfirm 
+                                title="确定一键代入吗？" 
+                                @confirm="handleReplace(item, i)" 
+                                placement="bottom"
+                                confirm-button-text="确定" 
+                                cancel-button-text="取消">
+                                <template #reference>
+                                    <el-button 
+                                        v-if="!item.role && i!==0 && messageType == 'generateForPrivacyPolicy'&&item.status === 0" 
+                                        type="text" size="small" 
+                                        >一键代入</el-button>
+                                </template>
+                            </el-popconfirm>
                         </template>
                     </div>
                 </div>
@@ -57,6 +81,9 @@
                         <el-button style="margin-left: 12px;" :disabled="!(input.trim()&&isSend)" size="small" type="primary" icon="el-icon-top" circle @click="send('')" />
                     </div>
                 </div>
+                <div style="margin-bottom: 4px; text-align: center;font-size: 12px;color: darkgoldenrod;">
+                    ai回答仅供参考，请根据实际情况进行判断。
+                </div>
             </div>
         </div>
     </QuestionModal>
@@ -64,7 +91,7 @@
 </template>
 
 <script>
-import { getChatIdApi, getChatListApi, AIChatApi, generateApi } from '@/api/admin/index'
+import { getChatIdApi, getChatListApi, AIChatApi, generateApi, listMessagesApi } from '@/api/admin/index'
 import { streamChatMixin } from './useStreamChat'
 import MarkdownIt from 'markdown-it'
 import QuestionModal from '../QuestionModal/src/QuestionModal.vue'
@@ -80,7 +107,7 @@ export default {
             input: '',
             sessionId: '',
             chatId: '',
-            chatList: [],
+            chatList: null,
             messageList: [],
             isSend: true,
             messageType: '',
@@ -94,13 +121,23 @@ export default {
                 top: 'el-icon-top',
                 circleClose: 'el-icon-circle-close',
                 user: 'el-icon-user'
-            }
+            },
+            messageType: '',
+            messageQuestionId: null,
+            currentChatId: '',
+            chatTitle: '',
         }
     },
     methods: {
         start() {
             // 每次打开时，可以清除缓存
             this.$refs.qm.start();
+        },
+        setAicontent(value, type, questionId) {
+            this.chatTitle = value
+            this.input = value
+            this.messageType = type
+            this.messageQuestionId = questionId
         },
         scrollToBottom() {
             this.$nextTick(() => {
@@ -111,28 +148,26 @@ export default {
         },
         createChat() {
             return getChatIdApi().then(res => {
-                this.chatId = res.data
-                this.getChatList()
+                this.chatId = res.data.data
+                this.getChatList(this.messageType)
             })
         },
-        getChatList() {
-            getChatListApi().then(res => {
-                this.chatList = res.data
+        getChatList(type) {
+            getChatListApi(type).then(res => {
+                this.chatList = res.data.data
             })
-        },
-        checkMsg(val) {
-            console.log(val, '切换对话')
         },
         handleReplace(item, index) {
             generateApi(this.messageType, this.messageQuestionId, item.content.id).then(res => {
-                this.$emit('message', res.data)
+                this.$emit('message', res.data.data)
             })
         },
-        createMessage(content, type) {
+        createMessage(content, role, id, status) {
             return {
-                avatar: '',
                 content,
-                type
+                role,
+                id,
+                status
             }
         },
         handleDelete(item, index) {
@@ -147,9 +182,24 @@ export default {
         renderMarkdown(text) {
             return this.md.render(text || '')
         },
+        async checkMsg(val) {
+            console.log(val,'切换对话');
+            this.chatTitle = val.title
+
+            this.messageList = []
+            this.currentChatId = val.chatId
+            await this.listMessages(val.chatId, val.cryptonymId, val.type)
+        },
+        listMessages(chatId, cryptonymId, type) {
+            return listMessagesApi(chatId, cryptonymId, type).then(res => {
+                this.messageList = res.data.data
+                this.scrollToBottom()
+            })
+        },
         async send(val) {
+            console.log(val, '发送消息');
             if(val === 'rigthLoading') {
-                this.messageList.push(this.createMessage('', 1)) // Type.right
+                this.messageList.push(this.createMessage('', 3)) // Type.right
                 this.isSend = false
                 return
             }
@@ -159,24 +209,40 @@ export default {
                 return
             }
             if(val === 'rightData') {
-                await this.createChat()
+
+                listMessagesApi(null, this.messageQuestionId, this.messageType).then(res => {
+                    if(res.data.data.length === 0) {
+                        this.createChat().then(() => {
+                            this.sendApi()
+                        })
+                    }else {
+                        this.messageList = res.data.data
+                        this.input = ''
+                        this.chatId = res.data.data[0].chatId
+                        this.getChatList(this.messageType)
+                        this.scrollToBottom()
+                    }
+                })
+            }else {
+                this.sendApi()
             }
-            this.messageList.push(this.createMessage(this.input, 1)) // Type.right
+            
+        },
+        sendApi() {
+            this.messageList.push(this.createMessage(this.input, 3)) // Type.right
             this.messageList.push(this.createMessage('', 0)) // Type.left
             this.isSend = false
-            
-            this.startStreaming({message: this.input, chatId: this.chatId}).then(res => {
-                this.messageList[this.messageList.length-1] = this.createMessage(this.messageStream, 0) // Type.left
+            this.startStreaming({message: this.input, chatId: this.chatId, cryptonymId: this.messageQuestionId, type: this.messageType}).then(res => {
+                this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.messageStream.content, 0, this.messageStream.id, this.messageStream.status));
                 this.isSend = true
                 this.scrollToBottom()
             })
-            
             this.input = ''
             if (this.$refs.textareaRef) {
                 this.$refs.textareaRef.style.height = 'auto'
             }
             this.scrollToBottom()
-        }
+        },
     },
     watch: {
         input() {
@@ -250,12 +316,21 @@ export default {
             cursor: pointer;
             font-size: 14px;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin: 4px;
+            color: gray;
+            div {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
         
         .conversation-item:hover {
-            background-color: #f7f7f8;
+            background-color: #e0dcff;
+            border-radius: 4px;
+        }
+        .conversation-item-checked {
+            background-color: #e0dcff;
+            border-radius: 4px;
         }
     }
 }
@@ -297,7 +372,7 @@ export default {
                     color: aqua;
                 }
 
-                &.avatar-1 {
+                &.avatar-3 {
                     background-color: #88b4e4;
                     color: aliceblue;
                 }
@@ -311,7 +386,7 @@ export default {
                     align-items: flex-start;
                 }
 
-                &.msg-1 {
+                &.msg-3 {
                     align-items: flex-end;
                 }
 

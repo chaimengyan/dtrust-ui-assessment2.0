@@ -71,7 +71,7 @@ export default {
       chatTitle: {
         type: String,
         default: () => {
-          return 'AI助手'
+          return '小信助手'
         }
       }
   },
@@ -301,7 +301,7 @@ export default {
 .question-modal {
   display: none;
   position: fixed;
-  z-index: 3000;
+  z-index: 6000;
 
   .flex {
     display: flex;
@@ -312,9 +312,9 @@ export default {
     display: block;
   }
   .question-body {
-      display: flex;
+    display: flex;
     box-shadow: 0 0 16px 0 rgba(0,0,0,0.16);
-
+    border-radius: 8px;
   .question-modal-content {
     position: relative;
     background-color: #fff;

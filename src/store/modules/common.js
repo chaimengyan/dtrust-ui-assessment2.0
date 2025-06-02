@@ -12,7 +12,9 @@ const common = {
     showTag: true,
     showCollapse: true,
     showFullScren: true,
-    website: website
+    website: website,
+    chat: null,
+
   },
   actions: {},
   mutations: {
@@ -22,6 +24,9 @@ const common = {
         name: 'language',
         content: state.language
       })
+    },
+    SET_CHAT_METHOD(state, chat) {
+      state.chat = chat;
     },
     SET_SHADE: (state, active) => {
       state.isShade = active
