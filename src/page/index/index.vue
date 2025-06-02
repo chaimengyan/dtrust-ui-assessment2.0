@@ -96,6 +96,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.el-popover.el-popper {
+  z-index: 9000 !important;
+}
+</style>
+
 <style lang="scss" scoped>
 .seizeSeat {
   height: 64px;

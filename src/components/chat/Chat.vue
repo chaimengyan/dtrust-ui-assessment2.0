@@ -50,7 +50,7 @@
                                 cancel-button-text="取消">
                                 <template #reference>
                                     <el-button 
-                                        v-if="!item.role && i!==0 && messageType == 'generateForPrivacyPolicy'&&item.status === 0" 
+                                        v-if="!item.role && i!==0 && messageType == 'generateForAssetAttributes'&&item.status === 0" 
                                         type="text" size="small" 
                                         >一键代入</el-button>
                                 </template>
@@ -126,9 +126,13 @@ export default {
             messageQuestionId: null,
             currentChatId: '',
             chatTitle: '',
+            onMessage: null,
         }
     },
     methods: {
+        setOnMessage(func) {
+            this.onMessage = func;
+        },
         start() {
             // 每次打开时，可以清除缓存
             this.$refs.qm.start();
@@ -158,8 +162,10 @@ export default {
             })
         },
         handleReplace(item, index) {
-            generateApi(this.messageType, this.messageQuestionId, item.content.id).then(res => {
+            console.log(item, 'item')
+            generateApi(this.messageType, this.messageQuestionId, item.id).then(res => {
                 this.$emit('message', res.data.data)
+                this.onMessage && this.onMessage(res.data.data);
             })
         },
         createMessage(content, role, id, status) {

@@ -129,8 +129,11 @@ export default {
           const chatRef = this.$store.state.common.chat
           console.log(chatRef,'chatRef');
           chatRef.start()
-          chatRef.setAicontent(res.data.data, 'generateForPrivacyPolicy', this.projectId)
+          chatRef.setAicontent(res.data.data, 'generateForAssetAttributes', this.projectId)
           chatRef.send('rightData')
+          chatRef.setOnMessage((value) => {
+            console.log(value, 'value')
+          })
       })
     },
     // 下一步
