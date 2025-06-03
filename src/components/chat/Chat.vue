@@ -50,7 +50,7 @@
                                 cancel-button-text="取消">
                                 <template #reference>
                                     <el-button 
-                                        v-if="!item.role && i!==0 && messageType == 'generateForAssetAttributes'&&item.status === 0" 
+                                        v-if="!item.role && i!==0 && ['generateForAssetAttributes','generateForSceneAttributes'].includes(messageType)&&item.status === 0" 
                                         type="text" size="small" 
                                         >一键代入</el-button>
                                 </template>
@@ -125,8 +125,12 @@ export default {
             messageType: '',
             messageQuestionId: null,
             currentChatId: '',
-            chatTitle: '',
+            chatTitle: '新对话',
             onMessage: null,
+            surface: '',
+            mainBodyIds: '',
+            projectIds: '',
+
         }
     },
     methods: {
@@ -135,13 +139,23 @@ export default {
         },
         start() {
             // 每次打开时，可以清除缓存
+            this.clearCache();
             this.$refs.qm.start();
+
         },
-        setAicontent(value, type, questionId) {
-            this.chatTitle = value
-            this.input = value
+        clearCache() {
+            this.currentChatId = ''
+            this.chatList = []
+            this.messageList = []
+            this.input = ''
+            this.surface = ''
+        },
+        setAicontent(valueMap, type, questionId, otherId) {
+            this.surface = valueMap.surface
+            this.input = valueMap.real
             this.messageType = type
             this.messageQuestionId = questionId
+            type === 'generateForAssetAttributes' ?  this.mainBodyIds = otherId : this.projectIds = otherId 
         },
         scrollToBottom() {
             this.$nextTick(() => {
@@ -152,8 +166,7 @@ export default {
         },
         createChat() {
             return getChatIdApi().then(res => {
-                this.chatId = res.data.data
-                this.getChatList(this.messageType)
+                return res.data.data
             })
         },
         getChatList(type) {
@@ -162,10 +175,27 @@ export default {
             })
         },
         handleReplace(item, index) {
+            this.messageList.push(this.createMessage('帮我应用', 3))
+            this.messageList.push(this.createMessage('', 0))
             console.log(item, 'item')
-            generateApi(this.messageType, this.messageQuestionId, item.id).then(res => {
-                this.$emit('message', res.data.data)
-                this.onMessage && this.onMessage(res.data.data);
+            generateApi({
+                type: this.messageType,
+                questionId: this.messageQuestionId, 
+                messageId: item.id, 
+                voice: '帮我应用',
+                projectIds: this.projectIds,
+                mainBodyIds: this.mainBodyIds
+            }).then(res => {
+                if(res.data.data) {
+                    this.$emit('message', res.data.data)
+                    this.onMessage && this.onMessage(res.data.data);
+                    this.$set(this.messageList, this.messageList.length-1, this.createMessage(res.data.data.content, 0, res.data.data.id, res.data.data.status));
+                }else {
+                    this.$set(this.messageList, this.messageList.length-1, this.createMessage(res.data.message, 0, null, null));
+                }
+                
+            }).catch(res => {
+                this.$set(this.messageList, this.messageList.length-1, this.createMessage('请求失败', 0, null, null));
             })
         },
         createMessage(content, role, id, status) {
@@ -209,33 +239,39 @@ export default {
                 this.isSend = false
                 return
             }
-            if(!this.input.trim()) {
-                this.$message.warning(this.$t('message.chat.不能发送空白信息'))
-                this.input = ''
-                return
-            }
+          
             if(val === 'rightData') {
-
                 listMessagesApi(null, this.messageQuestionId, this.messageType).then(res => {
                     if(res.data.data.length === 0) {
-                        this.createChat().then(() => {
-                            this.sendApi()
+                        this.createChat().then(res => {
+                            this.chatId = res
+                            this.getChatList(this.messageType)
+                            this.sendApi(this.surface)
                         })
                     }else {
+                        this.chatTitle = res.data.data[0].content
                         this.messageList = res.data.data
-                        this.input = ''
                         this.chatId = res.data.data[0].chatId
                         this.getChatList(this.messageType)
-                        this.scrollToBottom()
+                        this.sendApi(this.surface)
                     }
                 })
             }else {
+                if(!this.input.trim()) {
+                    this.$message.warning(this.$t('message.chat.不能发送空白信息'))
+                    this.input = ''
+                    return
+                }
                 this.sendApi()
             }
             
         },
-        sendApi() {
-            this.messageList.push(this.createMessage(this.input, 3)) // Type.right
+        sendApi(surface) {
+            if(!surface) {
+                this.messageList.push(this.createMessage(this.input, 3)) // Type.right
+            }else {
+                this.messageList.push(this.createMessage(surface, 3)) // Type.right
+            }
             this.messageList.push(this.createMessage('', 0)) // Type.left
             this.isSend = false
             this.startStreaming({message: this.input, chatId: this.chatId, cryptonymId: this.messageQuestionId, type: this.messageType}).then(res => {

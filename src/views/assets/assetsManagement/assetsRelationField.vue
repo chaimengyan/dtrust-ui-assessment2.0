@@ -124,15 +124,24 @@ export default {
   },
   methods: {
     openAI() {
-      adviceForAssetAttributes(this.projectId, this.checkedMainBody.map(item => item.mainBodyIdReal)).then(res => {
+      const mainBodyIds = this.checkedMainBody.map(item => item.mainBodyIdReal)
+      adviceForAssetAttributes(this.projectId, mainBodyIds).then(res => {
           // 这个就是chat组件实例，可以直接调用chat组件里的方法
           const chatRef = this.$store.state.common.chat
           console.log(chatRef,'chatRef');
           chatRef.start()
-          chatRef.setAicontent(res.data.data, 'generateForAssetAttributes', this.projectId)
+          chatRef.setAicontent(res.data.data, 'generateForAssetAttributes', this.projectId, mainBodyIds)
           chatRef.send('rightData')
           chatRef.setOnMessage((value) => {
-            console.log(value, 'value')
+            console.log(value.data, 'value')
+            this.echoCheckedDataSubjectList = value.data.map(item => ({
+              ...item,
+              attributes: item.attributes.map(item => ({
+                  ...item,
+                  _id: `${item.projectId}.${item.mainBodyId}.${item.categoryId}.${item.attributesId}`
+              })),
+              mainBodyId: `${this.projectId}.${item.mainBodyId}`
+          }))
           })
       })
     },

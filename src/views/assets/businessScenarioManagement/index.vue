@@ -148,11 +148,18 @@
           <i :class="isFullscreen ? 'el-icon-news' : 'el-icon-full-screen'" />
         </div>
       </div>
-      <el-steps :active="active" style="width: 60%;margin: 0 auto;" simple finish-status="success">
-        <el-step :title="$t('businessScenarioManagement.选择资产')"></el-step>
-        <el-step :title="$t('assetsManagement.选择字段')"></el-step>
-        <el-step :title="$t('assetsManagement.字段配置')"></el-step>
-      </el-steps>
+      <div class="header"> 
+        <el-steps :active="active" style="width: 60%;margin: 0 auto;" simple finish-status="success">
+          <el-step :title="$t('businessScenarioManagement.选择资产')"></el-step>
+          <el-step :title="$t('assetsManagement.选择字段')"></el-step>
+          <el-step :title="$t('assetsManagement.字段配置')"></el-step>
+        </el-steps>
+        <div class="ai-button" @click="openAI">
+            <img src="/img/MaxKB.gif" height="22px" width="22px">
+            小信助手
+        </div>
+      </div>
+      
 
         <template v-if="isShow">
             <RelatedAssets
@@ -320,7 +327,8 @@ import {
   getAssetsBusinessSceneByPage,
   putObj,
   getProjectAttributesBySceneId,
-  auditScene
+  auditScene,
+  adviceForSceneAttributes
 } from "@/api/assets/businessScenarioManagement";
 import {
   getTableByName,
@@ -426,6 +434,21 @@ export default {
     this.getTable()
   },
   methods: {
+    openAI() {
+      const projectIds = this.checkedProjectBody.map(item => item.projectId)
+      adviceForSceneAttributes(this.sceneId, projectIds).then(res => {
+          // 这个就是chat组件实例，可以直接调用chat组件里的方法
+          const chatRef = this.$store.state.common.chat
+          console.log(chatRef,'chatRef');
+          chatRef.start()
+          chatRef.setAicontent(res.data.data, 'generateForSceneAttributes', this.sceneId, projectIds)
+          chatRef.send('rightData')
+          chatRef.setOnMessage((value) => {
+            console.log(value.data, 'value')
+          
+          })
+      })
+    },
       // 选中project保存option到父组件
       onDataSubject(checkedDataSubjectOptions) {
         this.fullscreenLoading = false
@@ -837,6 +860,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
+.header {
+  display: flex;
+  align-items: center;
+
+
+  .ai-button {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 30px;
+
+    &:hover {
+      color: #01aea9;
+    }
+  }
+}
 .sceneName:hover {
     cursor:pointer;
     color: rgb(52, 228, 234);

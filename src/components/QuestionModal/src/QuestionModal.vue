@@ -4,7 +4,11 @@
     <div class="question-modal-content" :class="{ show: showContent, hide: !showContent }" :style="rectStyle" @animationend="onClose">
       
       <div class="question-header" :class="{ ['right-fixed']: fixed }">
-        <div class="chatTitle">{{chatTitle}}</div>
+        <div class="chatTitle">
+          <div class="title-icon">
+            信
+          </div>
+          {{chatTitle}}</div>
         <div class="flex">
           <div class="icon" @click="handleFixed">
             <!-- <el-icon><FullScreen /></el-icon> -->
@@ -345,9 +349,19 @@ export default {
       border-radius: 10px;
       margin: 8px;
       .chatTitle {
+        display: flex;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        align-items: center;
+        .title-icon {
+          margin: 4px;
+          padding: 4px 6px;
+          color: #eff2f6;
+          background-color: #888bff;
+          border-radius: 4px;
+          font-size: 12px;
+        }
       }
     }
 

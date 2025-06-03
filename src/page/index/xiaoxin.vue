@@ -7,8 +7,10 @@
     ref="button"
   >
     <button class="qa-button" @click="toggleQa">
-      <span v-if="!isOpen">?</span>
-      <span v-else>×</span>
+      <span v-if="!isOpen">
+        <img src="/img/MaxKB.gif" height="32px" width="32px">
+      </span>
+      <span v-else>信</span>
     </button>
     
   

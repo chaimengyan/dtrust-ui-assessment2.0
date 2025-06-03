@@ -102,3 +102,11 @@ export function checkSceneName(sceneName) {
         method: 'get',
     })
 }
+
+// 根据业务活动以及资产、主体推荐字段
+export function adviceForSceneAttributes(sceneId, projectIds) {
+    return request({
+        url: `/intelligence/intelligenceAsset/adviceForSceneAttributes?sceneId=${sceneId}&projectIds=${projectIds}`,
+        method: 'get',
+    })
+}

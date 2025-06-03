@@ -37,9 +37,9 @@ import request from '@/router/axios'
             })
         }
           // 处理对应功能 一键代入
-        export function generateApi(type, questionId, messageId) {
+        export function generateApi(query) {
             return request({
-            url: `/intelligence/chatting/generate?type=${type}&questionId=${questionId}&messageId=${messageId}`,
+            url: `/intelligence/chatting/generate?type=${query.type}&questionId=${query.questionId}&messageId=${query.messageId}&voice=${query.voice}&projectIds=${query.projectIds}&mainBodyIds=${query.mainBodyIds}`,
             method: 'post',
             })
         }
