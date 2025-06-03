@@ -158,11 +158,17 @@ export default {
             type === 'generateForAssetAttributes' ?  this.mainBodyIds = otherId : this.projectIds = otherId 
         },
         scrollToBottom() {
-            this.$nextTick(() => {
-                if (this.$refs.chatContainer) {
-                    this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight
-                }
-            })
+            setTimeout(() => {
+                console.log(this.$refs.chatContainer.scrollHeight, 'this.$refs.chatContainer')
+                this.$refs.chatContainer.scrollTo({
+                    top: this.$refs.chatContainer.scrollHeight,
+                });
+                // this.$nextTick(() => {
+                //     if (this.$refs.chatContainer) {
+                //         this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight
+                //     }
+                // })
+            });
         },
         createChat() {
             return getChatIdApi().then(res => {
