@@ -58,6 +58,7 @@ export const streamChatMixin = {
               }else {
                 this.msgInfo = data.data
               }
+              this.scrollToBottom();
             } catch (err) {
               console.error('解析错误:', err)
             }
