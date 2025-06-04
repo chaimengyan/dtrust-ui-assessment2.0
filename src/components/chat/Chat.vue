@@ -6,7 +6,7 @@
                     <div v-for="(item, index) in chatList" :key="index"
                         class="conversation-item"
                         :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
-                        <div @click="checkMsg(item)">{{ item.title }}</div>
+                        <div @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
                     </div>
                     <div v-if="chatList === null" class="typing-dots">
                         <span></span>
@@ -35,7 +35,14 @@
                             <span></span>
                             <span></span>
                         </div>
-                                
+                        <!-- 流式响应消息 -->
+                        <span 
+                            v-if="isStreaming&&item.content === ''"
+                            class="msg-content" 
+                            style="background-color:rgba(0, 0, 0, 0.08)" 
+                            v-html="renderMarkdown(messageStream)"
+                        >
+                        </span>  
                         <template v-else>
                             <span 
                                 class="msg-content" 
@@ -82,7 +89,7 @@
                     </div>
                 </div>
                 <div style="margin-bottom: 4px; text-align: center;font-size: 12px;color: darkgoldenrod;">
-                    ai回答仅供参考，请根据实际情况进行判断。
+                    本AI助手由大语言模型提供支持，请用户谨慎判断是否采纳相关结果。
                 </div>
             </div>
         </div>
@@ -116,6 +123,7 @@ export default {
             // Stream chat related
             isStreaming: false,
             messageStream: '',
+            msgInfo: {},
             // Element icons (using class names instead of components)
             icons: {
                 top: 'el-icon-top',
@@ -199,9 +207,10 @@ export default {
                 }else {
                     this.$set(this.messageList, this.messageList.length-1, this.createMessage(res.data.message, 0, null, null));
                 }
-                
             }).catch(res => {
                 this.$set(this.messageList, this.messageList.length-1, this.createMessage('请求失败', 0, null, null));
+            }).finally(() => {
+                this.scrollToBottom()
             })
         },
         createMessage(content, role, id, status) {
@@ -281,7 +290,7 @@ export default {
             this.messageList.push(this.createMessage('', 0)) // Type.left
             this.isSend = false
             this.startStreaming({message: this.input, chatId: this.chatId, cryptonymId: this.messageQuestionId, type: this.messageType}).then(res => {
-                this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.messageStream.content, 0, this.messageStream.id, this.messageStream.status));
+                this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.messageStream, 0, this.msgInfo.id, this.msgInfo.status));
                 this.isSend = true
                 this.scrollToBottom()
             })

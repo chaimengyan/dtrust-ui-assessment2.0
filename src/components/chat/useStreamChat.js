@@ -9,13 +9,15 @@ export const streamChatMixin = {
     return {
       messageStream: '',
       isStreaming: false,
-      streamController: null
+      streamController: null,
+      msgInfo: {}
     }
   },
   methods: {
     async startStreaming(prompt) {
       // Reset state
       this.messageStream = ''
+      this.msgInfo = {}
       this.isStreaming = true
       
       // Create new AbortController
@@ -39,7 +41,6 @@ export const streamChatMixin = {
           },
           
           onmessage: (event) => {
-            console.log(event, 'event');
             
             if (event.data === '[DONE]') {
               this.streamController?.abort()
@@ -52,8 +53,11 @@ export const streamChatMixin = {
                 this.streamController?.abort()
                 return
               }
-              console.log(data, 'datasssssss');
-              this.messageStream = data.data
+              if(typeof data === 'string')  {
+                this.messageStream += data
+              }else {
+                this.msgInfo = data.data
+              }
             } catch (err) {
               console.error('解析错误:', err)
             }

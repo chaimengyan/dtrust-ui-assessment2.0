@@ -31,7 +31,7 @@
          @click="showCollapse"></div>
             <Chat ref="chat" />
 
-            <Xiaoxin />
+            <!-- <Xiaoxin /> -->
   </div>
 </template>
 
