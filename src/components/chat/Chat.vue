@@ -2,13 +2,20 @@
     <QuestionModal ref="qm" :chatTitle="chatTitle">
         <div class="chat-container">
             <div class="chat-slider">
+                <!-- <el-button
+                    round
+                    icon="el-icon-plus"
+                    style="margin: 10px;"
+                    >
+                    新建对话
+                </el-button> -->
                 <div class="conversation-list">
                     <div v-for="(item, index) in chatList" :key="index"
                         class="conversation-item"
                         :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
                         <div @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
                     </div>
-                    <div v-if="chatList === null" class="typing-dots">
+                    <div v-if="chatList.length === 0" class="typing-dots">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -30,38 +37,48 @@
                             <img v-if="!item.role" src="/img/aiAvatar.svg" height="32px" width="32px">
                             <i v-else class="el-icon-user"></i>
                         </span>
-                        <div v-if="item.content === ''" class="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <!-- 流式响应消息 -->
                         <span 
-                            v-if="isStreaming&&item.content === ''"
-                            class="msg-content" 
-                            style="background-color:rgba(0, 0, 0, 0.08)" 
-                            v-html="renderMarkdown(messageStream)"
-                        >
-                        </span>  
+                            v-if="item.type === 'vue'" 
+                            style=" background-color:rgba(0, 0, 0, 0.08)"
+                            class="msg-content">
+                            <component :is="item.content" @checkMsg="quickSend"></component>
+                        </span>
                         <template v-else>
+                            <div v-if="item.content === ''" class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <!-- 流式响应消息 -->
                             <span 
+                                v-if="isStreaming&&item.content === ''"
                                 class="msg-content" 
-                                :style=" item.role ? 'background-color: rgb(0 99 255 / 8%)':'background-color:rgba(0, 0, 0, 0.08)'" 
-                                v-html="renderMarkdown(item.content)"
-                            ></span>
-                            <el-popconfirm 
-                                title="确定一键代入吗？" 
-                                @confirm="handleReplace(item, i)" 
-                                placement="bottom"
-                                confirm-button-text="确定" 
-                                cancel-button-text="取消">
-                                <template #reference>
-                                    <el-button 
-                                        v-if="!item.role && i!==0 && ['generateForAssetAttributes','generateForSceneAttributes'].includes(messageType)&&item.status === 0" 
-                                        type="text" size="small" 
-                                        >一键代入</el-button>
-                                </template>
-                            </el-popconfirm>
+                                style="background-color:rgba(0, 0, 0, 0.08)" 
+                                v-html="renderMarkdown(messageStream)"
+                            >
+                            </span>  
+                            <template v-else>
+                                <span 
+                                    class="msg-content" 
+                                    :style=" item.role ? 'background-color: rgb(0 99 255 / 8%)':'background-color:rgba(0, 0, 0, 0.08)'" 
+                                    v-html="renderMarkdown(item.content)"
+                                ></span>
+                                <el-popconfirm 
+                                    width="170"
+                                    :key="Math.random()"
+                                    title="确定一键代入吗？" 
+                                    @confirm="handleReplace(item, i)" 
+                                    placement="bottom"
+                                    confirm-button-text="确定" 
+                                    cancel-button-text="取消">
+                                    <template #reference>
+                                        <el-button
+                                            v-if="!item.role && i!==0 && ['generateForAssetAttributes','generateForSceneAttributes'].includes(messageType)&&item.status === 0" 
+                                            type="text" size="small" 
+                                            >一键代入</el-button>
+                                    </template>
+                                </el-popconfirm>
+                            </template>
                         </template>
                     </div>
                 </div>
@@ -102,6 +119,7 @@ import { getChatIdApi, getChatListApi, AIChatApi, generateApi, listMessagesApi }
 import { streamChatMixin } from './useStreamChat'
 import MarkdownIt from 'markdown-it'
 import QuestionModal from '../QuestionModal/src/QuestionModal.vue'
+import PresetMsg from './PresetMsg.vue'
 
 export default {
     mixins: [streamChatMixin],
@@ -114,7 +132,7 @@ export default {
             input: '',
             sessionId: '',
             chatId: '',
-            chatList: null,
+            chatList: [],
             messageList: [],
             isSend: true,
             messageType: '',
@@ -136,12 +154,16 @@ export default {
             chatTitle: '新对话',
             onMessage: null,
             surface: '',
-            mainBodyIds: '',
-            projectIds: '',
+            mainBodyIds: [],
+            projectIds: [],
 
         }
     },
     methods: {
+        quickSend(val) {
+            this.input = val.label
+            this.sendApi(this.input)
+        },
         setOnMessage(func) {
             this.onMessage = func;
         },
@@ -157,17 +179,28 @@ export default {
             this.messageList = []
             this.input = ''
             this.surface = ''
+            this.chatId  = ''
+
         },
         setAicontent(valueMap, type, questionId, otherId) {
             this.surface = valueMap.surface
+            this.chatTitle = valueMap.surface
             this.input = valueMap.real
             this.messageType = type
             this.messageQuestionId = questionId
             type === 'generateForAssetAttributes' ?  this.mainBodyIds = otherId : this.projectIds = otherId 
+            if(type === 'chat') {
+                this.messageList.push(this.createMessage(PresetMsg, 0, null, null, 'vue'));
+                this.createChat().then(res => {
+                    this.chatId = res
+                    this.currentChatId = res
+                    this.getChatList(this.messageType)
+                })
+            }
         },
         scrollToBottom() {
             setTimeout(() => {
-                console.log(this.$refs.chatContainer.scrollHeight, 'this.$refs.chatContainer')
+                // console.log(this.$refs.chatContainer.scrollHeight, 'this.$refs.chatContainer')
                 this.$refs.chatContainer.scrollTo({
                     top: this.$refs.chatContainer.scrollHeight,
                 });
@@ -186,19 +219,23 @@ export default {
         getChatList(type) {
             getChatListApi(type).then(res => {
                 this.chatList = res.data.data
+                if(res.data.data.find(m => m.chatId === this.currentChatId) === undefined) {
+                    this.chatList.unshift({chatId: this.currentChatId, title: '新对话'})
+                }
             })
         },
         handleReplace(item, index) {
-            this.messageList.push(this.createMessage('帮我应用', 3))
+            this.messageList.push(this.createMessage('生成相关数据', 3))
             this.messageList.push(this.createMessage('', 0))
             console.log(item, 'item')
+            this.scrollToBottom()
             generateApi({
                 type: this.messageType,
                 questionId: this.messageQuestionId, 
                 messageId: item.id, 
-                voice: '帮我应用',
-                projectIds: this.projectIds,
-                mainBodyIds: this.mainBodyIds
+                voice: '生成相关数据',
+                projectIds: this.projectIds||[],
+                mainBodyIds: this.mainBodyIds||[]
             }).then(res => {
                 if(res.data.data) {
                     this.$emit('message', res.data.data)
@@ -213,12 +250,13 @@ export default {
                 this.scrollToBottom()
             })
         },
-        createMessage(content, role, id, status) {
+        createMessage(content, role, id, status, type) {
             return {
                 content,
                 role,
                 id,
-                status
+                status,
+                type
             }
         },
         handleDelete(item, index) {
@@ -270,6 +308,7 @@ export default {
                         this.getChatList(this.messageType)
                         this.sendApi(this.surface)
                     }
+                    this.currentChatId = this.chatId
                 })
             }else {
                 if(!this.input.trim()) {
@@ -277,19 +316,21 @@ export default {
                     this.input = ''
                     return
                 }
-                this.sendApi()
+                this.sendApi(this.input)
             }
             
         },
         sendApi(surface) {
-            if(!surface) {
-                this.messageList.push(this.createMessage(this.input, 3)) // Type.right
-            }else {
-                this.messageList.push(this.createMessage(surface, 3)) // Type.right
-            }
+            this.messageList.push(this.createMessage(surface, 3)) // Type.right
             this.messageList.push(this.createMessage('', 0)) // Type.left
             this.isSend = false
-            this.startStreaming({message: this.input, chatId: this.chatId, cryptonymId: this.messageQuestionId, type: this.messageType}).then(res => {
+            this.startStreaming({
+                message: surface,
+                real: this.input, 
+                chatId: this.chatId, 
+                cryptonymId: this.messageQuestionId, 
+                type: this.messageType}).then(res => {
+                    console.log(this.messageStream,'this.messageStream?????');
                 this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.messageStream, 0, this.msgInfo.id, this.msgInfo.status));
                 this.isSend = true
                 this.scrollToBottom()
@@ -326,30 +367,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-/* Your SCSS styles remain exactly the same */
-.typing-dots {
-  display: inline-flex;
-  align-items: center;
-  height: 17px;
-}
 
-.typing-dots span {
-  width: 8px;
-  height: 8px;
-  margin: 0 2px;
-  background-color: #6e6e80;
-  border-radius: 50%;
-  display: inline-block;
-  animation: typing-dots 1.4s infinite ease-in-out both;
-}
-
-.typing-dots span:nth-child(1) {
-  animation-delay: -0.32s;
-}
-
-.typing-dots span:nth-child(2) {
-  animation-delay: -0.16s;
-}
 .chat-container {
     display: flex;
     align-items: flex-start;
@@ -391,16 +409,7 @@ export default {
         }
     }
 }
-@keyframes typing-dots {
-  0%, 80%, 100% { 
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  40% { 
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+
 
     .chat {
         flex: 1;
@@ -452,6 +461,9 @@ export default {
                     word-break: break-all;
                     border-radius: 8px;
                     padding: 3px 6px;
+                    * {
+                        white-space: normal; // 设置消息框下的所有元素文字的排版样式为默认
+                    }
                 }
             }
         }

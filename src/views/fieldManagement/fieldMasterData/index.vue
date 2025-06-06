@@ -23,10 +23,19 @@
 
         <template slot="attributesNameForm" slot-scope="{scope}">
           <el-input placeholder="请输入内容" v-model="form.attributesName">
-            <template slot="append" >
+            <!-- <template slot="append" >
               <div class="advice-btn" @click="adviceForAttributeLevel">AI填充</div>
-            </template>
+            </template> -->
           </el-input>
+          <div v-if="AILoading" class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+          <div v-else class="AIBtn" @click="adviceForAttributeLevel">
+              <img src="/img/MaxKB.gif" height="22px" width="22px">
+                  小信助手
+          </div>
         </template>
         <template slot="menuLeft">
           <el-button
@@ -199,6 +208,7 @@ export default {
       fullscreenLoading: false,
       isFullscreen: false,
       isOverHidden: true,
+      AILoading: false,
     };
   },
   computed: {
@@ -214,8 +224,16 @@ export default {
   },
   methods: {
     adviceForAttributeLevel() {
+      this.AILoading = true
       adviceForAttributeLevel(this.form.attributesName).then(res => {
-        this.form.typeId = this.$refs.crud.DIC.typeId.find(t => t.typeName === res.data.data).typeId
+        // 这个就是chat组件实例，可以直接调用chat组件里的方法
+        const chatRef = this.$store.state.common.chat
+        chatRef.start()
+        chatRef.setAicontent({real: res.data.data, surface: res.data.data}, 'generateForAttributeLevel', null, null)
+        chatRef.send('rightData')
+        // this.form.typeId = this.$refs.crud.DIC.typeId.find(t => t.typeName === res.data.data).typeId
+      }).finally(() => {
+        this.AILoading = false
       })
     },
     changeArray() {
@@ -410,6 +428,17 @@ export default {
 ::v-deep  .avue-icon i {
   font-size: 16px !important;
 }
+.ai-button {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 30px;
+
+    &:hover {
+      color: #01aea9;
+    }
+  }
 .advice-btn {
   text-align: center;
   &:hover {

@@ -51,6 +51,7 @@ export default {
     methods: {
         setDefaultValue() {
             if (this.echo.length) {
+              console.log(this.echo,'this.echo');
                 this.checkedDataSubjectList = this.echo.map(item => item.mainBodyId) || []
                 if (!this.isAssets) {
                     this.disabledKeys = [...this.checkedDataSubjectList]

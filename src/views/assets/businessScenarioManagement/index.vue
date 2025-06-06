@@ -154,9 +154,14 @@
           <el-step :title="$t('assetsManagement.选择字段')"></el-step>
           <el-step :title="$t('assetsManagement.字段配置')"></el-step>
         </el-steps>
-        <div class="ai-button" @click="openAI">
+        <div v-if="AILoading" class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div v-else class="AIBtn" style="margin-right: 30px;" @click="openAI">
             <img src="/img/MaxKB.gif" height="22px" width="22px">
-            小信助手
+                小信助手
         </div>
       </div>
       
@@ -420,7 +425,8 @@ export default {
       option: {},
       option2: {},
       isShow: false,
-        checkedProjectBody: [],
+      checkedProjectBody: [],
+      AILoading: false,
     };
   },
   computed: {
@@ -435,6 +441,8 @@ export default {
   },
   methods: {
     openAI() {
+          
+      this.AILoading = true
       const projectIds = this.checkedProjectBody.map(item => item.projectId)
       adviceForSceneAttributes(this.sceneId, projectIds).then(res => {
           // 这个就是chat组件实例，可以直接调用chat组件里的方法
@@ -445,8 +453,32 @@ export default {
           chatRef.send('rightData')
           chatRef.setOnMessage((value) => {
             console.log(value.data, 'value')
-          
+            
+            value.data.forEach((asset,index) => {
+              asset.dataSubjectList.forEach((item, itemIndex) => {
+                item.realMainBodyId = item.mainBodyId
+                item.mainBodyId = `${asset.projectId}.${item.mainBodyId}`
+                item.attributes.forEach(attr => {
+                    attr._id = `${item.mainBodyId}.${attr.categoryId}.${attr.attributesId}`
+                    attr.mainBodyId = item.realMainBodyId
+                    attr.mainBodyName = item.mainBodyName
+                    attr.projectId = asset.projectId
+                    attr.projectName = asset.projectName
+                })
+                item.categoryList.forEach(attr => {
+                    attr._id = `${item.mainBodyId}.${attr.categoryId}`
+                })
+              })
+            })
+
+            
+            this.echoCheckedAssetObjList = value.data
+            this.$refs.relatedAssets.setDefaultValue()
+            this.$refs.selectField.mounted()
+            this.$refs.selectField.setValue()
           })
+      }).finally(() => {
+        this.AILoading = false
       })
     },
       // 选中project保存option到父组件

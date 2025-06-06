@@ -1,0 +1,516 @@
+[
+    {
+        "lng": "116.404",
+        "internalOr3rdParty": "",
+        "projectName": "路虎小程序",
+        "projectId": 565,
+        "lat": "39.915",
+        "dataSubjectList": [
+            {
+                "mainBodyName": "客户",
+                "mainBodyId": 482,
+                "typeList": [
+                    {
+                        "createBy": "admin",
+                        "createTime": "2024-06-14T10:33:49",
+                        "updateBy": "admin",
+                        "updateTime": "2024-06-14T10:33:49",
+                        "belongTo": 0,
+                        "tenantId": 124,
+                        "typeId": 340,
+                        "typeName": "一般个人信息",
+                        "keyword": null
+                    }
+                ],
+                "categoryList": [
+                    {
+                        "createBy": "admin",
+                        "createTime": "2024-06-14T10:33:50",
+                        "updateBy": "admin",
+                        "updateTime": "2024-06-14T10:33:50",
+                        "belongTo": 0,
+                        "tenantId": 124,
+                        "categoryId": 1069,
+                        "categoryName": "个人基本资料",
+                        "keyword": null
+                    }
+                ],
+                "attributes": [
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2535,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45711,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "个人姓名",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5207,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2536,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45712,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "生日",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5208,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2537,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45713,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "民族",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5210,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2538,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45714,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "国籍",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5211,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2539,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45715,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "家庭关系",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5212,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2540,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45716,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "住址",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5213,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2541,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45717,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "个人电话号码",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5214,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2542,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45718,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "电子邮件地址",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5215,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    },
+                    {
+                        "createBy": "lcc",
+                        "createTime": "2024-11-29T15:49:49",
+                        "updateBy": "lcc",
+                        "updateTime": "2024-11-29T15:49:49",
+                        "belongTo": 243,
+                        "tenantId": 124,
+                        "assetsSceneProjectAttributesId": 2543,
+                        "activitiesName": "",
+                        "assetsSceneId": 433,
+                        "projectAttributesId": 45719,
+                        "projectId": 565,
+                        "volumeOfDataSubjects": 1,
+                        "outOfTheCountry": null,
+                        "type": 0,
+                        "gatherActivitiesList": [],
+                        "storageActivitiesList": [],
+                        "useActivitiesList": [],
+                        "transmitActivitiesList": [],
+                        "delActivitiesList": [],
+                        "attributesName": "性别",
+                        "mainBodyName": "客户",
+                        "categoryName": "个人基本资料",
+                        "typeName": "一般个人信息",
+                        "mainBodyId": 482,
+                        "categoryId": 1069,
+                        "attributesId": 5209,
+                        "typeId": 340,
+                        "projectName": "路虎小程序",
+                        "assetsSceneName": null
+                    }
+                ]
+            }
+        ]
+    }
+]
+
+
+[
+    {
+        "projectId": 565,
+        "projectName": "路虎小程序",
+        "dataSubjectList": [
+            {
+                "mainBodyId": 482,
+                "mainBodyName": "客户",
+                "attributes": [
+                    {
+                        "attributesId": 5207,
+                        "attributesName": "个人姓名",
+                        "remark": "个人姓名",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5208,
+                        "attributesName": "生日",
+                        "remark": "生日",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5210,
+                        "attributesName": "民族",
+                        "remark": "",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5211,
+                        "attributesName": "国籍",
+                        "remark": "",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5212,
+                        "attributesName": "家庭关系",
+                        "remark": "家庭关系",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5213,
+                        "attributesName": "住址",
+                        "remark": "住址",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5214,
+                        "attributesName": "个人电话号码",
+                        "remark": "个人电话号码",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5215,
+                        "attributesName": "电子邮件地址",
+                        "remark": "电子邮件地址",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5209,
+                        "attributesName": "性别",
+                        "remark": "性别",
+                        "categoryId": 1069,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5319,
+                        "attributesName": "333",
+                        "remark": "",
+                        "categoryId": 1068,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5199,
+                        "attributesName": "身份证",
+                        "remark": "身份证",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5200,
+                        "attributesName": "军官证",
+                        "remark": "",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5201,
+                        "attributesName": "护照",
+                        "remark": "护照",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5202,
+                        "attributesName": "驾驶证",
+                        "remark": "驾驶证",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5203,
+                        "attributesName": "工作证",
+                        "remark": "工作证",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5204,
+                        "attributesName": "出入证",
+                        "remark": "出入证",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5205,
+                        "attributesName": "社保卡",
+                        "remark": "社保卡",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5206,
+                        "attributesName": "居住证",
+                        "remark": "居住证",
+                        "categoryId": 1068,
+                        "typeId": 339
+                    },
+                    {
+                        "attributesId": 5136,
+                        "attributesName": "行踪轨迹",
+                        "remark": "行踪轨迹",
+                        "categoryId": 1058,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5137,
+                        "attributesName": "精准定位信息",
+                        "remark": "精准定位信息",
+                        "categoryId": 1058,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5138,
+                        "attributesName": "住宿信息",
+                        "remark": "住宿信息",
+                        "categoryId": 1058,
+                        "typeId": 340
+                    },
+                    {
+                        "attributesId": 5139,
+                        "attributesName": "经纬度",
+                        "remark": "经纬度",
+                        "categoryId": 1058,
+                        "typeId": 340
+                    }
+                ],
+                "categoryList": [
+                    {
+                        "categoryId": 1069,
+                        "categoryName": "个人基本资料"
+                    },
+                    {
+                        "categoryId": 1068,
+                        "categoryName": "个人身份信息"
+                    },
+                    {
+                        "categoryId": 1058,
+                        "categoryName": "个人位置信息"
+                    }
+                ],
+                "typeList": [
+                    {
+                        "typeId": 340,
+                        "typeName": "一般个人信息"
+                    },
+                    {
+                        "typeId": 339,
+                        "typeName": "敏感个人信息"
+                    }
+                ]
+            }
+        ]
+    }
+]

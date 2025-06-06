@@ -109,6 +109,7 @@ export default {
             setTimeout(() => {
                 this.buildRenderList()
                 this.buildEchoFields()
+                console.log(this.checkAllFields, this.renderList,'????LLLLL')
             })
             // this.getDefaultAttrs()
         },

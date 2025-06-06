@@ -12,9 +12,14 @@
           <el-step :title="$t('assetsManagement.选择字段')"></el-step>
           <el-step v-if="isAssets" :title="$t('assetsManagement.字段配置')"></el-step>
         </el-steps>
-        <div class="ai-button" @click="openAI">
+        <div v-if="AILoading" class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div v-else class="AIBtn" style="margin-right: 30px;" @click="openAI">
             <img src="/img/MaxKB.gif" height="22px" width="22px">
-            小信助手
+                小信助手
         </div>
       </div>
            
@@ -119,11 +124,13 @@ export default {
       isFullscreen: false,
       isShow: false,
       disabledKeys: null,
-      relationDialogSize: '100%'
+      relationDialogSize: '100%',
+      AILoading: false,
     };
   },
   methods: {
     openAI() {
+      this.AILoading = true
       const mainBodyIds = this.checkedMainBody.map(item => item.mainBodyIdReal)
       adviceForAssetAttributes(this.projectId, mainBodyIds).then(res => {
           // 这个就是chat组件实例，可以直接调用chat组件里的方法
@@ -133,16 +140,21 @@ export default {
           chatRef.setAicontent(res.data.data, 'generateForAssetAttributes', this.projectId, mainBodyIds)
           chatRef.send('rightData')
           chatRef.setOnMessage((value) => {
-            console.log(value.data, 'value')
             this.echoCheckedDataSubjectList = value.data.map(item => ({
               ...item,
-              attributes: item.attributes.map(item => ({
-                  ...item,
-                  _id: `${item.projectId}.${item.mainBodyId}.${item.categoryId}.${item.attributesId}`
+              attributes: item.attributes.map(a => ({
+                  ...a,
+                  _id: `${this.projectId}.${item.mainBodyId}.${a.categoryId}.${a.attributesId}`
               })),
-              mainBodyId: `${this.projectId}.${item.mainBodyId}`
-          }))
+              mainBodyId: `${this.projectId}.${item.mainBodyId}`,
+            }))
+            console.log(this.echoCheckedDataSubjectList, 'this.echoCheckedDataSubjectList')
+            this.$refs.dataSubject.setDefaultValue()
+            this.$refs.selectField.mounted()
+            this.$refs.selectField.setValue()
           })
+      }).finally(() => {
+        this.AILoading = false
       })
     },
     // 下一步
@@ -155,6 +167,7 @@ export default {
           this.$refs.selectField.mounted()
           this.$refs.selectField.setValue()
        }else if (this.active === 1) {
+        console.log(this.$refs.selectField.getAttrs(), 'this.$refs.selectField.getAttrs()');
           const attrs = this.$refs.selectField.getAttrs()
           const mainBodyField = Array.from(new Set(attrs.map(a => a.mainBodyId)))
           let noFieldMainBodyName = []
@@ -272,19 +285,6 @@ export default {
 .header {
   display: flex;
   align-items: center;
-
-
-  .ai-button {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    cursor: pointer;
-    margin-right: 30px;
-
-    &:hover {
-      color: #01aea9;
-    }
-  }
 }
 
 </style>

@@ -56,6 +56,7 @@ export const streamChatMixin = {
               if(typeof data === 'string')  {
                 this.messageStream += data
               }else {
+                console.log(data.data,'ddadddd')
                 this.msgInfo = data.data
               }
               this.scrollToBottom();

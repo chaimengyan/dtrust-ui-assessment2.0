@@ -30,8 +30,7 @@
     <div class="avue-shade"
          @click="showCollapse"></div>
             <Chat ref="chat" />
-
-            <!-- <Xiaoxin /> -->
+            <Xiaoxin />
   </div>
 </template>
 

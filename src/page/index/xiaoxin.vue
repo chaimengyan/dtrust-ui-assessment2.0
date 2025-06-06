@@ -62,11 +62,10 @@ export default {
   methods: {
     toggleQa() {
         
-         const chatRef = this.$store.state.common.chat
+          const chatRef = this.$store.state.common.chat
           console.log(chatRef,'chatRef');
           chatRef.start()
-        //   chatRef.setAicontent(res.data.data, 'generateForPrivacyPolicy', this.simpleId)
-        //   chatRef.send('rightData')
+          chatRef.setAicontent({real: '', surface: ''}, 'chat', null, null)
       
     },
     toggleAnswer(index) {
