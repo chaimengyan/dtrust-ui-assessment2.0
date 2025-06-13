@@ -43,4 +43,12 @@ import request from '@/router/axios'
             method: 'post',
             })
         }
+         // 处理对应功能 一键代入
+         export function delChatApi(chatId) {
+            return request({
+            url: `/intelligence/chatting/${chatId}`,
+            method: 'delete',
+            })
+        }
+        
         

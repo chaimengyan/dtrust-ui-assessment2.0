@@ -1,6 +1,7 @@
 // streamChatMixin.js
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import CookieUtil from "@/util/cookie";
+const baseUrl = process.env.VUE_APP_BASE_URL
 
 const { access_token } = CookieUtil.getToken()
 
@@ -24,7 +25,7 @@ export const streamChatMixin = {
       this.streamController = new AbortController()
 
       try {
-        await fetchEventSource(`/intelligence/chatting/dialogue`, {
+        await fetchEventSource(`${baseUrl}/intelligence/chatting/dialogue`, {
           method: 'POST',
           headers: {
             'Accept': 'text/event-stream',

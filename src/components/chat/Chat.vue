@@ -2,18 +2,42 @@
     <QuestionModal ref="qm" :chatTitle="chatTitle">
         <div class="chat-container">
             <div class="chat-slider">
-                <!-- <el-button
-                    round
-                    icon="el-icon-plus"
-                    style="margin: 10px;"
-                    >
-                    新建对话
-                </el-button> -->
+                <el-popconfirm 
+                    width="170"
+                    title="确定新建对话吗？" 
+                    @confirm="newChat" 
+                    placement="bottom"
+                    confirm-button-text="确定" 
+                    cancel-button-text="取消">
+                    <template #reference>
+                        <el-button
+                            round
+                            icon="el-icon-plus"
+                            style="margin: 10px;"
+                            >
+                            新建对话
+                        </el-button>
+                    </template>
+                </el-popconfirm>
+
                 <div class="conversation-list">
                     <div v-for="(item, index) in chatList" :key="index"
                         class="conversation-item"
                         :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
-                        <div @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
+                        <div class="msg-title" @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
+                        <div class="hidden-button">
+                            <el-popconfirm 
+                                width="170"
+                                title="确定删除吗？" 
+                                @confirm="deleteMsg(item)" 
+                                placement="bottom"
+                                confirm-button-text="确定" 
+                                cancel-button-text="取消">
+                                <template #reference>
+                                    <el-button type="text" icon="el-icon-delete" circle/>
+                                </template>
+                            </el-popconfirm>
+                        </div>
                     </div>
                     <div v-if="chatList.length === 0" class="typing-dots">
                         <span></span>
@@ -115,7 +139,7 @@
 </template>
 
 <script>
-import { getChatIdApi, getChatListApi, AIChatApi, generateApi, listMessagesApi } from '@/api/admin/index'
+import { getChatIdApi, getChatListApi, AIChatApi, generateApi, listMessagesApi, delChatApi } from '@/api/admin/index'
 import { streamChatMixin } from './useStreamChat'
 import MarkdownIt from 'markdown-it'
 import QuestionModal from '../QuestionModal/src/QuestionModal.vue'
@@ -160,6 +184,19 @@ export default {
         }
     },
     methods: {
+        newChat() { 
+            this.createChat()
+        },
+        deleteMsg(item) {
+            this.currentChatId = ''
+            this.chatList = []
+            this.messageList = []
+            delChatApi(item.chatId).then(res => {
+                this.getChatList(this.messageType).then(() => {
+                    this.checkMsg(this.chatList[0])
+                })
+            })
+        },
         quickSend(val) {
             this.input = val.label
             this.sendApi(this.input)
@@ -217,10 +254,14 @@ export default {
             })
         },
         getChatList(type) {
-            getChatListApi(type).then(res => {
+            return getChatListApi(type).then(res => {
                 this.chatList = res.data.data
-                if(res.data.data.find(m => m.chatId === this.currentChatId) === undefined) {
-                    this.chatList.unshift({chatId: this.currentChatId, title: '新对话'})
+                if(this.currentChatId) {
+                    if(res.data.data.find(m => m.chatId === this.currentChatId) === undefined) {
+                        this.chatList.unshift({chatId: this.currentChatId, title: '新对话'})
+                    }
+                }else {
+                    this.currentChatId = this.chatList[0].chatId
                 }
             })
         },
@@ -388,12 +429,18 @@ export default {
         
         .conversation-item {
             padding: 8px 16px;
+            padding-right: 0;
             cursor: pointer;
             font-size: 14px;
             white-space: nowrap;
             margin: 4px;
             color: gray;
-            div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .msg-title {
+                width: 0;
+                flex: 1;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -402,6 +449,23 @@ export default {
         .conversation-item:hover {
             background-color: #e0dcff;
             border-radius: 4px;
+            .hidden-button {
+                visibility: unset;
+            }
+        }
+        .hidden-button {
+            // display: none;
+            visibility: hidden;
+
+            :deep(.el-button) {
+                padding: 0;
+                padding-right: 4px;
+            }
+           
+        }
+        .conversation-item div:hover .hidden-button {
+           
+            display: block; /* 鼠标悬浮时显示按钮 */
         }
         .conversation-item-checked {
             background-color: #e0dcff;

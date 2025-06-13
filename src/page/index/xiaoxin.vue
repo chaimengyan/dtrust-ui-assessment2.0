@@ -6,7 +6,7 @@
     @touchstart="startDrag"
     ref="button"
   >
-    <button class="qa-button" @click="toggleQa">
+    <button class="qa-button" @dblclick="toggleQa">
       <span v-if="!isOpen">
         <img src="/img/MaxKB.gif" height="32px" width="32px">
       </span>
