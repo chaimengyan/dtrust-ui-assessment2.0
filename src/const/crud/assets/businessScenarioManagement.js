@@ -7,7 +7,13 @@ import {
 import {
   checkSceneName
 } from "@/api/assets/businessScenarioManagement";
+import {getUserList} from "@/api/assets/components/releaseForm";
 
+function getUserListFunc(item) {
+  return getUserList().then(res => {
+    item.dicData = res.data.data || []
+  })
+}
 // item.dicUrl 调接口
 function getSelectOption(item, tenantId) {
   getDeptTreeByTenantId(tenantId).then(res => {
@@ -38,13 +44,6 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
 
-    if(item.prop === 'managingOrganization') {
-      item.props = {
-        label:'name',
-        value:'id'
-      }
-      getSelectOption(item, tenantId);
-    }
     if(item.prop === 'sceneName') {
       item.rules.push({ validator: validateSceneName, trigger: 'blur' })
     }
@@ -68,6 +67,22 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
       }
       item.dicData = city
       item.type = 'select'
+    }
+    if(item.type === 'deptTree') {
+      item.props = {
+        label:'name',
+        value:'id'
+      }
+      item.type = 'tree'
+      getSelectOption(item, tenantId);
+    }
+     if(item.type === 'userSelect') {
+      item.props = {
+        label:'nickName',
+        value:'userId'
+      }
+      item.type = 'select'
+      getUserListFunc(item)
     }
 
   });

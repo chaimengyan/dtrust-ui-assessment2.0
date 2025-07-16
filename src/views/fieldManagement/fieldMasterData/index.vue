@@ -34,7 +34,7 @@
           </div>
           <div v-else class="AIBtn" @click="adviceForAttributeLevel">
               <img src="/img/MaxKB.gif" height="22px" width="22px">
-                  小信助手
+                  {{$t('chat.小信助手')}}
           </div>
         </template>
         <template slot="menuLeft">

@@ -1,52 +1,76 @@
 <template>
     <QuestionModal ref="qm" :chatTitle="chatTitle">
-        <div class="chat-container">
-            <div class="chat-slider">
+        <template v-if="noMessage">
+            <div>
                 <el-popconfirm 
                     width="170"
-                    title="确定新建对话吗？" 
+                    :title="$t('chat.确定新建对话吗')"
                     @confirm="newChat" 
                     placement="bottom"
-                    confirm-button-text="确定" 
-                    cancel-button-text="取消">
+                    :confirm-button-text="$t('crudCommon.确定')" 
+                    :cancel-button-text="$t('crudCommon.取消')">
                     <template #reference>
                         <el-button
                             round
                             icon="el-icon-plus"
                             style="margin: 10px;"
                             >
-                            新建对话
+                            {{$t('chat.新建对话')}}
+                        </el-button>
+                    </template>
+                </el-popconfirm>
+            </div>
+        </template>
+        <div class="chat-container" v-else>
+            <div class="chat-slider">
+                <el-popconfirm 
+                    width="170"
+                    :title="$t('chat.确定新建对话吗')" 
+                    @confirm="newChat" 
+                    placement="bottom"
+                    :confirm-button-text="$t('crudCommon.确定')" 
+                    :cancel-button-text="$t('crudCommon.取消')">
+                    <template #reference>
+                        <el-button
+                            round
+                            icon="el-icon-plus"
+                            style="margin: 10px;"
+                            >
+                            {{$t('chat.新建对话')}}
                         </el-button>
                     </template>
                 </el-popconfirm>
 
                 <div class="conversation-list">
-                    <div v-for="(item, index) in chatList" :key="index"
-                        class="conversation-item"
-                        :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
-                        <div class="msg-title" @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
-                        <div class="hidden-button">
-                            <el-popconfirm 
-                                width="170"
-                                title="确定删除吗？" 
-                                @confirm="deleteMsg(item)" 
-                                placement="bottom"
-                                confirm-button-text="确定" 
-                                cancel-button-text="取消">
-                                <template #reference>
-                                    <el-button type="text" icon="el-icon-delete" circle/>
-                                </template>
-                            </el-popconfirm>
+                  
+                    <div v-if="chatListLoading" class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <template v-else>
+                        <div v-if="chatList.length === 0" style="text-align: center;">
+                            {{$t('chat.暂无数据')}}
                         </div>
-                    </div>
-                    <div v-if="chatList.length === 0" class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <!-- <div v-if="chatList.length === 0" style="text-align: center;">
-                        暂无数据
-                    </div> -->
+                        <div v-else v-for="(item, index) in chatList" :key="index"
+                            class="conversation-item"
+                            :class="item.chatId === currentChatId ? 'conversation-item-checked' : ''">
+                            <div class="msg-title" @click="checkMsg(item)" :title="item.title">{{ item.title }}</div>
+                            <div class="hidden-button">
+                                <el-popconfirm 
+                                    width="170"
+                                    :title="$t('chat.确定删除吗')" 
+                                    @confirm="deleteMsg(item, index)" 
+                                    placement="bottom"
+                                    :confirm-button-text="$t('crudCommon.确定')" 
+                                    :cancel-button-text="$t('crudCommon.取消')">
+                                    <template #reference>
+                                        <el-button type="text" style="color: red" icon="el-icon-delete" circle/>
+                                    </template>
+                                </el-popconfirm>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div class="chat">
@@ -90,16 +114,16 @@
                                 <el-popconfirm 
                                     width="170"
                                     :key="Math.random()"
-                                    title="确定一键代入吗？" 
+                                    :title="$t('chat.确定一键代入吗')" 
                                     @confirm="handleReplace(item, i)" 
                                     placement="bottom"
-                                    confirm-button-text="确定" 
-                                    cancel-button-text="取消">
+                                    :confirm-button-text="$t('crudCommon.确定')" 
+                                    :cancel-button-text="$t('crudCommon.取消')">
                                     <template #reference>
                                         <el-button
                                             v-if="!item.role && i!==0 && ['generateForAssetAttributes','generateForSceneAttributes'].includes(messageType)&&item.status === 0" 
                                             type="text" size="small" 
-                                            >一键代入</el-button>
+                                            >{{$t('chat.一键代入')}}</el-button>
                                     </template>
                                 </el-popconfirm>
                             </template>
@@ -122,7 +146,7 @@
                             v-model="input" 
                             @keydown.enter.exact.prevent="send('')"
                             @keydown.shift.enter.exact.prevent="input += '\n'"
-                            placeholder="输入消息..."
+                            :placeholder="`${$t('chat.输入消息')}...`"
                             rows="3"
                             ref="textareaRef"
                         ></textarea>
@@ -130,7 +154,7 @@
                     </div>
                 </div>
                 <div style="margin-bottom: 4px; text-align: center;font-size: 12px;color: darkgoldenrod;">
-                    本AI助手由大语言模型提供支持，请用户谨慎判断是否采纳相关结果。
+                    {{$t('chat.本AI助手由大语言模型提供支持请用户谨慎判断是否采纳相关结果')}}
                 </div>
             </div>
         </div>
@@ -152,11 +176,12 @@ export default {
         return {
             tooltip: false,
             fileList: [],
-            sendBtn: this.$t('message.chat.发送'),
+            sendBtn: this.$t('chat.发送'),
             input: '',
             sessionId: '',
             chatId: '',
             chatList: [],
+            chatListLoading: true,
             messageList: [],
             isSend: true,
             messageType: '',
@@ -175,27 +200,41 @@ export default {
             messageType: '',
             messageQuestionId: null,
             currentChatId: '',
-            chatTitle: '新对话',
+            chatTitle: this.$t('chat.新对话'),
             onMessage: null,
             surface: '',
             mainBodyIds: [],
             projectIds: [],
-
+            noMessage: false,
         }
     },
     methods: {
         newChat() { 
-            this.createChat()
-        },
-        deleteMsg(item) {
-            this.currentChatId = ''
-            this.chatList = []
-            this.messageList = []
-            delChatApi(item.chatId).then(res => {
-                this.getChatList(this.messageType).then(() => {
-                    this.checkMsg(this.chatList[0])
-                })
+            this.createChat().then(res => { 
+                this.chatId = res
+                this.currentChatId = res
+                this.getChatList(this.messageType)
+                this.noMessage = false
             })
+        },
+        deleteMsg(item, index) {
+            if(this.chatList.length > 1) {
+                const preIndex =  index > 0 ? index-1 : index+1
+                this.currentChatId = this.chatList[preIndex].chatId
+                this.chatList = []
+                this.messageList = []
+                delChatApi(item.chatId).then(res => {
+                    this.getChatList(this.messageType).then(() => {
+                        this.checkMsg(this.chatList[preIndex])
+                    })
+                })
+            }else {
+                this.chatList = []
+                this.messageList = []
+                delChatApi(item.chatId).then(res => {
+                   this.noMessage = true
+                })
+            }
         },
         quickSend(val) {
             this.input = val.label
@@ -254,19 +293,23 @@ export default {
             })
         },
         getChatList(type) {
+            this.chatListLoading = true
             return getChatListApi(type).then(res => {
                 this.chatList = res.data.data
                 if(this.currentChatId) {
                     if(res.data.data.find(m => m.chatId === this.currentChatId) === undefined) {
-                        this.chatList.unshift({chatId: this.currentChatId, title: '新对话'})
+                        this.chatList.unshift({chatId: this.currentChatId, title: this.$t('chat.新对话'), cryptonymId: this.messageQuestionId, type: this.messageType})
                     }
                 }else {
                     this.currentChatId = this.chatList[0].chatId
                 }
+            }).finally(() => { 
+                this.chatListLoading = false
+                this.checkMsg(this.chatList.find(m => m.chatId === this.currentChatId))
             })
         },
         handleReplace(item, index) {
-            this.messageList.push(this.createMessage('生成相关数据', 3))
+            this.messageList.push(this.createMessage(this.$t('chat.生成相关数据'), 3))
             this.messageList.push(this.createMessage('', 0))
             console.log(item, 'item')
             this.scrollToBottom()
@@ -274,7 +317,7 @@ export default {
                 type: this.messageType,
                 questionId: this.messageQuestionId, 
                 messageId: item.id, 
-                voice: '生成相关数据',
+                voice: this.$t('chat.生成相关数据'),
                 projectIds: this.projectIds||[],
                 mainBodyIds: this.mainBodyIds||[]
             }).then(res => {
@@ -286,7 +329,7 @@ export default {
                     this.$set(this.messageList, this.messageList.length-1, this.createMessage(res.data.message, 0, null, null));
                 }
             }).catch(res => {
-                this.$set(this.messageList, this.messageList.length-1, this.createMessage('请求失败', 0, null, null));
+                this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.$t('chat.请求失败'), 0, null, null));
             }).finally(() => {
                 this.scrollToBottom()
             })
@@ -323,6 +366,9 @@ export default {
         listMessages(chatId, cryptonymId, type) {
             return listMessagesApi(chatId, cryptonymId, type).then(res => {
                 this.messageList = res.data.data
+                if(this.messageList.length === 0 && this.messageType === 'chat') {
+                    this.messageList.push(this.createMessage(PresetMsg, 0,null,null,'vue'));
+                }
                 this.scrollToBottom()
             })
         },
@@ -353,7 +399,7 @@ export default {
                 })
             }else {
                 if(!this.input.trim()) {
-                    this.$message.warning(this.$t('message.chat.不能发送空白信息'))
+                    this.$message.warning(this.$t('chat.不能发送空白信息'))
                     this.input = ''
                     return
                 }
@@ -371,7 +417,6 @@ export default {
                 chatId: this.chatId, 
                 cryptonymId: this.messageQuestionId, 
                 type: this.messageType}).then(res => {
-                    console.log(this.messageStream,'this.messageStream?????');
                 this.$set(this.messageList, this.messageList.length-1, this.createMessage(this.messageStream, 0, this.msgInfo.id, this.msgInfo.status));
                 this.isSend = true
                 this.scrollToBottom()

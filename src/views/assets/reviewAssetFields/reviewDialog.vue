@@ -128,7 +128,7 @@
         this.relationTitle = `<i class="${row.projectIcon}"></i> <span style="font-weight: 700;">${row.projectName}</span> ${this.$t('assetsManagement.关联字段')}`
         this.getAttributesListByProjectId({status, projectId: this.projectId}).then(()  => {
           if(this.checkedDataSubjectObjList.length === 0) {
-            this.$message.error('暂无数据')
+            this.$message.error(this.$t('chat.暂无数据'))
             this.relationDialog = false
             this.fullscreenLoading = false
             return

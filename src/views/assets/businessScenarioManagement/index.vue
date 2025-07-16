@@ -161,7 +161,7 @@
         </div>
         <div v-else class="AIBtn" style="margin-right: 30px;" @click="openAI">
             <img src="/img/MaxKB.gif" height="22px" width="22px">
-                小信助手
+                {{$t('chat.小信助手')}}
         </div>
       </div>
       

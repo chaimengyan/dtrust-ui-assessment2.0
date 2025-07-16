@@ -41,9 +41,6 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     item.overHidden = isOverHidden
     Reflect.deleteProperty(item, 'props')
 
-    if (item.dicUrl) {
-      getSelectOption(item, tenantId);
-    }
     if(item.prop === 'projectName') {
       item.rules.push({ validator: validateProjectName, trigger: 'blur' })
     }
@@ -67,17 +64,20 @@ export const tableOption = (_this, tenantId, isOverHidden, isLinkPage, option) =
     if(item.type === 'icon') {
       item.iconList = iconList
     }
-    else if(item.prop === 'managingOrganization') {
+    if(item.type === 'deptTree') {
       item.props = {
         label:'name',
         value:'id'
       }
+      item.type = 'tree'
       getSelectOption(item, tenantId);
-    }else if(['champion','owner'].includes(item.prop)) {
+    }
+     if(item.type === 'userSelect') {
       item.props = {
         label:'nickName',
         value:'userId'
       }
+      item.type = 'select'
       getUserListFunc(item)
     }
   });

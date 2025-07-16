@@ -87,6 +87,14 @@ export const tableOption = (_this, isOverHidden) => {
         label: _this.$t('tableConfiguration.下拉地址'),
         value: 'addressSelect'
       },
+      {
+        label: _this.$t('tableConfiguration.下拉用户'),
+        value: 'userSelect'
+      },
+      {
+        label: _this.$t('tableConfiguration.树形组织机构'),
+        value: 'deptTree'
+      },
       // ,{
       //   label: 'checkbox',
       //   value: 'checkbox'
@@ -234,6 +242,58 @@ export const tableOption = (_this, isOverHidden) => {
           }
         }
       }else if(val === 'addressSelect') {
+        return {
+          value: {
+            display: false,
+            value: null,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: true,
+          },
+          estimate: {
+            display: true,
+            value: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          },
+          filterable: {
+            display: true,
+          }
+        }
+      }else if(val === 'userSelect') {
+        return {
+          value: {
+            display: false,
+            value: null,
+          },
+          checkStrictly: {
+            display: false,
+          },
+          multiple: {
+            display: true,
+          },
+          estimate: {
+            display: true,
+            value: true,
+          },
+          format: {
+            display: false,
+          },
+          valueFormat: {
+            display: false,
+          },
+          filterable: {
+            display: true,
+          }
+        }
+      }else if(val === 'deptTree') {
         return {
           value: {
             display: false,
@@ -777,6 +837,18 @@ export const tableOption = (_this, isOverHidden) => {
     prop: 'sortable',
     value: false,
     type: 'switch',
+    span: 24,
+    rules: [{
+      required: false,
+      // message: `${_this.$t('crudCommon.请输入')}${_this.$t('fieldManagement.数据类型名称')}`,
+      trigger: 'blur'
+    }],
+    overHidden: isOverHidden,
+  },{
+    label: _this.$t('tableConfiguration.该列在表格中展示的顺序'),
+    prop: 'sort',
+    value: 0,
+    type: 'number',
     span: 24,
     rules: [{
       required: false,

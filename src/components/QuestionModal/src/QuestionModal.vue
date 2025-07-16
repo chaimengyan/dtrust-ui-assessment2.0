@@ -75,7 +75,7 @@ export default {
       chatTitle: {
         type: String,
         default: () => {
-          return '小信助手'
+          return this.$t('chat.小信助手')
         }
       }
   },
